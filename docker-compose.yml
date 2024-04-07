@@ -15,6 +15,19 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
 
+  reports-service:
+    build:
+        context: ./finance-reports-service
+        dockerfile: Dockerfile
+    ports:
+        - "8081:8081"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
   db:
     image: postgres:latest
     ports:

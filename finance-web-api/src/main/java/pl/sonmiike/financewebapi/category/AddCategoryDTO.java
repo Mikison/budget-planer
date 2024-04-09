@@ -14,7 +14,6 @@ public class AddCategoryDTO {
 
     @NotBlank
     private String name;
-    // TODO think if it should be required or optional (default icon)
     private String iconUrl;
 
 }

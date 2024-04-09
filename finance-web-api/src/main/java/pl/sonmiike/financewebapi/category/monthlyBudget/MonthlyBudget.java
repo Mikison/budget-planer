@@ -2,6 +2,8 @@ package pl.sonmiike.financewebapi.category.monthlyBudget;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

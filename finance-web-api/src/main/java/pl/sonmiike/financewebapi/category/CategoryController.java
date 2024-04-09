@@ -27,7 +27,7 @@ public class CategoryController {
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Set<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories()); // TODO think about moving it to Admin Controller
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @GetMapping

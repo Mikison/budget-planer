@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report;
+package pl.sonmiike.reportsservice.report.types;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

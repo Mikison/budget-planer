@@ -1,21 +1,23 @@
-package pl.sonmiike.financewebapi.income;
+package pl.sonmiike.reportsservice.income;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.sonmiike.financewebapi.user.UserEntity;
-
+import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Income {
+@Table(name = "income")
+public class IncomeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +32,7 @@ public class Income {
     private BigDecimal amount;
 
     @ManyToOne
-    private UserEntity user;
+    private UserEntityReport user;
 
 
 }

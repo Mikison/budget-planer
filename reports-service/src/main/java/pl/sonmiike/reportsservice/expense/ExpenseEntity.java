@@ -35,4 +35,15 @@ public class ExpenseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
+
+
+    public String detailedString() {
+
+        return "Expense" +
+                ", Name: '" + name + '\'' +
+                ", Description: '" + description + '\'' +
+                ", Date: " + date +
+                ", Amount: " + amount.toPlainString() +
+                ", Category: " + category.getName();
+    }
 }

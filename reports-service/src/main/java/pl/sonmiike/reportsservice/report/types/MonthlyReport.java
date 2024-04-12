@@ -3,11 +3,16 @@ package pl.sonmiike.reportsservice.report.types;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
+import pl.sonmiike.reportsservice.income.IncomeEntity;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
@@ -23,6 +28,13 @@ public class MonthlyReport implements Report {
     private BigDecimal totalIncomes;
     private BigDecimal totalProfitPercentage;
     private BigDecimal budgetSummary;
+    private List<ExpenseEntity> expensesList;
+    private List<IncomeEntity> incomeList;
+    private HashMap<CategoryEntity, BigDecimal> categoryExpenses;
 
 
+    @Override
+    public Map<String, String> getReportData() {
+        return Map.of();
+    }
 }

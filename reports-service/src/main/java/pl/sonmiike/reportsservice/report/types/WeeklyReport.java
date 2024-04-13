@@ -33,18 +33,18 @@ public class WeeklyReport implements Report {
     @Override
     public Map<String, String> getReportData() {
         Map<String, String> dataMap = new HashMap<>();
-        dataMap.put("User: ", user.getName());
-        dataMap.put("Date Interval: ", dateInterval.toString());
-        dataMap.put("Total Expenses: ", totalExpenses.toPlainString());
-        dataMap.put("Biggest Expense: ", biggestExpense.detailedString());
-        dataMap.put("Smallest Expense: ", smallestExpense.detailedString());
-        dataMap.put("Average Daily Expense: ", averageDailyExpense.toPlainString());
-        dataMap.put("Total Incomes: ", totalIncomes.toPlainString());
-        dataMap.put("Percentage of Budget Spent: ", percentageOfBudgetSpent.toPlainString());
-        dataMap.put("Budget Summary: ", budgetSummary.toPlainString());
-        dataMap.put("Expenses List: ", listToStringCoverter(expensesList));
-        dataMap.put("Income List: ", listToStringCoverter(incomeList));
-        dataMap.put("Category Expenses: ", categoryExpenses.toString());
+        dataMap.put("User", user.getName());
+        dataMap.put("Date Interval", dateInterval.toString());
+        dataMap.put("Total Expenses", totalExpenses.toPlainString());
+        dataMap.put("Biggest Expense", detailedString(biggestExpense));
+        dataMap.put("Smallest Expense", detailedString(smallestExpense));
+        dataMap.put("Average Daily Expense", averageDailyExpense.toPlainString());
+        dataMap.put("Total Incomes", totalIncomes.toPlainString());
+//        dataMap.put("Percentage of Budget Spent", percentageOfBudgetSpent.toPlainString());
+        dataMap.put("Budget Summary", budgetSummary.toPlainString());
+        dataMap.put("Expenses List", listToStringCoverter(expensesList));
+        dataMap.put("Income List", listToStringCoverter(incomeList));
+//        dataMap.put("Category Expenses", categoryExpenses.toString());
 
 
         return dataMap;
@@ -59,13 +59,24 @@ public class WeeklyReport implements Report {
         return sb.toString();
     }
 
-    private String convertMapToString(HashMap<CategoryEntity, BigDecimal> categoryExpenses) {
-        StringBuilder result = new StringBuilder();
-        for (Map.Entry<CategoryEntity, BigDecimal> entry : categoryExpenses.entrySet()) {
-            CategoryEntity category = entry.getKey();
-            BigDecimal expense = entry.getValue();
-            result.append(category.getName()).append(": ").append(expense).append("\n");
-        }
-        return result.toString().trim();
+//    private String convertMapToString(HashMap<CategoryEntity, BigDecimal> categoryExpenses) {
+//        StringBuilder result = new StringBuilder();
+//        for (Map.Entry<CategoryEntity, BigDecimal> entry categoryExpenses.entrySet()) {
+//            CategoryEntity category = entry.getKey();
+//            BigDecimal expense = entry.getValue();
+//            result.append(category.getName()).append("").append(expense).append("\n");
+//        }
+//        return result.toString().trim();
+//    }
+
+    private String detailedString(ExpenseEntity expense) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Expense");
+        sb.append(", Name'").append(expense.getName()).append('\'');
+        sb.append(", Description'").append(expense.getDescription()).append('\'');
+        sb.append(", Date").append(expense.getDate());
+        sb.append(", Amount").append(expense.getAmount().toPlainString());
+        sb.append(", Category").append(expense.getCategory().getName());
+        return sb.toString();
     }
 }

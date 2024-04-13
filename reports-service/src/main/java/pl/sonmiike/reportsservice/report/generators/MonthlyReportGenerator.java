@@ -11,6 +11,7 @@ import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 import pl.sonmiike.reportsservice.user.UserEntityService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -33,30 +34,43 @@ public class MonthlyReportGenerator {
     public Set<MonthlyReport> createMonthlyReport() {
         DateInterval date = getDateInterval();
         Set<MonthlyReport> monthlyReports = new HashSet<>();
+
         for (UserEntityReport user : userEntityService.getAllUsers()) {
-            Optional<List<IncomeEntity>> income = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
-            Optional<List<ExpenseEntity>> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId());
-            if (income.isPresent() && expenses.isPresent()) {
-                MonthlyReport monthlyReport = MonthlyReport.builder()
-                        .user(user)
-                        .dateInterval(date)
-                        .totalExpenses(calculateTotalExpenses(expenses.get()))
-                        .averageWeeklyExpense(calculateAverageWeeklyExpenses(expenses.get()))
-                        .weekWithHighestExpenses(calculateWeekWithBiggestExpense(expenses.get()))
-                        .dayWithHighestAverageExpense(getDayWithHighestAverageExpense(expenses.get()))
-                        .totalIncomes(getTotalIncomes(income.get()))
-//                        .totalProfitPercentage(calculateTotalProfitPercentage(income.get(), expenses.get())) // TODO implement
-                        .budgetSummary(getTotalIncomes(income.get()).subtract(calculateTotalExpenses(expenses.get())))
-                        .expensesList(expenses.get())
-                        .incomeList(income.get())
-//                        .categoryExpenses(calculateCategoryExpenses(expenses.get())) // Implement
-                        .build();
+            Optional<List<IncomeEntity>> incomeOpt = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
+            Optional<List<ExpenseEntity>> expensesOpt = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId());
 
-                monthlyReports.add(monthlyReport);
+            if (incomeOpt.isEmpty() || incomeOpt.get().isEmpty() || expensesOpt.isEmpty() || expensesOpt.get().isEmpty()) {
+                continue;
             }
-        }
-        return monthlyReports;
 
+            List<IncomeEntity> incomes = incomeOpt.get();
+            List<ExpenseEntity> expenses = expensesOpt.get();
+
+            MonthlyReport monthlyReport = buildMonthlyReport(user, date, incomes, expenses);
+            monthlyReports.add(monthlyReport);
+        }
+
+        return monthlyReports;
+    }
+
+    private MonthlyReport buildMonthlyReport(UserEntityReport user, DateInterval dateInterval, List<IncomeEntity> incomes, List<ExpenseEntity> expenses) {
+        BigDecimal totalIncomes = getTotalIncomes(incomes);
+        BigDecimal totalExpenses = calculateTotalExpenses(expenses);
+
+        return MonthlyReport.builder()
+                .user(user)
+                .dateInterval(dateInterval)
+                .totalExpenses(totalExpenses)
+                .averageWeeklyExpense(calculateAverageWeeklyExpenses(expenses))
+                .weekWithHighestExpenses(calculateWeekWithBiggestExpense(expenses))
+                .dayWithHighestAverageExpense(getDayWithHighestAverageExpense(expenses))
+                .totalIncomes(totalIncomes)
+//                .totalProfitPercentage(calculateTotalProfitPercentage(incomes, expenses)) // Assuming implemented
+                .budgetSummary(totalIncomes.subtract(totalExpenses))
+                .expensesList(expenses)
+                .incomeList(incomes)
+//                .categoryExpenses(calculateCategoryExpenses(expenses)) // Assuming implemented
+                .build();
     }
 
 

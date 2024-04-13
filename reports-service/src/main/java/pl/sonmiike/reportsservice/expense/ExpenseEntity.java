@@ -28,22 +28,13 @@ public class ExpenseEntity {
     private LocalDate date;
     private BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntityReport user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
 
 
-    public String detailedString() {
-
-        return "Expense" +
-                ", Name: '" + name + '\'' +
-                ", Description: '" + description + '\'' +
-                ", Date: " + date +
-                ", Amount: " + amount.toPlainString() +
-                ", Category: " + category.getName();
-    }
 }

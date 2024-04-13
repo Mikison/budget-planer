@@ -15,6 +15,7 @@ public class UserEntityService {
 
 
     public Set<UserEntityReport> getAllUsers() {
+        System.out.println(userEntityRepository.findAll());
         return new HashSet<>(userEntityRepository.findAll());
     }
 

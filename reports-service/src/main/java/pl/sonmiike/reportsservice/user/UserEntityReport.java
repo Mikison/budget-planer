@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import pl.sonmiike.reportsservice.user.refreshtoken.RefreshTokenEntity;
-//import pl.sonmiike.reportsservice.user.refrshtoken.RefreshTokenEntity;
+import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;
+
 
 
 @Entity
@@ -38,8 +38,8 @@ public class UserEntityReport {
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
-    @OneToOne(mappedBy = "user")
-    private RefreshTokenEntity refreshToken;
+    @OneToOne
+    private RefreshToken refreshToken;
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;

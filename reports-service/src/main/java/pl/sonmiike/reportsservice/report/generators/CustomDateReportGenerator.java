@@ -1,9 +1,8 @@
 package pl.sonmiike.reportsservice.report.generators;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
@@ -26,11 +25,10 @@ import java.util.Set;
 import static pl.sonmiike.reportsservice.expense.ExpenseOperations.*;
 import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes;
 
+
 @Component
 @RequiredArgsConstructor
-public class WeeklyReportGenerator {
-
-
+public class CustomDateReportGenerator {
 
 
     private final UserEntityService userEntityService;
@@ -38,20 +36,17 @@ public class WeeklyReportGenerator {
     private final ExpenseEntityService expenseEntityService;
 
 
-    public Set<? extends Report> createWeeklyReport() {
-        DateInterval date = getDateInterval();
-        Set<WeeklyReport> weeklyReports = new HashSet<>();
-        for (UserEntityReport user : userEntityService.getAllUsers()) {
-            Optional<List<IncomeEntity>> income = incomeService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
-            Optional<List<ExpenseEntity>> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId());
+    public Report createCustomDateIntervalReport(Long userId, LocalDate startDate, LocalDate endDate) {
+            Optional<List<IncomeEntity>> income = incomeService.getIncomesFromDateInterval(startDate,endDate, userId);
+            Optional<List<ExpenseEntity>> expenses = expenseEntityService.getExpensesFromDateBetween(startDate, endDate, userId);
             if (income.isPresent() && expenses.isPresent()) {
                 WeeklyReport weeklyReport = WeeklyReport.builder()
-                        .user(user)
-                        .dateInterval(date)
+                        .user(userEntityService.getUserById(userId))
+                        .dateInterval(new DateInterval(startDate, endDate))
                         .totalExpenses(calculateTotalExpenses(expenses.get()))
                         .biggestExpense(findMaxExpense(expenses.get()))
                         .smallestExpense(findMinExpense(expenses.get()))
-                        .averageDailyExpense(calculateAverageDailyExpenses(expenses.get(), Period.between(date.getStartDate(), date.getEndDate()).getDays() + 1))
+                        .averageDailyExpense(calculateAverageDailyExpenses(expenses.get(), Period.between(startDate, endDate).getDays() + 1))
                         .totalIncomes(getTotalIncomes(income.get()))
                         // TODO Percentage of Budget Spent to be implemented
                         .budgetSummary(getTotalIncomes(income.get()).subtract(calculateTotalExpenses(expenses.get())))
@@ -59,22 +54,11 @@ public class WeeklyReportGenerator {
                         .incomeList(income.get())
                         // TODO Category Expenses to be implemented
                         .build();
-                weeklyReports.add(weeklyReport);
+                return weeklyReport;
             }
-        }
-        return weeklyReports;
 
+            return null;
     }
 
 
-    private DateInterval getDateInterval() {
-        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
-        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-
-        if (endDate.getMonth() != startDate.getMonth()) {
-            startDate = endDate.withDayOfMonth(1);
-        }
-
-        return new DateInterval(startDate, endDate);
-    }
 }

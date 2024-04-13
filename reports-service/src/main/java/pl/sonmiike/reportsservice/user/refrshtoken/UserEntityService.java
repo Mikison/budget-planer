@@ -19,4 +19,8 @@ public class UserEntityService {
     public Set<UserEntityReport> getAllUsers() {
         return new HashSet<>(userEntityRepository.findAll());
     }
+
+    public UserEntityReport getUserById(Long userId) {
+        return userEntityRepository.findById(userId).orElse(null);
+    }
 }

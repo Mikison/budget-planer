@@ -2,7 +2,6 @@ package pl.sonmiike.reportsservice.report.types;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;

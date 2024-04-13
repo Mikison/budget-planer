@@ -1,9 +1,11 @@
 package pl.sonmiike.financewebapi.category;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import pl.sonmiike.financewebapi.user.UserEntity;
-
 
 import java.time.LocalDateTime;
 

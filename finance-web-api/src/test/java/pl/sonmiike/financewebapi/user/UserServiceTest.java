@@ -15,7 +15,6 @@ import pl.sonmiike.financewebapi.expenses.ExpenseRepository;
 import pl.sonmiike.financewebapi.income.IncomeRepository;
 import pl.sonmiike.financewebapi.user.refreshToken.RefreshTokenRepository;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

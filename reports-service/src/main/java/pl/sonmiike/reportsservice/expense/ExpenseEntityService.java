@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +13,7 @@ public class ExpenseEntityService {
 
     private final ExpenseEntityRepository expenseEntityRepository;
 
-    public List<ExpenseEntity> getExpensesFromDateBetween(LocalDate starDate, LocalDate endDate, Long userId) {
+    public Optional<List<ExpenseEntity>> getExpensesFromDateBetween(LocalDate starDate, LocalDate endDate, Long userId) {
         return expenseEntityRepository.findExpenseEntitiesByDateBetweenAndUserUserId(starDate, endDate, userId);
     }
 }

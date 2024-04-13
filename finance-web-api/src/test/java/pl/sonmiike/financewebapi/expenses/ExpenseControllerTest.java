@@ -16,7 +16,6 @@ import pl.sonmiike.financewebapi.category.UserCategoryRepository;
 import pl.sonmiike.financewebapi.security.auth.AuthService;
 import pl.sonmiike.financewebapi.security.auth.JwtService;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

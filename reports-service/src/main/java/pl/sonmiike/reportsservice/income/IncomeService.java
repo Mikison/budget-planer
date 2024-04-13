@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -13,7 +14,7 @@ public class IncomeService {
 
     private final IncomeEntityRepository IncomeRepository;
 
-    public List<IncomeEntity> getIncomesFromDateInterval(LocalDate startDate, LocalDate endDate, Long userId) {
+    public Optional<List<IncomeEntity>> getIncomesFromDateInterval(LocalDate startDate, LocalDate endDate, Long userId) {
         return IncomeRepository.findIncomeEntitiesByIncomeDateBetweenAndUserUserId(startDate, endDate, userId);
     }
 }

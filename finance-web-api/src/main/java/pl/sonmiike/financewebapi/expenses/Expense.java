@@ -6,7 +6,6 @@ import lombok.*;
 import pl.sonmiike.financewebapi.category.Category;
 import pl.sonmiike.financewebapi.user.UserEntity;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

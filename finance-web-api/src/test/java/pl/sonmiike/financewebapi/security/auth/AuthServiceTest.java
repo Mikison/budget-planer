@@ -19,7 +19,6 @@ import pl.sonmiike.financewebapi.user.UserRole;
 import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;
 import pl.sonmiike.financewebapi.user.refreshToken.RefreshTokenService;
 
-
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;

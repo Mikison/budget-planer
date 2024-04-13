@@ -4,7 +4,6 @@ package pl.sonmiike.financewebapi.user.refreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.financewebapi.user.UserRepository;

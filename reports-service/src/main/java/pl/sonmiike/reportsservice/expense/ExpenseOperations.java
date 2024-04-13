@@ -25,20 +25,18 @@ public class ExpenseOperations {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public static BigDecimal findMaxExpense(@NotNull List<ExpenseEntity> expenses) {
+    public static ExpenseEntity findMaxExpense(@NotNull List<ExpenseEntity> expenses) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .map(ExpenseEntity::getAmount)
-                .max(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
+                .max(Comparator.comparing(ExpenseEntity::getAmount))
+                .orElseThrow(() -> new NullPointerException("Cannot find max expense"));
     }
 
-    public static BigDecimal findMinExpense(@NotNull List<ExpenseEntity> expenses) {
+    public static ExpenseEntity findMinExpense(@NotNull List<ExpenseEntity> expenses) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .map(ExpenseEntity::getAmount)
-                .min(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
+                .min(Comparator.comparing(ExpenseEntity::getAmount))
+                .orElseThrow(() -> new NullPointerException("Cannot find min expense"));
     }
 
     public static BigDecimal calculateAverageDailyExpenses(@NotNull List<ExpenseEntity> expenses, int days) {

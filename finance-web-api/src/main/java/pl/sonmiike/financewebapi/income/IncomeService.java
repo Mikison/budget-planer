@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.financewebapi.user.UserService;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

@@ -8,7 +8,6 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;
 
 import java.util.Collection;

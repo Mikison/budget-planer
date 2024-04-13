@@ -4,7 +4,6 @@ package pl.sonmiike.financewebapi.user.refreshToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
 import pl.sonmiike.financewebapi.user.UserEntity;
 
 import java.time.Instant;

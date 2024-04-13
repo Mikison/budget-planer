@@ -12,7 +12,6 @@ import pl.sonmiike.financewebapi.exceptions.custom.EmailAlreadyTakenException;
 import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 
-
 import java.time.LocalDateTime;
 
 @ControllerAdvice

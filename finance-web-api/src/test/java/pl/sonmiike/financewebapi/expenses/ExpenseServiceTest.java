@@ -17,7 +17,6 @@ import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.financewebapi.user.UserService;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;

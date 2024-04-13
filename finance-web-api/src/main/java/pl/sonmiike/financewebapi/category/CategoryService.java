@@ -11,7 +11,6 @@ import pl.sonmiike.financewebapi.expenses.ExpenseRepository;
 import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.financewebapi.user.UserRepository;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.YearMonth;

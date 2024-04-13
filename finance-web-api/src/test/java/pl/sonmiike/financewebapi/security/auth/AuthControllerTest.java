@@ -8,7 +8,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import pl.sonmiike.financewebapi.security.testconfig.TestSecurityConfig;
 import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;

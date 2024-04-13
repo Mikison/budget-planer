@@ -1,9 +1,9 @@
-package pl.sonmiike.reportsservice.user.refrshtoken;
+package pl.sonmiike.reportsservice.user.refreshtoken;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.financewebapi.user.UserEntity;
 
 import java.time.Instant;
 
@@ -12,8 +12,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter
 @Table(name = "refresh_token")
+@Setter
 public class RefreshTokenEntity {
 
     @Id
@@ -27,5 +27,5 @@ public class RefreshTokenEntity {
     @Column(nullable = false)
     private Instant expirationTime;
     @OneToOne
-    private UserEntityReport user;
+    private UserEntity user;
 }

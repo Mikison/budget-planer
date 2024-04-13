@@ -3,16 +3,14 @@ package pl.sonmiike.reportsservice.report.generators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
-import pl.sonmiike.reportsservice.income.IncomeService;
+import pl.sonmiike.reportsservice.income.IncomeEntityService;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
-import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.refrshtoken.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserEntityService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -34,15 +32,15 @@ public class WeeklyReportGenerator {
 
 
     private final UserEntityService userEntityService;
-    private final IncomeService incomeService;
+    private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
 
 
-    public Set<? extends Report> createWeeklyReport() {
+    public Set<WeeklyReport> createWeeklyReport() {
         DateInterval date = getDateInterval();
         Set<WeeklyReport> weeklyReports = new HashSet<>();
         for (UserEntityReport user : userEntityService.getAllUsers()) {
-            Optional<List<IncomeEntity>> income = incomeService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
+            Optional<List<IncomeEntity>> income = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
             Optional<List<ExpenseEntity>> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId());
             if (income.isPresent() && expenses.isPresent()) {
                 WeeklyReport weeklyReport = WeeklyReport.builder()

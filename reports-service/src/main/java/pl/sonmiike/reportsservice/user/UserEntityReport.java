@@ -5,7 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import pl.sonmiike.reportsservice.user.refrshtoken.RefreshTokenEntity;
+import pl.sonmiike.reportsservice.user.refreshtoken.RefreshTokenEntity;
+//import pl.sonmiike.reportsservice.user.refrshtoken.RefreshTokenEntity;
 
 
 @Entity

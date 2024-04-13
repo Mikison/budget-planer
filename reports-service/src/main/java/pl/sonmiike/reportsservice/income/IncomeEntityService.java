@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class IncomeService {
+public class IncomeEntityService {
 
     private final IncomeEntityRepository IncomeRepository;
 

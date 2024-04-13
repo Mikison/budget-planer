@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import pl.sonmiike.reportsservice.report.types.Report;
 
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,8 +23,8 @@ public class GenericPDFReportGenerator<T extends Report> implements ReportPDFGen
 
 
     @Override
-    public void generatePDF() {
-        generatePdf("123");
+    public void generatePDF(Path path) {
+        generatePdf(path.toString());
     }
 
 

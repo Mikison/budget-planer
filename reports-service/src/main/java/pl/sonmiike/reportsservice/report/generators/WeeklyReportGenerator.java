@@ -4,6 +4,8 @@ package pl.sonmiike.reportsservice.report.generators;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
@@ -19,10 +21,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.TemporalAdjusters;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static pl.sonmiike.reportsservice.expense.ExpenseOperations.*;
 import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes;
@@ -37,28 +37,45 @@ public class WeeklyReportGenerator {
     private final UserEntityService userEntityService;
     private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
+    private final CategoryEntityService categoryEntityService;
+
 
 
     public Set<WeeklyReport> createWeeklyReport() {
         DateInterval date = getDateInterval();
         Set<WeeklyReport> weeklyReports = new HashSet<>();
-        for (UserEntityReport user : userEntityService.getAllUsers()) {
-            Optional<List<IncomeEntity>> incomeOpt = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
-            Optional<List<ExpenseEntity>> expensesOpt = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId());
-            if (incomeOpt.isEmpty() || incomeOpt.get().isEmpty() || expensesOpt.isEmpty() || expensesOpt.get().isEmpty()) {
-                continue;
+        List<CategoryEntity> categories = categoryEntityService.getCategories();
+
+        userEntityService.getAllUsers().forEach(user -> {
+            List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId()).orElse(Collections.emptyList());
+            List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId()).orElse(Collections.emptyList());
+
+            if (!incomes.isEmpty() && !expenses.isEmpty()) {
+                Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
+                List<CategoryEntity> userCategories = categories.stream()
+                        .filter(category -> categoryIds.contains(category.getId()))
+                        .collect(Collectors.toList());
+
+                HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, userCategories);
+                weeklyReports.add(buildWeeklyReport(user, date, incomes, expenses, categoryExpenses));
             }
-            List<IncomeEntity> incomes = incomeOpt.get();
-            List<ExpenseEntity> expenses = expensesOpt.get();
+        });
 
-            WeeklyReport monthlyReport = buildWeeklyReport(user, date, incomes, expenses);
-            weeklyReports.add(monthlyReport);
-        }
         return weeklyReports;
-
     }
 
-    private WeeklyReport buildWeeklyReport(UserEntityReport user, DateInterval dateInterval, List<IncomeEntity> incomes, List<ExpenseEntity> expenses) {
+    private HashMap<CategoryEntity, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<CategoryEntity> userCategories) {
+        HashMap<CategoryEntity, BigDecimal> categoryExpenses = new HashMap<>();
+        for (CategoryEntity category : userCategories) {
+            BigDecimal categoryExpense = calculateTotalExpenses(expenses.stream()
+                    .filter(expense -> expense.getCategory().getId().equals(category.getId()))
+                    .toList());
+            categoryExpenses.put(category, categoryExpense);
+        }
+        return categoryExpenses;
+    }
+
+    private WeeklyReport buildWeeklyReport(UserEntityReport user, DateInterval dateInterval, List<IncomeEntity> incomes, List<ExpenseEntity> expenses, HashMap<CategoryEntity, BigDecimal> categoryExpenses) {
         BigDecimal totalIncomes = getTotalIncomes(incomes);
         BigDecimal totalExpenses = calculateTotalExpenses(expenses);
 
@@ -70,11 +87,10 @@ public class WeeklyReportGenerator {
                 .smallestExpense(findMinExpense(expenses))
                 .averageDailyExpense(calculateAverageDailyExpenses(expenses, Period.between(dateInterval.getStartDate(), dateInterval.getEndDate()).getDays() + 1))
                 .totalIncomes(totalIncomes)
-//                .percentageOfBudgetSpent()
                 .budgetSummary(totalIncomes.subtract(totalExpenses))
                 .expensesList(expenses)
                 .incomeList(incomes)
-//                .categoryExpenses(calculateCategoryExpenses(expenses))
+                .categoryExpenses(categoryExpenses)
                 .build();
     }
 

@@ -43,11 +43,10 @@ public class WeeklyReport implements Report {
         dataMap.put("Smallest Expense", smallestExpense);
         dataMap.put("Average Daily Expense", averageDailyExpense.toPlainString());
         dataMap.put("Total Incomes", totalIncomes.toPlainString());
-//        dataMap.put("Percentage of Budget Spent", percentageOfBudgetSpent.toPlainString()); // TODO to implement
         dataMap.put("Budget Summary", budgetSummary.toPlainString());
         dataMap.put("Expenses List", expensesList);
         dataMap.put("Income List", incomeList);
-//        dataMap.put("Category Expenses", categoryExpenses); // TODO to implement
+        dataMap.put("Category Expenses", categoryExpenses);
 
         return dataMap;
 

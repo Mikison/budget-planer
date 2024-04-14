@@ -13,7 +13,6 @@ import java.time.DayOfWeek;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Builder
 @Data
@@ -36,11 +35,32 @@ public class MonthlyReport implements Report {
 
     @Override
     public Map<String, Object> getReportData() {
-        return Map.of();
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("User", user.getUsername());
+        dataMap.put("Date Interval", dateIntervalToString(dateInterval));
+        dataMap.put("Total Expenses", totalExpenses.toPlainString());
+        dataMap.put("Largest Expense", largestExpense);
+        dataMap.put("Average Weekly Expense", averageWeeklyExpense.toPlainString());
+        dataMap.put("Week With Highest Expenses", dateIntervalToString(weekWithHighestExpenses));
+        dataMap.put("Day With Highest Average Expense", dayWithHighestAverageExpense);
+        dataMap.put("Total Incomes", totalIncomes.toPlainString());
+        dataMap.put("Total Profit Percentage", totalProfitPercentage.toPlainString());
+        dataMap.put("Budget Summary", budgetSummary.toPlainString());
+        dataMap.put("Expenses List", expensesList);
+        dataMap.put("Income List", incomeList);
+        dataMap.put("Category Expenses", categoryExpenses);
+
+        return dataMap;
+
+
     }
 
     @Override
     public ReportType getReportType() {
         return ReportType.MONTHLY_REPORT;
+    }
+
+    private String dateIntervalToString(DateInterval dateInterval) {
+        return dateInterval.getStartDate() + " - " + dateInterval.getEndDate();
     }
 }

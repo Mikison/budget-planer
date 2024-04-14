@@ -21,6 +21,6 @@ public class ReportsServiceApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        reportCreator.executeWeeklyReports();
+        reportCreator.executeMonthlyReports();
     }
 }

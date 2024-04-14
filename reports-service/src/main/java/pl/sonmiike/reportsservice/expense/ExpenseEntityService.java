@@ -16,4 +16,6 @@ public class ExpenseEntityService {
     public Optional<List<ExpenseEntity>> getExpensesFromDateBetween(LocalDate starDate, LocalDate endDate, Long userId) {
         return expenseEntityRepository.findExpenseEntitiesByDateBetweenAndUserUserId(starDate, endDate, userId);
     }
+
+
 }

@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators.Reports;
+package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,10 +13,8 @@ import pl.sonmiike.reportsservice.user.UserEntityService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static pl.sonmiike.reportsservice.expense.ExpenseOperations.*;
 import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes;
@@ -35,20 +33,24 @@ public class MonthlyReportAssembler {
         DateInterval date = getDateInterval();
         Set<MonthlyReport> monthlyReports = new HashSet<>();
 
-        for (UserEntityReport user : userEntityService.getAllUsers()) {
-            Optional<List<IncomeEntity>> incomeOpt = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId());
-            Optional<List<ExpenseEntity>> expensesOpt = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId());
+        userEntityService.getAllUsers().forEach(user -> {
+            List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
+                    .collect(Collectors.toList());
 
-            if (incomeOpt.isEmpty() || incomeOpt.get().isEmpty() || expensesOpt.isEmpty() || expensesOpt.get().isEmpty()) {
-                continue;
+            List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .sorted(Comparator.comparing(ExpenseEntity::getDate))
+                    .collect(Collectors.toList());
+
+            if (!incomes.isEmpty() && !expenses.isEmpty()) {
+                MonthlyReport monthlyReport = buildMonthlyReport(user, date, incomes, expenses);
+                monthlyReports.add(monthlyReport);
             }
-
-            List<IncomeEntity> incomes = incomeOpt.get();
-            List<ExpenseEntity> expenses = expensesOpt.get();
-
-            MonthlyReport monthlyReport = buildMonthlyReport(user, date, incomes, expenses);
-            monthlyReports.add(monthlyReport);
-        }
+        });
 
         return monthlyReports;
     }

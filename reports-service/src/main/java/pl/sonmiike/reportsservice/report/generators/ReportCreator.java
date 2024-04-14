@@ -2,9 +2,9 @@ package pl.sonmiike.reportsservice.report.generators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.report.generators.Reports.CustomDateReportAssembler;
-import pl.sonmiike.reportsservice.report.generators.Reports.MonthlyReportAssembler;
-import pl.sonmiike.reportsservice.report.generators.Reports.WeeklyReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.assemblers.CustomDateReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 

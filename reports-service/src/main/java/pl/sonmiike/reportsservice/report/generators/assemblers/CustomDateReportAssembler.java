@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators.Reports;
+package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -13,8 +13,10 @@ import com.itextpdf.layout.properties.UnitValue;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.types.Report;
 
 import java.io.IOException;
@@ -36,6 +38,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
     //    @Value("${reports.path}")
     private String basePath = "./reports/";
+
 
 
     @PostConstruct
@@ -68,19 +71,21 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                         .setTextAlignment(TextAlignment.CENTER));
 
                 Map<String, Object> reportData = report.getReportData();
-                String[] order = {"User", "Date Interval", "Total Expenses", "Average Daily Expense",
-                        "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
-                        "Expenses List", "Income List"};
+                String[] order = getOrderForReportType(report.getReportType());
 
                 for (String key : order) {
                     Object value = reportData.get(key);
+                    if (value == null) continue;
 
                     if (key.equals("Budget Summary") || key.equals("Biggest Expense") || key.equals("Smallest Expense")) {
 
                         handleSpecialEntries(document, key, value);
                         continue;
                     }
-
+                    if (key.equals("Category Expenses")) {
+                        createCategoryExpensesTable(document, (Map<CategoryEntity, BigDecimal>) value);
+                        continue;
+                    }
                     if (value instanceof List) {
                         createCenteredTable(document, key, value);
                     } else {
@@ -96,6 +101,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
             }
         }
     }
+
 
     private void handleSpecialEntries(Document document, String key, Object value) {
         if (key.equals("Budget Summary")) {
@@ -118,7 +124,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     private void createCenteredTable(Document document, String key, Object value) {
         List<?> list = (List<?>) value;
         if (!list.isEmpty() && (list.get(0) instanceof IncomeEntity || list.get(0) instanceof ExpenseEntity)) {
-            Table table = new Table(UnitValue.createPercentArray(new float[]{0.8f, 2.5f , 0.8f, 1f}))
+            Table table = new Table(UnitValue.createPercentArray(new float[]{0.8f, 2.5f, 0.8f, 1f}))
                     .setWidth(UnitValue.createPercentValue(100))
                     .setTextAlignment(TextAlignment.CENTER);
             table.addHeaderCell(new Cell().add(new Paragraph("Date").setTextAlignment(TextAlignment.CENTER)));
@@ -130,12 +136,12 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                 if (item instanceof ExpenseEntity expense) {
                     table.addCell(new Cell().add(new Paragraph(expense.getDate().toString()).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph(expense.getDescription()).setTextAlignment(TextAlignment.CENTER)));
-                    table.addCell(new Cell().add(new Paragraph("-"+ expense.getAmount().toPlainString()).setFontColor(DARK_RED_COLOR).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph("-" + expense.getAmount().toPlainString()).setFontColor(DARK_RED_COLOR).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph(expense.getCategory().getName()).setTextAlignment(TextAlignment.CENTER)));
                 } else if (item instanceof IncomeEntity income) {
                     table.addCell(new Cell().add(new Paragraph(income.getIncomeDate().toString()).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph(income.getDescription()).setTextAlignment(TextAlignment.CENTER)));
-                    table.addCell(new Cell().add(new Paragraph("+"+ income.getAmount().toPlainString()).setFontColor(DARK_GREEN_COLOR).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph("+" + income.getAmount().toPlainString()).setFontColor(DARK_GREEN_COLOR).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph("N/A")));
                 }
             }
@@ -151,4 +157,34 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
         return p;
     }
+
+    private void createCategoryExpensesTable(Document document, Map<CategoryEntity, BigDecimal> categoryExpenses) {
+        if (categoryExpenses != null && !categoryExpenses.isEmpty()) {
+            Table table = new Table(UnitValue.createPercentArray(2)).useAllAvailableWidth();
+            table.addHeaderCell("Category Name").setTextAlignment(TextAlignment.CENTER);
+            table.addHeaderCell("Amount Spent").setTextAlignment(TextAlignment.CENTER);
+
+            for (Map.Entry<CategoryEntity, BigDecimal> entry : categoryExpenses.entrySet()) {
+                table.addCell(new Cell().add(new Paragraph(entry.getKey().getName())).setTextAlignment(TextAlignment.CENTER));
+                table.addCell(new Cell().add(new Paragraph(entry.getValue().toPlainString()).setTextAlignment(TextAlignment.CENTER)));
+            }
+
+            document.add(new Paragraph("Category Expenses:").setBold().setFontSize(14));
+            document.add(table);
+        }
+
+    }
+
+    private String[] getOrderForReportType(ReportType reportType) {
+        return switch (reportType) {
+            case WEEKLY_REPORT -> new String[]{"User", "Date Interval", "Total Expenses", "Average Daily Expense",
+                    "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
+                    "Expenses List", "Income List", "Category Expenses"};
+            case MONTHLY_REPORT ->
+                    new String[]{"User", "Date Interval", "Total Expenses", "Largest Expense", "Average Weekly Expense", "Week With Highest Expenses", "Day With Highest Average Expense", "Total Incomes", "Total Profit Percentage", "Budget Summary", "Expenses List", "Income List", "Category Expenses"};
+            default -> new String[]{};
+        };
+    }
+
+
 }

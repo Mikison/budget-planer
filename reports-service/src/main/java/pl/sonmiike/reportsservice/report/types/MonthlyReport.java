@@ -44,7 +44,7 @@ public class MonthlyReport implements Report {
         dataMap.put("Week With Highest Expenses", dateIntervalToString(weekWithHighestExpenses));
         dataMap.put("Day With Highest Average Expense", dayWithHighestAverageExpense);
         dataMap.put("Total Incomes", totalIncomes.toPlainString());
-        dataMap.put("Total Profit Percentage", totalProfitPercentage.toPlainString());
+//        dataMap.put("Total Profit Percentage", totalProfitPercentage.toPlainString());
         dataMap.put("Budget Summary", budgetSummary.toPlainString());
         dataMap.put("Expenses List", expensesList);
         dataMap.put("Income List", incomeList);

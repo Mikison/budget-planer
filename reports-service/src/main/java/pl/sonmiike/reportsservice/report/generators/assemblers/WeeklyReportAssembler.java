@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators.Reports;
+package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 
 import lombok.RequiredArgsConstructor;
@@ -45,8 +45,18 @@ public class WeeklyReportAssembler {
         List<CategoryEntity> categories = categoryEntityService.getCategories();
 
         userEntityService.getAllUsers().forEach(user -> {
-            List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId()).orElse(Collections.emptyList());
-            List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId()).orElse(Collections.emptyList());
+            List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
+                    .toList();
+
+
+            List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .sorted(Comparator.comparing(ExpenseEntity::getDate))
+                    .toList();
 
             if (!incomes.isEmpty() && !expenses.isEmpty()) {
                 Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());

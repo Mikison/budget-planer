@@ -1,36 +1,28 @@
 package pl.sonmiike.reportsservice.report.generators;
 
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
-import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.report.types.Report;
-import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,11 +30,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class GenericPDFReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
 
+    public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
+    public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(165, 0, 0);
     private final Set<T> reports;
 
-//    @Value("${reports.path}")
+    //    @Value("${reports.path}")
     private String basePath = "./reports/";
-
 
 
     @PostConstruct
@@ -56,51 +49,45 @@ public class GenericPDFReportGenerator<T extends Report> implements ReportPDFGen
 
     @Override
     public void generatePDF(Path path) {
-        generatePdf(path.toString());
+        generatePdf(basePath);
     }
-
 
     private void generatePdf(String baseOutputPath) {
         for (Report report : reports) {
-            String outputPath = Paths.get(baseOutputPath, report.getUser().getUsername() + ".pdf").toString();
+            String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + report.getUser().getUsername() + ".pdf").toString();
             try (PdfWriter writer = new PdfWriter(outputPath);
                  PdfDocument pdf = new PdfDocument(writer);
                  Document document = new Document(pdf)) {
 
-                // Title
-                document.add(new Paragraph("Report for " + report.getUser().getUsername())
+                document.add(new Paragraph(report.getReportType().toString())
                         .setBold()
-                        .setFontSize(14));
+                        .setFontSize(18)
+                        .setTextAlignment(TextAlignment.CENTER));
+                document.add(new Paragraph("Report for " + report.getUser().getEmail())
+                        .setFontSize(12)
+                        .setTextAlignment(TextAlignment.CENTER));
 
-                // Income List Table
-                if (report instanceof MonthlyReport || report instanceof WeeklyReport) {
-                    Table incomeTable = new Table(UnitValue.createPercentArray(new float[]{3, 3, 3}));
-                    incomeTable.setWidth(UnitValue.createPercentValue(100));
-                    incomeTable.addHeaderCell("Date").addHeaderCell("Description").addHeaderCell("Amount");
+                Map<String, Object> reportData = report.getReportData();
+                String[] order = {"User", "Date Interval", "Total Expenses", "Average Daily Expense",
+                        "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
+                        "Expenses List", "Income List"};
 
-//                    for (IncomeEntity income : ) {
-//                        incomeTable.addCell(income.getDate().toString());
-//                        incomeTable.addCell(income.getDescription());
-//                        incomeTable.addCell(income.getAmount().toString());
-//                    }
-                    document.add(new Paragraph("Incomes:"));
-                    document.add(incomeTable);
+                for (String key : order) {
+                    Object value = reportData.get(key);
+
+                    if (key.equals("Budget Summary") || key.equals("Biggest Expense") || key.equals("Smallest Expense")) {
+
+                        handleSpecialEntries(document, key, value);
+                        continue;
+                    }
+
+                    if (value instanceof List) {
+                        createCenteredTable(document, key, value);
+                    } else {
+                        document.add(createKeyValueParagraph(key, value));
+                    }
                 }
 
-                // Expense List Table
-                Table expenseTable = new Table(UnitValue.createPercentArray(new float[]{3, 3, 3}));
-                expenseTable.setWidth(UnitValue.createPercentValue(100));
-                expenseTable.addHeaderCell("Date").addHeaderCell("Description").addHeaderCell("Amount");
-//
-//                for (ExpenseEntity expense : report.getExpensesList()) {
-//                    expenseTable.addCell(expense.getDate().toString());
-//                    expenseTable.addCell(expense.getDescription());
-//                    expenseTable.addCell(expense.getAmount().toString());
-//                }
-                document.add(new Paragraph("Expenses:"));
-                document.add(expenseTable);
-
-                // Footer and metadata
                 document.add(new Paragraph("Report Generated on: " + new java.util.Date().toString()));
                 System.out.println("Report saved to: " + outputPath);
 
@@ -110,5 +97,58 @@ public class GenericPDFReportGenerator<T extends Report> implements ReportPDFGen
         }
     }
 
+    private void handleSpecialEntries(Document document, String key, Object value) {
+        if (key.equals("Budget Summary")) {
+            BigDecimal summary = new BigDecimal(value.toString());
+            Paragraph summaryParagraph = new Paragraph(key + ": ").setBold();
+            String summaryText = summary.compareTo(BigDecimal.ZERO) > 0 ? "+" + summary.toPlainString() : summary.toPlainString();
+            summaryParagraph.add(new Text(summaryText)
+                    .setFontColor(summary.compareTo(BigDecimal.ZERO) > 0 ? DARK_GREEN_COLOR : DARK_RED_COLOR));
+            document.add(summaryParagraph);
+        } else {
+            ExpenseEntity expense = (ExpenseEntity) value;
+            String expenseText = String.format("%s on %s spent %s",
+                    expense.getDescription(),
+                    expense.getDate().toString(),
+                    expense.getAmount().toPlainString());
+            document.add(createKeyValueParagraph(key, expenseText));
+        }
+    }
 
+    private void createCenteredTable(Document document, String key, Object value) {
+        List<?> list = (List<?>) value;
+        if (!list.isEmpty() && (list.get(0) instanceof IncomeEntity || list.get(0) instanceof ExpenseEntity)) {
+            Table table = new Table(UnitValue.createPercentArray(new float[]{0.8f, 2.5f , 0.8f, 1f}))
+                    .setWidth(UnitValue.createPercentValue(100))
+                    .setTextAlignment(TextAlignment.CENTER);
+            table.addHeaderCell(new Cell().add(new Paragraph("Date").setTextAlignment(TextAlignment.CENTER)));
+            table.addHeaderCell(new Cell().add(new Paragraph("Description").setTextAlignment(TextAlignment.CENTER)));
+            table.addHeaderCell(new Cell().add(new Paragraph("Amount").setTextAlignment(TextAlignment.CENTER)));
+            table.addHeaderCell(new Cell().add(new Paragraph("Category").setTextAlignment(TextAlignment.CENTER)));
+
+            for (Object item : list) {
+                if (item instanceof ExpenseEntity expense) {
+                    table.addCell(new Cell().add(new Paragraph(expense.getDate().toString()).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph(expense.getDescription()).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph("-"+ expense.getAmount().toPlainString()).setFontColor(DARK_RED_COLOR).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph(expense.getCategory().getName()).setTextAlignment(TextAlignment.CENTER)));
+                } else if (item instanceof IncomeEntity income) {
+                    table.addCell(new Cell().add(new Paragraph(income.getIncomeDate().toString()).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph(income.getDescription()).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph("+"+ income.getAmount().toPlainString()).setFontColor(DARK_GREEN_COLOR).setTextAlignment(TextAlignment.CENTER)));
+                    table.addCell(new Cell().add(new Paragraph("N/A")));
+                }
+            }
+            document.add(new Paragraph(key + ":").setBold());
+            document.add(table);
+        }
+    }
+
+    private Paragraph createKeyValueParagraph(String key, Object value) {
+        Paragraph p = new Paragraph();
+        p.add(new Text(key + ": ").setBold());
+        p.add(new Text(value.toString()));
+
+        return p;
+    }
 }

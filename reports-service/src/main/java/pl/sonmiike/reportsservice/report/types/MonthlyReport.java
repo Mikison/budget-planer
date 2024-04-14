@@ -5,6 +5,7 @@ import lombok.Data;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.time.DayOfWeek;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Builder
 @Data
@@ -33,7 +35,12 @@ public class MonthlyReport implements Report {
 
 
     @Override
-    public Map<String, String> getReportData() {
+    public Map<String, Object> getReportData() {
         return Map.of();
+    }
+
+    @Override
+    public ReportType getReportType() {
+        return ReportType.MONTHLY_REPORT;
     }
 }

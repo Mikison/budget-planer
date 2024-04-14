@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;
-
+import pl.sonmiike.reportsservice.user.refreshtoken.RefreshTokenEntity;
 
 
 @Entity
@@ -39,7 +38,7 @@ public class UserEntityReport {
     private String password;
 
     @OneToOne
-    private RefreshToken refreshToken;
+    private RefreshTokenEntity refreshToken;
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;

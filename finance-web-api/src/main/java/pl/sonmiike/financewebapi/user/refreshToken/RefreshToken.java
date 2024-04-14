@@ -11,6 +11,8 @@ import java.time.Instant;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "refresh_token")
+
 @Builder
 @Getter
 @Setter

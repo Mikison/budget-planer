@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="finance-web-api" />
+        <module name="mail-service" />
         <module name="reports-service" />
       </profile>
     </annotationProcessing>
@@ -21,6 +22,7 @@
       <module name="budget-finance" options="" />
       <module name="demo" options="-parameters" />
       <module name="finance-web-api" options="-parameters" />
+      <module name="mail-service" options="-parameters" />
       <module name="reports-service" options="-parameters" />
     </option>
   </component>

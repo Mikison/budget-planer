@@ -34,7 +34,7 @@ public class WeeklyReport implements Report {
     public Map<String, String> getReportData() {
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("User", user.getName());
-        dataMap.put("Date Interval", dateInterval.toString());
+        dataMap.put("Date Interval", dateIntervalToString(dateInterval));
         dataMap.put("Total Expenses", totalExpenses.toPlainString());
         dataMap.put("Biggest Expense", detailedString(biggestExpense));
         dataMap.put("Smallest Expense", detailedString(smallestExpense));
@@ -42,8 +42,8 @@ public class WeeklyReport implements Report {
         dataMap.put("Total Incomes", totalIncomes.toPlainString());
 //        dataMap.put("Percentage of Budget Spent", percentageOfBudgetSpent.toPlainString());
         dataMap.put("Budget Summary", budgetSummary.toPlainString());
-        dataMap.put("Expenses List", listToStringCoverter(expensesList));
-        dataMap.put("Income List", listToStringCoverter(incomeList));
+//        dataMap.put("Expenses List", listToStringCoverter(expensesList));
+//        dataMap.put("Income List", listToStringCoverter(incomeList));
 //        dataMap.put("Category Expenses", categoryExpenses.toString());
 
 
@@ -54,7 +54,7 @@ public class WeeklyReport implements Report {
     private String listToStringCoverter(List<?> list) {
         StringBuilder sb = new StringBuilder();
         for (Object obj : list) {
-            sb.append(obj.toString()).append("\n");
+            sb.append(obj.toString()).append("\r");
         }
         return sb.toString();
     }
@@ -68,6 +68,10 @@ public class WeeklyReport implements Report {
 //        }
 //        return result.toString().trim();
 //    }
+
+    private String dateIntervalToString(DateInterval dateInterval) {
+        return dateInterval.getStartDate() + " - " + dateInterval.getEndDate();
+    }
 
     private String detailedString(ExpenseEntity expense) {
         StringBuilder sb = new StringBuilder();

@@ -2,6 +2,9 @@ package pl.sonmiike.reportsservice.report.generators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.sonmiike.reportsservice.report.generators.Reports.CustomDateReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.Reports.MonthlyReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.Reports.WeeklyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 
@@ -14,11 +17,11 @@ import java.util.Set;
 public class ReportCreator {
 
 
-    private final PDFReportGeneratorFactory pdfReportGeneratorFactory;
+    private final ReportGeneratorFactory reportGeneratorFactory;
 
-    private final WeeklyReportGenerator weeklyReportGenerator;
-    private final MonthlyReportGenerator monthlyReportGenerator;
-    private final CustomDateReportGenerator customDateIntervalReportGenerator;
+    private final WeeklyReportAssembler weeklyReportAssembler;
+    private final MonthlyReportAssembler monthlyReportAssembler;
+    private final CustomDateReportAssembler customDateIntervalReportGenerator;
 
     private static final Path PATH  =  Path.of("../reports");
 
@@ -26,21 +29,21 @@ public class ReportCreator {
 
 
     public void executeWeeklyReports() {
-        Set<WeeklyReport> weeklyReports = weeklyReportGenerator.createWeeklyReport();
-        GenericPDFReportGenerator<WeeklyReport> pdfGenerator = pdfReportGeneratorFactory.createPDFGenerator(weeklyReports);
+        Set<WeeklyReport> weeklyReports = weeklyReportAssembler.createWeeklyReport();
+        ReportGenerator<WeeklyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator(weeklyReports);
         pdfGenerator.generatePDF(PATH);
     }
 
     public void executeMonthlyReports() {
-        Set<MonthlyReport> monthlyReports = monthlyReportGenerator.createMonthlyReport();
-        GenericPDFReportGenerator<MonthlyReport> pdfGenerator = pdfReportGeneratorFactory.createPDFGenerator(monthlyReports);
+        Set<MonthlyReport> monthlyReports = monthlyReportAssembler.createMonthlyReport();
+        ReportGenerator<MonthlyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator(monthlyReports);
         pdfGenerator.generatePDF(PATH);
     }
 
 
     public void executeCustomDateIntervalReport(Long userId, LocalDate startDate, LocalDate endDate) {
         WeeklyReport weeklyReports = customDateIntervalReportGenerator.createCustomDateIntervalReport(userId, startDate, endDate);
-        GenericPDFReportGenerator<WeeklyReport> pdfGenerator = pdfReportGeneratorFactory.createPDFGenerator(Set.of(weeklyReports));
+        ReportGenerator<WeeklyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator(Set.of(weeklyReports));
         pdfGenerator.generatePDF(PATH);
     }
 

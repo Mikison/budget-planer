@@ -1,7 +1,6 @@
-package pl.sonmiike.reportsservice.report.generators;
+package pl.sonmiike.reportsservice.report.generators.Reports;
 
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
@@ -11,7 +10,6 @@ import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntityService;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
-import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 import pl.sonmiike.reportsservice.user.UserEntityService;
@@ -29,7 +27,7 @@ import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes
 
 @Component
 @RequiredArgsConstructor
-public class WeeklyReportGenerator {
+public class WeeklyReportAssembler {
 
 
 

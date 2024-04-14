@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators;
+package pl.sonmiike.reportsservice.report.generators.Reports;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes
 
 @Component
 @RequiredArgsConstructor
-public class MonthlyReportGenerator {
+public class MonthlyReportAssembler {
 
 
     private final UserEntityService userEntityService;

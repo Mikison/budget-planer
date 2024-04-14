@@ -28,7 +28,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class GenericPDFReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
+public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
     public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(165, 0, 0);

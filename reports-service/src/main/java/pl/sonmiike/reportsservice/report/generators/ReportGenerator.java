@@ -33,7 +33,7 @@ import java.util.Set;
 public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
-    public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(165, 0, 0);
+    public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(220, 20, 60);
     private final Set<T> reports;
 
     //    @Value("${reports.path}")
@@ -56,7 +56,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
     private void generatePdf(String baseOutputPath) {
-        for (Report report : reports) {
+        for (T report : reports) {
             String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + report.getUser().getUsername() + ".pdf").toString();
             try (PdfWriter writer = new PdfWriter(outputPath);
                  PdfDocument pdf = new PdfDocument(writer);
@@ -181,7 +181,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                     "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
                     "Expenses List", "Income List", "Category Expenses"};
             case MONTHLY_REPORT ->
-                    new String[]{"User", "Date Interval", "Total Expenses", "Largest Expense", "Average Weekly Expense", "Week With Highest Expenses", "Day With Highest Average Expense", "Total Incomes", "Total Profit Percentage", "Budget Summary", "Expenses List", "Income List", "Category Expenses"};
+                    new String[]{"User", "Date Interval", "Total Expenses", "Largest Expense", "Average Weekly Expense", "Week With Highest Expenses", "Day With Highest Average Expense", "Total Incomes", "Budget Summary", "Expenses List", "Income List", "Category Expenses"};
             default -> new String[]{};
         };
     }

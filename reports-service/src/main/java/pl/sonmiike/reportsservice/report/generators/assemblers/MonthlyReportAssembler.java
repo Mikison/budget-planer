@@ -2,6 +2,8 @@ package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
@@ -27,11 +29,13 @@ public class MonthlyReportAssembler {
     private final UserEntityService userEntityService;
     private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
+    private final CategoryEntityService categoryEntityService;
 
 
     public Set<MonthlyReport> createMonthlyReport() {
         DateInterval date = getDateInterval();
         Set<MonthlyReport> monthlyReports = new HashSet<>();
+        List<CategoryEntity> categories = categoryEntityService.getCategories();
 
         userEntityService.getAllUsers().forEach(user -> {
             List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
@@ -46,8 +50,16 @@ public class MonthlyReportAssembler {
                     .sorted(Comparator.comparing(ExpenseEntity::getDate))
                     .collect(Collectors.toList());
 
+
+
             if (!incomes.isEmpty() && !expenses.isEmpty()) {
-                MonthlyReport monthlyReport = buildMonthlyReport(user, date, incomes, expenses);
+                Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
+                List<CategoryEntity> userCategories = categories.stream()
+                        .filter(category -> categoryIds.contains(category.getId()))
+                        .toList();
+
+                HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, userCategories);
+                MonthlyReport monthlyReport = buildMonthlyReport(user, date, incomes, expenses, categoryExpenses);
                 monthlyReports.add(monthlyReport);
             }
         });
@@ -55,7 +67,18 @@ public class MonthlyReportAssembler {
         return monthlyReports;
     }
 
-    private MonthlyReport buildMonthlyReport(UserEntityReport user, DateInterval dateInterval, List<IncomeEntity> incomes, List<ExpenseEntity> expenses) {
+    private HashMap<CategoryEntity, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<CategoryEntity> userCategories) {
+        HashMap<CategoryEntity, BigDecimal> categoryExpenses = new HashMap<>();
+        for (CategoryEntity category : userCategories) {
+            BigDecimal categoryExpense = calculateTotalExpenses(expenses.stream()
+                    .filter(expense -> expense.getCategory().getId().equals(category.getId()))
+                    .toList());
+            categoryExpenses.put(category, categoryExpense);
+        }
+        return categoryExpenses;
+    }
+
+    private MonthlyReport buildMonthlyReport(UserEntityReport user, DateInterval dateInterval, List<IncomeEntity> incomes, List<ExpenseEntity> expenses, HashMap<CategoryEntity, BigDecimal> categoryExpenses) {
         BigDecimal totalIncomes = getTotalIncomes(incomes);
         BigDecimal totalExpenses = calculateTotalExpenses(expenses);
 
@@ -67,11 +90,10 @@ public class MonthlyReportAssembler {
                 .weekWithHighestExpenses(calculateWeekWithBiggestExpense(expenses))
                 .dayWithHighestAverageExpense(getDayWithHighestAverageExpense(expenses))
                 .totalIncomes(totalIncomes)
-//                .totalProfitPercentage(calculateTotalProfitPercentage(incomes, expenses)) // Assuming implemented
                 .budgetSummary(totalIncomes.subtract(totalExpenses))
                 .expensesList(expenses)
                 .incomeList(incomes)
-//                .categoryExpenses(calculateCategoryExpenses(expenses)) // Assuming implemented
+                .categoryExpenses(categoryExpenses)
                 .build();
     }
 

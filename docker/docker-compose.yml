@@ -2,6 +2,41 @@ version: '3'
 
 services:
 
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=finance
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   webapi:
     build:
@@ -31,6 +66,15 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING.RABBITMQ.HOST=rabbitmq
+      - SPRING.RABBITMQ.PORT=5672
+      - SPRING.RABBITMQ.USERNAME=guest
+      - SPRING.RABBITMQ.PASSWORD=guest
+
+
+
+
+
   mail-service:
     build:
       context: ../mail-service
@@ -46,33 +90,5 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
 
 
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3-management
-    hostname: rabbitmq
-    restart: always
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
-      - rabbitmq_data:/var/lib/rabbitmq
-    networks:
-      - app_network
-
-
-  db:
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=finance
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-
 volumes:
   rabbitmq_data:
-
-networks:
-  app_network:

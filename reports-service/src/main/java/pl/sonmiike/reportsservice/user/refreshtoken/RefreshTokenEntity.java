@@ -1,7 +1,6 @@
 package pl.sonmiike.reportsservice.user.refreshtoken;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 

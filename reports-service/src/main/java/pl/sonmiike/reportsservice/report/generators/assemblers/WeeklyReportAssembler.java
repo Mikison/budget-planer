@@ -12,7 +12,6 @@ import pl.sonmiike.reportsservice.income.IncomeEntityService;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -31,20 +30,17 @@ public class WeeklyReportAssembler {
 
 
 
-
-    private final UserEntityService userEntityService;
     private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
     private final CategoryEntityService categoryEntityService;
 
 
 
-    public Set<WeeklyReport> createWeeklyReport() {
+    public WeeklyReport createWeeklyReport(UserEntityReport user) {
         DateInterval date = getDateInterval();
-        Set<WeeklyReport> weeklyReports = new HashSet<>();
+
         List<CategoryEntity> categories = categoryEntityService.getCategories();
 
-        userEntityService.getAllUsers().forEach(user -> {
             List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
                     .orElse(Collections.emptyList())
                     .stream()
@@ -58,18 +54,15 @@ public class WeeklyReportAssembler {
                     .sorted(Comparator.comparing(ExpenseEntity::getDate))
                     .toList();
 
-            if (!incomes.isEmpty() && !expenses.isEmpty()) {
-                Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
-                List<CategoryEntity> userCategories = categories.stream()
-                        .filter(category -> categoryIds.contains(category.getId()))
-                        .collect(Collectors.toList());
+            if (incomes.isEmpty() && expenses.isEmpty()) return null;
+        Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
+        List<CategoryEntity> userCategories = categories.stream()
+                .filter(category -> categoryIds.contains(category.getId()))
+                .collect(Collectors.toList());
 
-                HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, userCategories);
-                weeklyReports.add(buildWeeklyReport(user, date, incomes, expenses, categoryExpenses));
-            }
-        });
+        HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, userCategories);
+        return buildWeeklyReport(user, date, incomes, expenses, categoryExpenses);
 
-        return weeklyReports;
     }
 
     private HashMap<CategoryEntity, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<CategoryEntity> userCategories) {

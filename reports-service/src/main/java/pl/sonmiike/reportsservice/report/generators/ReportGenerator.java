@@ -26,7 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,11 +33,12 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
     public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(220, 20, 60);
-    private final Set<T> reports;
+
+
+
 
     //    @Value("${reports.path}")
-    private String basePath = "./reports/";
-
+    private final String basePath = "./reports/";
 
 
     @PostConstruct
@@ -51,55 +51,55 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
     @Override
-    public void generatePDF(Path path) {
-        generatePdf(basePath);
+    public void generatePDF(T report, Path path) {
+        generatePdf(report,basePath);
     }
 
-    private void generatePdf(String baseOutputPath) {
-        for (T report : reports) {
-            String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + report.getUser().getUsername() + ".pdf").toString();
-            try (PdfWriter writer = new PdfWriter(outputPath);
-                 PdfDocument pdf = new PdfDocument(writer);
-                 Document document = new Document(pdf)) {
+    private void generatePdf(T report, String baseOutputPath) {
+        if (report == null) return;
+        String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + report.getUser().getUsername() + ".pdf").toString();
+        try (PdfWriter writer = new PdfWriter(outputPath);
+             PdfDocument pdf = new PdfDocument(writer);
+             Document document = new Document(pdf)) {
 
-                document.add(new Paragraph(report.getReportType().toString())
-                        .setBold()
-                        .setFontSize(18)
-                        .setTextAlignment(TextAlignment.CENTER));
-                document.add(new Paragraph("Report for " + report.getUser().getEmail())
-                        .setFontSize(12)
-                        .setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph(report.getReportType().toString())
+                    .setBold()
+                    .setFontSize(18)
+                    .setTextAlignment(TextAlignment.CENTER));
+            document.add(new Paragraph("Report for " + report.getUser().getEmail())
+                    .setFontSize(12)
+                    .setTextAlignment(TextAlignment.CENTER));
 
-                Map<String, Object> reportData = report.getReportData();
-                String[] order = getOrderForReportType(report.getReportType());
+            Map<String, Object> reportData = report.getReportData();
+            String[] order = getOrderForReportType(report.getReportType());
 
-                for (String key : order) {
-                    Object value = reportData.get(key);
-                    if (value == null) continue;
+            for (String key : order) {
+                Object value = reportData.get(key);
+                if (value == null) continue;
 
-                    if (key.equals("Budget Summary") || key.equals("Biggest Expense") || key.equals("Smallest Expense")) {
+                if (key.equals("Budget Summary") || key.equals("Biggest Expense") || key.equals("Smallest Expense")) {
 
-                        handleSpecialEntries(document, key, value);
-                        continue;
-                    }
-                    if (key.equals("Category Expenses")) {
-                        createCategoryExpensesTable(document, (Map<CategoryEntity, BigDecimal>) value);
-                        continue;
-                    }
-                    if (value instanceof List) {
-                        createCenteredTable(document, key, value);
-                    } else {
-                        document.add(createKeyValueParagraph(key, value));
-                    }
+                    handleSpecialEntries(document, key, value);
+                    continue;
                 }
-
-                document.add(new Paragraph("Report Generated on: " + new java.util.Date().toString()));
-                System.out.println("Report saved to: " + outputPath);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+                if (key.equals("Category Expenses")) {
+                    createCategoryExpensesTable(document, (Map<CategoryEntity, BigDecimal>) value);
+                    continue;
+                }
+                if (value instanceof List) {
+                    createCenteredTable(document, key, value);
+                } else {
+                    document.add(createKeyValueParagraph(key, value));
+                }
             }
+
+            document.add(new Paragraph("Report Generated on: " + new java.util.Date()));
+            System.out.println("Report saved to: " + outputPath);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
 

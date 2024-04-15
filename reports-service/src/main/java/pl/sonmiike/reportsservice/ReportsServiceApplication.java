@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RestController;
-import pl.sonmiike.reportsservice.report.generators.ReportCreator;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import pl.sonmiike.reportsservice.report.ReportExecutor;
 
-@RestController
+
 @SpringBootApplication(scanBasePackages = "pl.sonmiike")
 @RequiredArgsConstructor
+@EnableScheduling
 public class ReportsServiceApplication implements CommandLineRunner {
 
-    private final ReportCreator reportCreator;
+    private final ReportExecutor reportExecutor;
 
 
     public static void main(String[] args) {
@@ -21,6 +22,7 @@ public class ReportsServiceApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        reportCreator.executeMonthlyReports();
+        reportExecutor.executeMonthlyReportGeneration();
+
     }
 }

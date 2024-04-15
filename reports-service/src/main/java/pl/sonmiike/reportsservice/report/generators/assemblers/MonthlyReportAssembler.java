@@ -11,7 +11,6 @@ import pl.sonmiike.reportsservice.income.IncomeEntityService;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,45 +25,37 @@ import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes
 public class MonthlyReportAssembler {
 
 
-    private final UserEntityService userEntityService;
     private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
     private final CategoryEntityService categoryEntityService;
 
 
-    public Set<MonthlyReport> createMonthlyReport() {
+    public MonthlyReport createMonthlyReport(UserEntityReport user) {
         DateInterval date = getDateInterval();
-        Set<MonthlyReport> monthlyReports = new HashSet<>();
         List<CategoryEntity> categories = categoryEntityService.getCategories();
 
-        userEntityService.getAllUsers().forEach(user -> {
-            List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
-                    .orElse(Collections.emptyList())
-                    .stream()
-                    .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
-                    .collect(Collectors.toList());
+        List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
+                .orElse(Collections.emptyList())
+                .stream()
+                .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
+                .collect(Collectors.toList());
 
-            List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId())
-                    .orElse(Collections.emptyList())
-                    .stream()
-                    .sorted(Comparator.comparing(ExpenseEntity::getDate))
-                    .collect(Collectors.toList());
-
+        List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId())
+                .orElse(Collections.emptyList())
+                .stream()
+                .sorted(Comparator.comparing(ExpenseEntity::getDate))
+                .collect(Collectors.toList());
 
 
-            if (!incomes.isEmpty() && !expenses.isEmpty()) {
-                Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
-                List<CategoryEntity> userCategories = categories.stream()
-                        .filter(category -> categoryIds.contains(category.getId()))
-                        .toList();
+        if (incomes.isEmpty() && expenses.isEmpty()) return null;
+        Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
+        List<CategoryEntity> userCategories = categories.stream()
+                .filter(category -> categoryIds.contains(category.getId()))
+                .toList();
 
-                HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, userCategories);
-                MonthlyReport monthlyReport = buildMonthlyReport(user, date, incomes, expenses, categoryExpenses);
-                monthlyReports.add(monthlyReport);
-            }
-        });
+        HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, userCategories);
+        return buildMonthlyReport(user, date, incomes, expenses, categoryExpenses);
 
-        return monthlyReports;
     }
 
     private HashMap<CategoryEntity, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<CategoryEntity> userCategories) {

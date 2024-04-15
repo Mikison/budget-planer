@@ -17,20 +17,26 @@ services:
 
   reports-service:
     build:
-        context: ./finance-reports-service
+        context: ./reports-service
         dockerfile: Dockerfile
     ports:
         - "8081:8081"
     depends_on:
       - db
+      - rabbitmq
+      - webapi
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - RABBITMQ_EXCHANGE=reports-exchange
+      - RABBITMQ_ROUTING_KEY_WEEKLY=reports.weekly
+      - RABBITMQ_ROUTING_KEY_MONTHLY=reports.monthly
+      - RABBITMQ_QUEUE=reports-queue
 
   mail-service:
     build:
-        context: ./finance-mail-service
+        context: ./mail-service
         dockerfile: Dockerfile
     ports:
         - "8082:8082"
@@ -43,9 +49,12 @@ services:
 
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.13-management
     ports:
       - "5672:5672"
+      - "15672:15672"
+    hostname: rabbitmq
+
 
   db:
     image: postgres:latest

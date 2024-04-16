@@ -1,9 +1,11 @@
 package pl.sonmiike.mailservice;
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "pl.sonmiike")
+@EnableRabbit
 public class MailServiceApplication {
 
     public static void main(String[] args) {

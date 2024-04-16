@@ -55,13 +55,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING.RABBITMQ.HOST=rabbitmq
-      - SPRING.RABBITMQ.PORT=5672
-      - SPRING.RABBITMQ.USERNAME=guest
-      - SPRING.RABBITMQ.PASSWORD=guest
-
-
-
-
 
   mail-service:
     build:
@@ -76,7 +69,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-
+      - SPRING.RABBITMQ.HOST=rabbitmq
 
 volumes:
   rabbitmq_data:
+

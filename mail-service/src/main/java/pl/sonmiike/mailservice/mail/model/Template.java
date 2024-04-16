@@ -1,8 +1,9 @@
-package pl.sonmiike.mailservice;
+package pl.sonmiike.mailservice.mail.model;
 
 public enum Template {
     WEEKLY_REPORT("weekly-report"),
-    MONTHLY_REPORT("monthly-report");
+    MONTHLY_REPORT("monthly-report"),
+    GREETING("greeting");
 
     final String value;
 

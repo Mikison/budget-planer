@@ -1,4 +1,4 @@
-package pl.sonmiike.mailservice;
+package pl.sonmiike.mailservice.mail.model;
 
 import java.util.Map;
 

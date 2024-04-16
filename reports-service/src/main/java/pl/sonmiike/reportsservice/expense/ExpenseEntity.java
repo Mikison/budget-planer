@@ -37,4 +37,12 @@ public class ExpenseEntity {
     private CategoryEntity category;
 
 
+    public ExpenseEntity(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public ExpenseEntity(BigDecimal amount, LocalDate date) {
+        this.date = date;
+        this.amount = amount;
+    }
 }

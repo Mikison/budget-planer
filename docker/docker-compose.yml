@@ -26,18 +26,6 @@ services:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   webapi:
     build:
       context: ../finance-web-api

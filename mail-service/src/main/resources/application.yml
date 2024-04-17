@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: mail-service
+  rabbitmq:
+    queue: mail-queue
+    exchange: mail-exchange
+    routing-key: mail-routing-key
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: planerbudget@gmail.com
+    password: sxiqmbekykztrbgk
+    properties.mail:
+      transport.protocol: smtp
+      smtp:
+        auth: true
+        starttls.enable: true
+        ssl.trust: smtp.gmail.com
+
+
+
+server:
+  port: 8383

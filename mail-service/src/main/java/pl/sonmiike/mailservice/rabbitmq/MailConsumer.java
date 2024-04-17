@@ -18,7 +18,7 @@ public class MailConsumer {
     private final MailCreator mailCreator;
 
     @RabbitHandler
-    @RabbitListener(queues = "${rabbitmq.queue}")
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void consume(@Payload MailDTO mail) {
         System.out.println("Received mail: " + mail);
         MimeMessage mailToSend = mailCreator.createMailToSend(mail);

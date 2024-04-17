@@ -22,13 +22,13 @@ public class ReportExecutor {
     private final RabbitTemplate rabbitTemplate;
     private final UserEntityService userEntityService;
 
-    @Value("${rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.exchange}")
     private String topicExchangeName;
 
-    @Value("${rabbitmq.routing.key.weekly}")
+    @Value("${spring.rabbitmq.routing.key.weekly}")
     private String weeklyRoutingKey;
 
-    @Value("${rabbitmq.routing.key.monthly}")
+    @Value("${spring.rabbitmq.routing.key.monthly}")
     private String monthlyRoutingKey;
 
     @Scheduled(cron = "0 0 0 1 * *")

@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
 
-    @Value("${rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.exchange}")
     private String topicExchangeName;
 
-    @Value("${rabbitmq.queue}")
+    @Value("${spring.rabbitmq.queue}")
     private String reportsQueueName;
 
 
@@ -40,10 +40,5 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(reportsQueue).to(reportsExchange).with("reports.#");
     }
 
-    @Bean
-    public MessageConverter jsonMessageConverter() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return new Jackson2JsonMessageConverter(objectMapper);
-    }
 }
 

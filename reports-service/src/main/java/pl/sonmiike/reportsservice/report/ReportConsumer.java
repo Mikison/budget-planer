@@ -13,7 +13,7 @@ public class ReportConsumer {
     private final ReportCreator reportCreator;
 
 
-    @RabbitListener(queues = "${rabbitmq.queue}")
+    @RabbitListener(queues = "${spring.rabbitmq.queue}")
     public void receiveReportMessage(String message) {
         System.out.println("Received message: " + message);
         if (message.startsWith("Generating Weekly Report for User: ")) {

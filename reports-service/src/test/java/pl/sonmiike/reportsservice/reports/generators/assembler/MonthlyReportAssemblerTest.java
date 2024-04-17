@@ -12,14 +12,14 @@ import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntityService;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
-import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

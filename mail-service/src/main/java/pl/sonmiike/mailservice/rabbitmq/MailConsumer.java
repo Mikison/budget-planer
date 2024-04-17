@@ -7,8 +7,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import pl.sonmiike.mailservice.mail.MailCreator;
-import pl.sonmiike.mailservice.mail.model.MailDTO;
 import pl.sonmiike.mailservice.mail.MailSenderService;
+import pl.sonmiike.mailservice.mail.model.MailDTO;
 
 @Component
 @RequiredArgsConstructor

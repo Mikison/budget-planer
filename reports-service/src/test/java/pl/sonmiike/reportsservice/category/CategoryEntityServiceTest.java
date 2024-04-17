@@ -11,7 +11,6 @@ import pl.sonmiike.reportsservice.cateogry.CategoryEntityRepository;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IncomeOperationsTest {
 
@@ -19,6 +20,14 @@ public class IncomeOperationsTest {
         );
         BigDecimal result = IncomeOperations.getTotalIncomes(incomes);
         assertEquals(BigDecimal.valueOf(250), result);
+    }
+
+    @Test
+    void testCalculateTotalIncomesWithNullList() {
+        List<IncomeEntity> incomes = null;
+
+        assertThrows(IllegalArgumentException.class, () -> IncomeOperations.getTotalIncomes(incomes));
+
     }
 
 

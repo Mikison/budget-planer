@@ -12,6 +12,7 @@ import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
@@ -34,11 +35,8 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
     public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(220, 20, 60);
 
-
-
-
-    //    @Value("${reports.path}")
-    private final String basePath = "./reports/";
+    @Value("${reports.folder.root}")
+    private String basePath;
 
 
     @PostConstruct
@@ -51,7 +49,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
     @Override
-    public void generatePDF(T report, Path path) {
+    public void generatePDF(T report) {
         generatePdf(report,basePath);
     }
 

@@ -6,7 +6,7 @@ import java.nio.file.Path;
 
 public interface ReportPDFGenerator<T extends Report>  {
 
-    void generatePDF(T report ,Path path);
+    void generatePDF(T report);
 
 
 }

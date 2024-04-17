@@ -24,7 +24,6 @@ public class ReportCreator {
     private final MonthlyReportAssembler monthlyReportAssembler;
     private final CustomDateReportAssembler customDateIntervalReportGenerator;
 
-    private static final Path PATH  =  Path.of("../reports");
 
 
 
@@ -37,7 +36,7 @@ public class ReportCreator {
             return;
         }
         ReportGenerator<WeeklyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator();
-        pdfGenerator.generatePDF(weeklyReport,PATH);
+        pdfGenerator.generatePDF(weeklyReport);
         System.out.println("Weekly Report Generated for user: " + userId);
     }
 
@@ -49,7 +48,7 @@ public class ReportCreator {
             return;
         }
         ReportGenerator<MonthlyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator();
-        pdfGenerator.generatePDF(monthlyReport, PATH);
+        pdfGenerator.generatePDF(monthlyReport);
         System.out.println("Monthly Report Generated for user: " + userId);
     }
 

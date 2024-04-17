@@ -28,29 +28,8 @@ public class CustomDateReportAssembler {
     private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
 
-
+    // TODO Implement this method
     public WeeklyReport createCustomDateIntervalReport(Long userId, LocalDate startDate, LocalDate endDate) {
-        if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
-        }
-        Optional<List<IncomeEntity>> income = incomeEntityService.getIncomesFromDateInterval(startDate, endDate, userId);
-        Optional<List<ExpenseEntity>> expenses = expenseEntityService.getExpensesFromDateBetween(startDate, endDate, userId);
-        if (income.isPresent() && expenses.isPresent()) {
-            return WeeklyReport.builder()
-                    .user(userEntityService.getUserById(userId))
-                    .dateInterval(new DateInterval(startDate, endDate))
-                    .totalExpenses(calculateTotalExpenses(expenses.get()))
-                    .biggestExpense(findMaxExpense(expenses.get()))
-                    .smallestExpense(findMinExpense(expenses.get()))
-                    .averageDailyExpense(calculateAverageDailyExpenses(expenses.get(), Period.between(startDate, endDate).getDays() + 1))
-                    .totalIncomes(getTotalIncomes(income.get()))
-                    // TODO Percentage of Budget Spent to be implemented
-                    .budgetSummary(getTotalIncomes(income.get()).subtract(calculateTotalExpenses(expenses.get())))
-                    .expensesList(expenses.get())
-                    .incomeList(income.get())
-                    // TODO Category Expenses to be implemented
-                    .build();
-        }
         return null;
     }
 

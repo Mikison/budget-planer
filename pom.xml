@@ -22,7 +22,6 @@
         <module>reports-service</module>
         <module>mail-service</module>
     </modules>
-
     <build>
         <plugins>
             <plugin>

@@ -15,15 +15,6 @@ public class UserMapper {
                 .build();
     }
 
-    public UserEntity toEntity(UserDTO userDTO) {
-        return UserEntity.builder()
-                .userId(userDTO.getId())
-                .username(userDTO.getUsername())
-                .email(userDTO.getEmail())
-                .role(UserRole.valueOf(userDTO.getRoles().toString()))
-                .build();
-    }
-
     public PagedUsersDTO toPagedDTO(Page<UserEntity> user) {
         return PagedUsersDTO.builder()
                 .currentPage(user.getNumber())

@@ -35,4 +35,12 @@ public class IncomeEntity {
     private UserEntityReport user;
 
 
+    public IncomeEntity(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public IncomeEntity(BigDecimal amount, LocalDate incomeDate) {
+        this.amount = amount;
+        this.incomeDate = incomeDate;
+    }
 }

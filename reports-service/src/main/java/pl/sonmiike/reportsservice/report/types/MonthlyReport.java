@@ -1,7 +1,9 @@
 package pl.sonmiike.reportsservice.report.types;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MonthlyReport implements Report {
 
     private UserEntityReport user;

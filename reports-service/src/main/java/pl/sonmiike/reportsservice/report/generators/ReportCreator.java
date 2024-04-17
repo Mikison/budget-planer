@@ -36,8 +36,6 @@ public class ReportCreator {
             System.out.println("Not Enought Data");
             return;
         }
-
-
         ReportGenerator<WeeklyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator();
         pdfGenerator.generatePDF(weeklyReport,PATH);
         System.out.println("Weekly Report Generated for user: " + userId);

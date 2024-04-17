@@ -8,13 +8,13 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import pl.sonmiike.mailservice.mail.MailCreator;
 import pl.sonmiike.mailservice.mail.model.MailDTO;
-import pl.sonmiike.mailservice.mail.MailSender;
+import pl.sonmiike.mailservice.mail.MailSenderService;
 
 @Component
 @RequiredArgsConstructor
 public class MailConsumer {
 
-    private final MailSender mailSender;
+    private final MailSenderService mailSender;
     private final MailCreator mailCreator;
 
     @RabbitHandler

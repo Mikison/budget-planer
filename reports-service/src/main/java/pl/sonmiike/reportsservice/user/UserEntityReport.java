@@ -42,4 +42,9 @@ public class UserEntityReport {
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
+
+
+    public UserEntityReport(Long userId) {
+        this.userId = userId;
+    }
 }

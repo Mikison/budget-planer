@@ -2,6 +2,7 @@ package pl.sonmiike.reportsservice.report;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,6 +13,7 @@ import pl.sonmiike.reportsservice.user.UserEntityService;
 import java.util.Set;
 
 @Service
+@Setter
 @RequiredArgsConstructor
 public class ReportExecutor {
 

@@ -31,11 +31,27 @@
       "durable": true,
       "auto_delete": false,
       "arguments": {}
+    },
+    {
+      "name": "mail-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
     }
   ],
   "exchanges": [
     {
       "name": "reports-exchange",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "mail-exchange",
       "vhost": "/",
       "type": "topic",
       "durable": true,
@@ -59,6 +75,14 @@
       "destination": "reports-queue",
       "destination_type": "queue",
       "routing_key": "reports.monthly",
+      "arguments": {}
+    },
+    {
+      "source": "mail-exchange",
+      "vhost": "/",
+      "destination": "mail-queue",
+      "destination_type": "queue",
+      "routing_key": "mail.*",
       "arguments": {}
     }
   ]

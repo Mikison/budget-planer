@@ -1,6 +1,5 @@
-package pl.sonmiike.mailservice.mail.model;
+package model;
 
-import java.io.Serializable;
 import java.util.Map;
 
 public record MailDTO(

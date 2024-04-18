@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMQConfig {
+public class ReportQueueConfig {
 
 
     @Value("${spring.rabbitmq.exchange}")
@@ -36,8 +36,14 @@ public class RabbitMQConfig {
 
 
     @Bean
-    Binding binding(Queue reportsQueue, TopicExchange reportsExchange) {
+    Binding reportsBinding(Queue reportsQueue, TopicExchange reportsExchange) {
         return BindingBuilder.bind(reportsQueue).to(reportsExchange).with("reports.#");
+    }
+
+    @Bean
+    public MessageConverter reportsJsonMessageConverter() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return new Jackson2JsonMessageConverter(objectMapper);
     }
 
 }

@@ -29,11 +29,9 @@ import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes
 public class WeeklyReportAssembler {
 
 
-
     private final IncomeEntityService incomeEntityService;
     private final ExpenseEntityService expenseEntityService;
     private final CategoryEntityService categoryEntityService;
-
 
 
     public WeeklyReport createWeeklyReport(UserEntityReport user) {
@@ -41,20 +39,19 @@ public class WeeklyReportAssembler {
 
         List<CategoryEntity> categories = categoryEntityService.getCategories();
 
-            List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
-                    .orElse(Collections.emptyList())
-                    .stream()
-                    .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
-                    .toList();
+        List<IncomeEntity> incomes = incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), user.getUserId())
+                .orElse(Collections.emptyList())
+                .stream()
+                .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
+                .toList();
 
 
-            List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId())
-                    .orElse(Collections.emptyList())
-                    .stream()
-                    .sorted(Comparator.comparing(ExpenseEntity::getDate))
-                    .toList();
-
-            if (incomes.isEmpty() && expenses.isEmpty()) return null;
+        List<ExpenseEntity> expenses = expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), user.getUserId())
+                .orElse(Collections.emptyList())
+                .stream()
+                .sorted(Comparator.comparing(ExpenseEntity::getDate))
+                .toList();
+        if (incomes.isEmpty() && expenses.isEmpty()) return null;
         Set<Long> categoryIds = expenses.stream().map(ExpenseEntity::getCategory).map(CategoryEntity::getId).collect(Collectors.toSet());
         List<CategoryEntity> userCategories = categories.stream()
                 .filter(category -> categoryIds.contains(category.getId()))
@@ -95,7 +92,7 @@ public class WeeklyReportAssembler {
                 .build();
     }
 
-        private DateInterval getDateInterval() {
+    private DateInterval getDateInterval() {
         LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 

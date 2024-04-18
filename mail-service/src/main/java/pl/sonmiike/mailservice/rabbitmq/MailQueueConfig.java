@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitMQConfig {
+public class MailQueueConfig {
 
     @Value("${spring.rabbitmq.exchange}")
     private String topicExchange;
@@ -37,12 +37,12 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding binding(Queue mailQueue, TopicExchange mailExchange) {
+    Binding mailBinding(Queue mailQueue, TopicExchange mailExchange) {
         return BindingBuilder.bind(mailQueue).to(mailExchange).with(routingKey);
     }
 
     @Bean
-    public MessageConverter jsonMessageConverter() {
+    public MessageConverter mailJsonMessageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         return new Jackson2JsonMessageConverter(objectMapper);
     }

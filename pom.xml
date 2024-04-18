@@ -21,6 +21,8 @@
         <module>finance-web-api</module>
         <module>reports-service</module>
         <module>mail-service</module>
+        <module>mail-template</module>
+
     </modules>
     <build>
         <plugins>

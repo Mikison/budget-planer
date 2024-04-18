@@ -26,4 +26,4 @@ server:
   port: 8282
 reports:
   folder:
-    root: ./reports/
+    root: ../reports/

@@ -1,4 +1,4 @@
-package pl.sonmiike.mailservice.mail.model;
+package model;
 
 public enum Template {
     WEEKLY_REPORT("weekly-report"),

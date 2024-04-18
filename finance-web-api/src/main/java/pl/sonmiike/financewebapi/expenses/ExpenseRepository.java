@@ -19,4 +19,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpec
     void deleteAllByUserUserId(Long userid);
 
     void deleteAllByCategoryIdAndUserUserId(Long userId, Long categoryId);
+
+    boolean existsByIdAndUserUserId(Long id, Long userId);
 }

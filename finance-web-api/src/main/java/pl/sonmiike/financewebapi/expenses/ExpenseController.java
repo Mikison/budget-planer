@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.financewebapi.security.auth.AuthService;
 
 import java.math.BigDecimal;
@@ -64,14 +65,22 @@ public class ExpenseController {
         expenseService.createExpense(expenseDTO, userId, categoryId);
     }
 
-    @DeleteMapping("/{expenseId}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable Long expenseId, Authentication authentication) {
-        Long userId = authService.getUserId(authentication);
-        if (expenseService.getExpenseById(expenseId, userId).getUserId().equals(userId)) {
-            expenseService.deleteExpense(expenseId, userId);
-            return ResponseEntity.noContent().build();
+    @PutMapping("/{id}")
+    public ResponseEntity<ExpenseDTO> updateExpense(@PathVariable Long id, @RequestBody @Valid ExpenseDTO expenseDTO, Authentication authentication) {
+        if (!id.equals(expenseDTO.getId())) {
+            throw new IdNotMatchingException("Id in path does not match id in request body");
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Long userId = authService.getUserId(authentication);
+        ExpenseDTO updatedExpense = expenseService.updateExpense(expenseDTO, userId);
+        return ResponseEntity.ok(updatedExpense);
+    }
+
+    @DeleteMapping("/{expenseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteExpense(@PathVariable Long expenseId, Authentication authentication) {
+        Long userId = authService.getUserId(authentication);
+        expenseService.deleteExpense(expenseId, userId);
+
     }
 
 }

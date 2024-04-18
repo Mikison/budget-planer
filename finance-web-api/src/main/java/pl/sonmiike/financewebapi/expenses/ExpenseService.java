@@ -61,18 +61,26 @@ public class ExpenseService {
     }
 
     @Transactional
-    public void updateExpense(ExpenseDTO expenseDTOtoUpdate, Long userId) {
+    public ExpenseDTO updateExpense(ExpenseDTO expenseDTOtoUpdate, Long userId) {
         if (!expenseRepository.existsById(expenseDTOtoUpdate.getId())) {
             throw new IdNotMatchingException("Expense not found");
         }
+        if (!userCategoryRepository.existsByUserUserIdAndCategoryId(userId, expenseDTOtoUpdate.getCategoryId())) {
+            throw new IdNotMatchingException("User does not have category with that id assigned");
+        }
         Expense expense = expenseMapper.toEntity(expenseDTOtoUpdate);
         expense.setUser(userService.getUserById(userId));
+        expense.setCategory(categoryService.getCategoryById(expenseDTOtoUpdate.getCategoryId()));
         expenseRepository.save(expense);
+        return expenseMapper.toDTO(expense);
     }
 
 
     @Transactional
     public void deleteExpense(Long expenseId, Long userId) {
+        if (!expenseRepository.existsByIdAndUserUserId(expenseId, userId)) {
+            throw new ResourceNotFoundException("Expense not found for that user assigned");
+        }
         expenseRepository.deleteByIdAndUserUserId(expenseId, userId);
     }
 

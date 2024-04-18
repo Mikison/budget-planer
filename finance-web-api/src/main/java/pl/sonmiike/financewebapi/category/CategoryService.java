@@ -84,7 +84,7 @@ public class CategoryService {
         UserCategory userCategory = userCategoryRepository.findByUserUserIdAndCategoryId(userId, categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("User does not have this category assigned"));
 
-        expenseRepository.deleteAllByCategoryIdAndUserUserId(userId, categoryId);
+        expenseRepository.deleteAllByCategoryIdAndUserUserId(userId, categoryId); // TODO DELETE THEM OR JUST STORE THEM IN EXPESNES TAB WITH DELETED | NULL | EMPTY CATEGORY
 
         userCategoryRepository.delete(userCategory);
     }

@@ -203,6 +203,7 @@ class ExpenseServiceTest {
         when(expenseRepository.existsById(expenseDTO.getId())).thenReturn(true);
         when(expenseMapper.toEntity(expenseDTO)).thenReturn(expense);
         when(userService.getUserById(userId)).thenReturn(user);
+        when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, expenseDTO.getCategoryId())).thenReturn(true);
 
         expenseService.updateExpense(expenseDTO, userId);
 
@@ -224,15 +225,41 @@ class ExpenseServiceTest {
         assertEquals("Expense not found", exception.getMessage());
     }
 
+    @Test
+    void updateTest_ExpenseNotFound_ThrowsCategoryUnassiggnedToUser() {
+        ExpenseDTO expenseDTO = new ExpenseDTO();
+        expenseDTO.setId(1L);
+        Long userId = 1L;
+        Long categoryId = 1L;
+
+        when(expenseRepository.existsById(expenseDTO.getId())).thenReturn(true);
+        when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(false);
+
+        Exception exception = assertThrows(IdNotMatchingException.class, () -> expenseService.updateExpense(expenseDTO, userId));
+
+        assertEquals("User does not have category with that id assigned", exception.getMessage());
+    }
+
 
     @Test
     void deleteExpense_VerifyRepositoryInteraction() {
         Long expenseId = 1L;
         Long userId = 1L;
-
+        when(expenseRepository.existsByIdAndUserUserId(expenseId, userId)).thenReturn(true);
         expenseService.deleteExpense(expenseId, userId);
 
         verify(expenseRepository).deleteByIdAndUserUserId(expenseId, userId);
+    }
+
+    @Test
+    void deleteExpense_ExpenseNotFound_ThrowsException() {
+        Long expenseId = 1L;
+        Long userId = 1L;
+        when(expenseRepository.existsByIdAndUserUserId(expenseId, userId)).thenReturn(false);
+
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> expenseService.deleteExpense(expenseId, userId));
+
+        assertEquals("Expense not found for that user assigned", exception.getMessage());
     }
 
 

@@ -80,7 +80,7 @@ public class CategoryServiceTest {
 
 
     @Test
-    void getUserCategories_ShouldReturnUserCategories() {
+    void getUserCategories_ShouldReturnUserCategoriesSuccess() {
         Long userId = 1L;
         List<Category> categories = Arrays.asList(Category.builder().id(1L).name("Food").build(), Category.builder().id(2L).name("Utilities").build());
         Set<CategoryDTO> categoryDTOs = categories.stream().map(category -> new CategoryDTO(category.getId(), category.getName())).collect(Collectors.toSet());
@@ -101,7 +101,7 @@ public class CategoryServiceTest {
 
 
     @Test
-    void getCategoryById_ShouldReturnCategory() {
+    void getCategoryById_ShouldReturnCategorySuccess() {
         Long categoryId = 1L;
         Category category = Category.builder().id(categoryId).name("Food").build();
 
@@ -124,7 +124,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testCreateAndAssignCategoryToUserWithNewCategory() {
+    void testCreateAndAssignCategoryForNewCategory_ShouldCreateNewCategoryAndAssignToUserSuccess() {
         Long userId = 1L;
         AddCategoryDTO categoryDTO = AddCategoryDTO.builder().name("TestCategory").build();
         Category category = Category.builder().id(1L).name("TestCategory").build();
@@ -147,7 +147,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testCreateAndAssignCategoryToUserWithExistingCategory() {
+    void testCreateAndAssignCategoryToUserWithExistingCategory_ShouldAssignUserToExistingRecordInDatabase() {
         // Given
         Long userId = 1L;
         AddCategoryDTO categoryDTO = AddCategoryDTO.builder().name("TestCategory").build();
@@ -169,7 +169,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testAssignUserToNonExistingCategory() {
+    void testAssignUserToNonExistingCategory_ShouldThrowResourceNotFoundException() {
         Long userId = 1L;
         Long categoryId = 999L;
 
@@ -182,7 +182,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testAssignCategoryToNonExistingUser() {
+    void testAssignCategoryToNonExistingUser_ShouldThrowResourceNotFoundException() {
         Long userId = 999L;
         Long categoryId = 1L;
         Category category = Category.builder().id(categoryId).name("TestCategory").build();
@@ -197,7 +197,7 @@ public class CategoryServiceTest {
 
 
     @Test
-    void testUnassignCategoryFromUser_Success() {
+    void testUnassignCategoryFromUser_ShouldUnassignUserFromCategory() {
         Long userId = 1L;
         Long categoryId = 1L;
         UserCategory userCategory = UserCategory.builder().id(1L).build();
@@ -212,7 +212,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testUnassignCategoryFromUser_throwException() {
+    void unassigningCategoryThatIsNotAssigned_ShouldThrowResourceNotFoundException() {
         Long userId = 1L;
         Long categoryId = 1L;
 
@@ -226,7 +226,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void whenCreatingNewBudget_thenNewBudgetIsSaved() {
+    void setMonthlyBudgetForCategory_ShouldSuccess() {
         Long userId = 1L;
         MonthlyBudgetDTO inputDTO = MonthlyBudgetDTO.builder().budgetToSet(BigDecimal.valueOf(1000)).build();
         UserCategory mockUserCategory = UserCategory.builder().id(1L).build();
@@ -245,7 +245,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void whenUpdatingExistingBudget_thenBudgetIsUpdated() {
+    void setMonthlyBudgetForCategoryUpdate_ShouldUpdateExistingRecord() {
         // Setup
         Long userId = 1L;
         MonthlyBudgetDTO inputDTO = MonthlyBudgetDTO.builder().budgetToSet(BigDecimal.valueOf(1000)).build();
@@ -274,7 +274,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testDeleteMonthlyBudgedWithCategoryAssigned() {
+    void deleteMonthlyBudgetWhenCategoryAssigned_ShouldSuccess() {
         Long userId = 1L;
         Long categoryId = 1L;
         YearMonth currentYearMonth = YearMonth.now();
@@ -286,7 +286,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    void testDeleteMonthlyBudgedWithoutCategoryAssigned() {
+    void deleteMonthlyBudgetWhenCategoryNotAssigned_ShouldThrowResourceNotFoundException() {
         Long userId = 1L;
         Long categoryId = 1L;
         YearMonth currentYearMonth = YearMonth.now();

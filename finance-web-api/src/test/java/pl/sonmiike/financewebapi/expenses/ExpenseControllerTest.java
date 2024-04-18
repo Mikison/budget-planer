@@ -11,8 +11,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.sonmiike.financewebapi.category.UserCategoryRepository;
+import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.financewebapi.security.auth.AuthService;
 import pl.sonmiike.financewebapi.security.auth.JwtService;
 
@@ -20,10 +23,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ExpenseController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -51,17 +54,20 @@ class ExpenseControllerTest {
     private ExpenseDTO expenseDTO;
     private PagedExpensesDTO pagedExpensesDTO;
 
+    @MockBean
+    private ExpenseRepository expenseRepository;
+
     @BeforeEach
     void setUp() {
-        expenseDTO = ExpenseDTO.builder().id(1L).name("Groceries").date(LocalDate.now().toString()).amount(BigDecimal.valueOf(100).toString()).build();
+        expenseDTO = ExpenseDTO.builder().id(1L).name("Groceries").description("Today").date(LocalDate.now().toString()).categoryId(1L).amount(BigDecimal.valueOf(100).toString()).build();
         pagedExpensesDTO = PagedExpensesDTO.builder().page(0).totalPages(1).expenses(List.of(expenseDTO)).build();
     }
 
     @Test
     void getUserExpenses_ReturnsExpenses() throws Exception {
         Long userId = 1L;
-        Mockito.when(authService.getUserId(any())).thenReturn(userId);
-        Mockito.when(expenseService.getUserExpenses(userId, 0, 10)).thenReturn(pagedExpensesDTO);
+        when(authService.getUserId(any())).thenReturn(userId);
+        when(expenseService.getUserExpenses(userId, 0, 10)).thenReturn(pagedExpensesDTO);
 
         mockMvc.perform(get("/me/expenses")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -72,8 +78,8 @@ class ExpenseControllerTest {
     void getUserExpensesByCategory_ReturnsExpenses() throws Exception {
         Long userId = 1L;
         Long categoryId = 2L;
-        Mockito.when(authService.getUserId(any())).thenReturn(userId);
-        Mockito.when(expenseService.getUserExpensesByCategory(userId, categoryId, 0, 10)).thenReturn(pagedExpensesDTO);
+        when(authService.getUserId(any())).thenReturn(userId);
+        when(expenseService.getUserExpensesByCategory(userId, categoryId, 0, 10)).thenReturn(pagedExpensesDTO);
 
         mockMvc.perform(get("/me/expenses/category/{categoryId}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -84,8 +90,8 @@ class ExpenseControllerTest {
     void getExpenseById_ReturnsExpense() throws Exception {
         Long userId = 1L;
         Long expenseId = 3L;
-        Mockito.when(authService.getUserId(any())).thenReturn(userId);
-        Mockito.when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
+        when(authService.getUserId(any())).thenReturn(userId);
+        when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
 
         mockMvc.perform(get("/me/expenses/{expenseId}", expenseId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -95,9 +101,9 @@ class ExpenseControllerTest {
     @Test
     void getExpenses_WithFilters_ReturnsFilteredExpenses() throws Exception {
         Long userId = 1L;
-        Mockito.when(authService.getUserId(any())).thenReturn(userId);
+        when(authService.getUserId(any())).thenReturn(userId);
 
-        Mockito.when(expenseService.findExpensesWithFilters(anyString(), any(), any(), any(), any(), any())).thenReturn(pagedExpensesDTO);
+        when(expenseService.findExpensesWithFilters(anyString(), any(), any(), any(), any(), any())).thenReturn(pagedExpensesDTO);
 
         mockMvc.perform(get("/me/expenses/filter")
                         .param("keyword", "food")
@@ -110,7 +116,7 @@ class ExpenseControllerTest {
         Long userId = 1L;
         Long categoryId = 2L;
         AddExpesneDTO addExpesneDTO = new AddExpesneDTO("Groceries", "Walmart", LocalDate.now(), BigDecimal.valueOf(100));
-        Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
+        when(authService.getUserId(Mockito.any())).thenReturn(userId);
         Mockito.doNothing().when(expenseService).createExpense(addExpesneDTO, userId, categoryId);
 
         mockMvc.perform(post("/me/expenses/{categoryId}", categoryId)
@@ -124,8 +130,8 @@ class ExpenseControllerTest {
         Long userId = 1L;
         Long expenseId = 3L;
         expenseDTO.setUserId(userId);
-        Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
+        when(authService.getUserId(Mockito.any())).thenReturn(userId);
+        when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
         Mockito.doNothing().when(expenseService).deleteExpense(expenseId, userId);
 
         mockMvc.perform(delete("/me/expenses/{expenseId}", expenseId)
@@ -134,19 +140,53 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void deleteExpense_DeletesExpenseThatExistsNotForThisUser() throws Exception {
+    void deleteExpense_NotFound() throws Exception {
+        Long expenseId = 1L;
         Long userId = 1L;
-        Long expenseId = 3L;
-        expenseDTO.setUserId(3L);
-        Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
-        Mockito.doNothing().when(expenseService).deleteExpense(expenseId, userId);
+        doThrow(new ResourceNotFoundException("Expense not found for that user assigned"))
+                .when(expenseService).deleteExpense(expenseId, userId);
+        when(authService.getUserId(any())).thenReturn(userId);
 
         mockMvc.perform(delete("/me/expenses/{expenseId}", expenseId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
+
+        verify(expenseService).deleteExpense(expenseId, userId);
+        verify(authService).getUserId(any());
     }
 
+    @Test
+    public void updateExpense_Success() throws Exception {
+        Long id = 1L;
+        ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", null, 1L);
+        ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", 1L, 1L);
+        when(authService.getUserId(any())).thenReturn(1L);
+        when(expenseService.updateExpense(any(ExpenseDTO.class), anyLong())).thenReturn(updatedExpenseDTO);
+        mockMvc.perform(put("/me/expenses/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(expenseDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(updatedExpenseDTO)));
+
+        verify(authService, times(1)).getUserId(any());
+        verify(expenseService, times(1)).updateExpense(any(ExpenseDTO.class), eq(1L));
+    }
+
+    @Test
+    public void updateExpense_ThrowsIdNotMatchingException() throws Exception {
+        Long id = 1L;
+        ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", null, 1L);
+        ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", 1L, 1L);
+        when(authService.getUserId(any())).thenReturn(1L);
+        when(expenseService.updateExpense(any(ExpenseDTO.class), anyLong())).thenReturn(updatedExpenseDTO);
+        mockMvc.perform(put("/me/expenses/{id}", id + 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(expenseDTO)))
+                .andExpect(status().isConflict());
+
+        verify(authService, never()).getUserId(any());
+        verify(expenseService, never()).updateExpense(any(ExpenseDTO.class), eq(1L));
+    }
 
 
 

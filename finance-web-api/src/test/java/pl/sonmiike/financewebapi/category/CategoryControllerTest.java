@@ -58,9 +58,8 @@ class CategoryControllerTest {
     }
 
 
-
     @Test
-    void getAllCategories_AdminAccess() throws Exception {
+    void getAllCategories_ShouldReturnAllCategoriesForAdmin() throws Exception {
         given(categoryService.getAllCategories()).willReturn(Set.of(categoryDTO));
 
         mockMvc.perform(get("/me/category/all"))
@@ -70,8 +69,9 @@ class CategoryControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Health"));
 
     }
+
     @Test
-    void getUserCategories() throws Exception {
+    void getUserCategories_ShouldReturnUserAssignedCategories() throws Exception {
         given(categoryService.getUserCategories(anyLong())).willReturn(Set.of(categoryDTO));
 
         mockMvc.perform(get("/me/category")
@@ -100,7 +100,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void unassignCategory_ShouldUnassignCategory() throws Exception {
+    void unassignCategory_ShouldUnassignCategoryFromUser() throws Exception {
         Long userId = 1L;
         Long categoryId = 2L;
 
@@ -113,7 +113,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void setBudgetForSpecificCategory_ShouldSetBudget() throws Exception {
+    void setBudgetForSpecificCategory_ShouldSetBudgetWithSuccess() throws Exception {
         Long userId = 1L;
         MonthlyBudgetDTO monthlyBudgetDTO = new MonthlyBudgetDTO(1L, BigDecimal.valueOf(100));
 
@@ -130,7 +130,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void deleteBudgetForSpecificCategory_ShouldDeleteBudget() throws Exception {
+    void deleteBudgetForSpecificCategory_ShouldDeleteBudgetWithSuccess() throws Exception {
         Long userId = 1L;
         Long categoryId = 2L;
 
@@ -141,7 +141,6 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
-
 
 
 }

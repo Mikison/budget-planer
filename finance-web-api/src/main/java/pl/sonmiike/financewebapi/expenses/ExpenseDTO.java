@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Builder
 public class ExpenseDTO {
 
-    @NotBlank
+    @NotNull
     private Long id;
     @NotBlank
     private String name;
@@ -23,9 +23,9 @@ public class ExpenseDTO {
     private String date;
     @NotBlank
     private String amount;
-    @NotBlank
+
     private Long userId;
-    @NotBlank
+    @NotNull
     private Long categoryId;
 
 }

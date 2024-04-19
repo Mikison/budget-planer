@@ -11,6 +11,7 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import jakarta.annotation.PostConstruct;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
@@ -26,6 +27,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+@Setter
 @Service
 public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
 
@@ -57,6 +59,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
         }
         String username = report.getUser().getUsername();
         String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + username + ".pdf").toString();
+        System.out.println(outputPath);
         try (PdfWriter writer = new PdfWriter(outputPath);
              PdfDocument pdf = new PdfDocument(writer);
              Document document = new Document(pdf)) {
@@ -94,7 +97,6 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
             document.add(new Paragraph("Report Generated on: " + new java.util.Date()));
             System.out.println("Report saved to: " + outputPath);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -186,7 +188,4 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
 
-    public void setBasePath(String basePath) {
-        this.basePath = basePath;
-    }
 }

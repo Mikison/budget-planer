@@ -63,6 +63,6 @@ public class MonthlyReport implements Report {
     }
 
     private String dateIntervalToString(DateInterval dateInterval) {
-        return dateInterval.getStartDate() + " - " + dateInterval.getEndDate();
+        return dateInterval.getStartDate() + "-" + dateInterval.getEndDate();
     }
 }

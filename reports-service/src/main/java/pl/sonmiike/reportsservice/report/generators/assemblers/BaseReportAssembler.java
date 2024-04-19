@@ -9,7 +9,6 @@ import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
 import pl.sonmiike.reportsservice.expense.ExpenseOperations;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntityService;
-import pl.sonmiike.reportsservice.income.IncomeOperations;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
@@ -22,9 +21,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public abstract class BaseReportAssembler {
 
-    protected final IncomeEntityService incomeEntityService;
-    protected final ExpenseEntityService expenseEntityService;
-    protected final CategoryEntityService categoryEntityService;
+    private final IncomeEntityService incomeEntityService;
+    private final ExpenseEntityService expenseEntityService;
+    private final CategoryEntityService categoryEntityService;
 
     protected abstract DateInterval getDateInterval();
 
@@ -72,8 +71,6 @@ public abstract class BaseReportAssembler {
         if (incomes.isEmpty() && expenses.isEmpty()) return null;
 
         HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, categories);
-        BigDecimal totalIncomes = IncomeOperations.getTotalIncomes(incomes);
-        BigDecimal totalExpenses = ExpenseOperations.calculateTotalExpenses(expenses);
 
         return processor.buildReport(user, date, incomes, expenses, categoryExpenses);
     }

@@ -10,8 +10,6 @@ import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 import pl.sonmiike.reportsservice.user.UserEntityService;
 
-import java.nio.file.Path;
-
 @Component
 @RequiredArgsConstructor
 public class ReportCreator {

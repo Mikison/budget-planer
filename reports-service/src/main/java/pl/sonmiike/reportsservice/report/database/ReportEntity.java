@@ -17,17 +17,25 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-public class ReportTypeEntity {
+public class ReportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private ReportType name;
+    private ReportType type;
+
+    private String fileName;
+
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate reportDate;
+    private LocalDate startDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate endDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate generatedDate;
 
     @ManyToOne
     private UserEntityReport user;

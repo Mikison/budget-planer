@@ -11,32 +11,42 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.report.database.ReportEntity;
+import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
 import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
+import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Setter
 @Service
+@RequiredArgsConstructor
 public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
     public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(220, 20, 60);
+    private final ReportEntityRepository reportEntityRepository;
+
+
 
     @Value("${reports.folder.root}")
     private String basePath;
-
 
     @PostConstruct
     public void init() {
@@ -95,8 +105,10 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                 }
             }
 
-            document.add(new Paragraph("Report Generated on: " + new java.util.Date()));
+            document.add(new Paragraph("Report Generated on: " + new Date()));
             System.out.println("Report saved to: " + outputPath);
+
+            reportEntityRepository.save(getReportEntity(report.getUser(), report.getReportType(), (DateInterval) report.getReportData().get("Date Interval"), outputPath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -185,6 +197,17 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                     new String[]{"User", "Date Interval", "Total Expenses", "Largest Expense", "Average Weekly Expense", "Week With Highest Expenses", "Day With Highest Average Expense", "Total Incomes", "Budget Summary", "Expenses List", "Income List", "Category Expenses"};
             default -> new String[]{};
         };
+    }
+
+    private ReportEntity getReportEntity(UserEntityReport user, ReportType reportType, DateInterval dateInterval, String outputPath) {
+        ReportEntity reportEntity = new ReportEntity();
+        reportEntity.setStartDate(dateInterval.getStartDate());
+        reportEntity.setEndDate(dateInterval.getEndDate());
+        reportEntity.setGeneratedDate(LocalDate.now());
+        reportEntity.setType(reportType);
+        reportEntity.setUser(user);
+        reportEntity.setFileName(outputPath);
+        return reportEntity;
     }
 
 

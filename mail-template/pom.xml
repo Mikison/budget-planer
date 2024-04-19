@@ -10,6 +10,16 @@
     </parent>
 
     <artifactId>mail-template</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

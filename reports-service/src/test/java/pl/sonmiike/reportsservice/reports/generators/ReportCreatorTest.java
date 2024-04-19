@@ -5,13 +5,23 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import pl.sonmiike.reportsservice.expense.ExpenseEntity;
+import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
+import pl.sonmiike.reportsservice.report.generators.ReportGenerator;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
 import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
+import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
+import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 import pl.sonmiike.reportsservice.user.UserEntityService;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -27,6 +37,9 @@ public class ReportCreatorTest {
     @Mock
     private MonthlyReportAssembler monthlyReportAssembler;
 
+    @Mock
+    private ReportGenerator<Report> reportGenerator;
+
     @InjectMocks
     private ReportCreator reportCreator;
 
@@ -40,13 +53,13 @@ public class ReportCreatorTest {
     public void testGenerateWeeklyReport_WhenReportIsCreated() {
         Long userId = 1L;
         UserEntityReport user = getUser(); // Assuming existence of such a class
-        WeeklyReport weeklyReport = mock(WeeklyReport.class);
+        WeeklyReport weeklyReport = getWeeklyReport();
         weeklyReport.setUser(user);
 
         when(userEntityService.getUserById(userId)).thenReturn(user);
         when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(weeklyReport);
 
-        reportCreator.generateWeeklyReport(userId);
+        reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
         verify(userEntityService).getUserById(userId);
         verify(weeklyReportAssembler).createWeeklyReport(user);
@@ -61,7 +74,7 @@ public class ReportCreatorTest {
         when(userEntityService.getUserById(userId)).thenReturn(user);
         when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(null);
 
-        reportCreator.generateWeeklyReport(userId);
+        reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
         verify(userEntityService).getUserById(userId);
         verify(weeklyReportAssembler).createWeeklyReport(user);
@@ -79,7 +92,7 @@ public class ReportCreatorTest {
         when(userEntityService.getUserById(userId)).thenReturn(user);
         when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(monthlyReport);
 
-        reportCreator.generateMonthlyReport(userId);
+        reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
 
         verify(userEntityService).getUserById(userId);
         verify(monthlyReportAssembler).createMonthlyReport(user);
@@ -94,7 +107,7 @@ public class ReportCreatorTest {
         when(userEntityService.getUserById(userId)).thenReturn(user);
         when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(null);
 
-        reportCreator.generateMonthlyReport(userId);
+        reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
 
         verify(userEntityService).getUserById(userId);
         verify(monthlyReportAssembler).createMonthlyReport(user);
@@ -109,6 +122,23 @@ public class ReportCreatorTest {
                 .build();
     }
 
+
+
+    private WeeklyReport getWeeklyReport() {
+        return WeeklyReport.builder()
+                .user(getUser())
+                .dateInterval(new DateInterval(LocalDate.now().minusDays(7), LocalDate.now()))
+                .totalExpenses(BigDecimal.valueOf(100))
+                .biggestExpense(new ExpenseEntity())
+                .smallestExpense(new ExpenseEntity())
+                .averageDailyExpense(BigDecimal.valueOf(10))
+                .totalIncomes(BigDecimal.valueOf(200))
+                .budgetSummary(BigDecimal.valueOf(100))
+                .expensesList(List.of(new ExpenseEntity()))
+                .incomeList(List.of(new IncomeEntity()))
+                .categoryExpenses(null)
+                .build();
+    }
 
 }
 

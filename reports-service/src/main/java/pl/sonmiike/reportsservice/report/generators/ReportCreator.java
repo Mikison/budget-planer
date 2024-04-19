@@ -20,7 +20,7 @@ public class ReportCreator {
     private final WeeklyReportAssembler weeklyReportAssembler;
     private final MonthlyReportAssembler monthlyReportAssembler;
     private final CustomDateReportAssembler customDateIntervalReportGenerator;
-    private final ReportGenerator<Report> reportGenerator; // Generic Report Generator
+    private final ReportGenerator<Report> reportGenerator;
 
     public void generateReport(Long userId, ReportType reportType) {
         UserEntityReport user = userEntityService.getUserById(userId);

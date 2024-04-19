@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 @RequiredArgsConstructor
 public class ReportConsumer {
@@ -28,6 +31,11 @@ public class ReportConsumer {
     }
 
     private Long extractUserId(String message) {
-        return Long.parseLong(message.split(": ")[1]);
+        Pattern pattern = Pattern.compile("\\d+$");
+        Matcher matcher = pattern.matcher(message);
+        if (matcher.find()) {
+            return Long.parseLong(matcher.group());
+        }
+        throw new IllegalArgumentException("No user ID found in the message.");
     }
 }

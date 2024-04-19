@@ -13,6 +13,7 @@ import pl.sonmiike.reportsservice.user.UserEntityService;
 import java.util.Set;
 
 @Service
+@Setter
 @RequiredArgsConstructor
 public class ReportExecutor {
 

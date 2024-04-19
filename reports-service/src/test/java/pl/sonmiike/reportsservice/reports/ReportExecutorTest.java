@@ -27,9 +27,9 @@ public class ReportExecutorTest {
     @InjectMocks
     private ReportExecutor reportExecutor;
 
-    private String topicExchangeName = "testExchange";
-    private String weeklyRoutingKey = "weekly";
-    private String monthlyRoutingKey = "monthly";
+    private final String topicExchangeName = "testExchange";
+    private final String weeklyRoutingKey = "weekly";
+    private final String monthlyRoutingKey = "monthly";
 
     @BeforeEach
     public void setUp() {
@@ -37,7 +37,7 @@ public class ReportExecutorTest {
         reportExecutor = new ReportExecutor(rabbitTemplate, userEntityService);
         reportExecutor.setTopicExchangeName(topicExchangeName);
         reportExecutor.setWeeklyRoutingKey(weeklyRoutingKey);
-reportExecutor.setMonthlyRoutingKey(monthlyRoutingKey);
+        reportExecutor.setMonthlyRoutingKey(monthlyRoutingKey);
 
     }
 
@@ -52,7 +52,7 @@ reportExecutor.setMonthlyRoutingKey(monthlyRoutingKey);
             verify(rabbitTemplate).convertAndSend(
                     topicExchangeName,
                     weeklyRoutingKey,
-                    "Generating Weekly Report for User: " + user.getUserId()
+                    "[>] Weekly Report: Generating for User: " + user.getUserId()
             );
         }
     }
@@ -68,7 +68,7 @@ reportExecutor.setMonthlyRoutingKey(monthlyRoutingKey);
             verify(rabbitTemplate).convertAndSend(
                     topicExchangeName,
                     monthlyRoutingKey,
-                    "Generating Monthly Reports for User: " + user.getUserId());
+                    "[>] Monthly Report: Generating for User: " + user.getUserId());
         }
     }
 }

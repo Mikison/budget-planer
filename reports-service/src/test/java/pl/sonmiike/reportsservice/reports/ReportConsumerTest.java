@@ -6,8 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.report.ReportConsumer;
+import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -27,23 +29,22 @@ public class ReportConsumerTest {
 
     @Test
     public void testReceiveWeeklyReportMessage() {
-        String message = "Generating Weekly Report for User: 12345";
+        String message = "[>] Weekly Report: Generating for User: 12345";
         reportConsumer.receiveReportMessage(message);
-        verify(reportCreator).generateWeeklyReport(12345L);
+        verify(reportCreator).generateReport(12345L, ReportType.WEEKLY_REPORT);
     }
 
     @Test
     public void testReceiveMonthlyReportMessage() {
-        String message = "Generating Monthly Reports for User: 12345";
+        String message = "[>] Monthly Report: Generating for User: 12345";
         reportConsumer.receiveReportMessage(message);
-        verify(reportCreator).generateMonthlyReport(12345L);
+        verify(reportCreator).generateReport(12345L, ReportType.MONTHLY_REPORT);
     }
 
     @Test
     public void testReceiveInvalidMessage() {
         String message = "Invalid Message Content";
         reportConsumer.receiveReportMessage(message);
-        verify(reportCreator, never()).generateWeeklyReport(anyLong());
-        verify(reportCreator, never()).generateMonthlyReport(anyLong());
+        verify(reportCreator, never()).generateReport(anyLong(), any(ReportType.class));
     }
 }

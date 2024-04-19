@@ -27,7 +27,6 @@ public class WeeklyReport implements Report {
     private ExpenseEntity smallestExpense;
     private BigDecimal averageDailyExpense;
     private BigDecimal totalIncomes;
-    private BigDecimal percentageOfBudgetSpent;
     private BigDecimal budgetSummary;
     private List<ExpenseEntity> expensesList;
     private List<IncomeEntity> incomeList;

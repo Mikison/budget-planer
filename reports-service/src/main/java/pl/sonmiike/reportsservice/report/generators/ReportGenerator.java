@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> {
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
@@ -54,8 +53,12 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
     private void generatePdf(T report, String baseOutputPath) {
-        if (report == null) return;
-        String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + report.getUser().getUsername() + ".pdf").toString();
+        if (report == null || report.getUser() == null) {
+            System.out.println("Report or user is null, aborting PDF generation.");
+            return;
+        }
+        String username = report.getUser().getUsername();
+        String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + username + ".pdf").toString();
         try (PdfWriter writer = new PdfWriter(outputPath);
              PdfDocument pdf = new PdfDocument(writer);
              Document document = new Document(pdf)) {
@@ -185,4 +188,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
 
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
 }

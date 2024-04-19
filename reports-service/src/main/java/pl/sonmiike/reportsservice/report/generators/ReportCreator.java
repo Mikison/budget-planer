@@ -17,7 +17,6 @@ import java.nio.file.Path;
 public class ReportCreator {
 
 
-    private final ReportGeneratorFactory reportGeneratorFactory;
     private final UserEntityService userEntityService;
 
     private final WeeklyReportAssembler weeklyReportAssembler;
@@ -35,7 +34,7 @@ public class ReportCreator {
             System.out.println("Not Enought Data");
             return;
         }
-        ReportGenerator<WeeklyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator();
+        ReportGenerator<WeeklyReport> pdfGenerator = new ReportGenerator<>();
         pdfGenerator.generatePDF(weeklyReport);
         System.out.println("Weekly Report Generated for user: " + userId);
     }
@@ -47,7 +46,7 @@ public class ReportCreator {
             System.out.println("Not Enought Data");
             return;
         }
-        ReportGenerator<MonthlyReport> pdfGenerator = reportGeneratorFactory.createPDFGenerator();
+        ReportGenerator<MonthlyReport> pdfGenerator = new ReportGenerator<>();
         pdfGenerator.generatePDF(monthlyReport);
         System.out.println("Monthly Report Generated for user: " + userId);
     }

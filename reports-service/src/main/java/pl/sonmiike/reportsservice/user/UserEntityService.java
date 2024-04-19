@@ -2,7 +2,9 @@ package pl.sonmiike.reportsservice.user;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import pl.sonmiike.financewebapi.user.UserEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,5 +22,10 @@ public class UserEntityService {
 
     public UserEntityReport getUserById(Long userId) {
         return userEntityRepository.findById(userId).orElse(null);
+    }
+
+    public Long getUserId(Authentication authentication) {
+        UserEntity user = (UserEntity) authentication.getPrincipal();
+        return user.getUserId();
     }
 }

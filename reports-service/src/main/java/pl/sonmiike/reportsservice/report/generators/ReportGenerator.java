@@ -68,8 +68,9 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
             return;
         }
         String username = report.getUser().getUsername();
-        String outputPath = Paths.get(baseOutputPath, report.getReportType() + "_" + report.getReportData().get("Date Interval") + "_" + username + ".pdf").toString();
-        System.out.println(outputPath);
+        String dateInterval = report.getReportData().get("Date Interval").toString();
+        String fileName = report.getReportType() + "_" + dateInterval + "_" + username + ".pdf";
+        String outputPath = Paths.get(baseOutputPath, fileName).toString();
         try (PdfWriter writer = new PdfWriter(outputPath);
              PdfDocument pdf = new PdfDocument(writer);
              Document document = new Document(pdf)) {
@@ -107,12 +108,23 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
             document.add(new Paragraph("Report Generated on: " + new Date()));
             System.out.println("Report saved to: " + outputPath);
-
-            reportEntityRepository.save(getReportEntity(report.getUser(), report.getReportType(), (DateInterval) report.getReportData().get("Date Interval"), outputPath));
+            DateInterval dateIntervalObj = getDateIntervalfromString(dateInterval);
+            if (!reportEntityRepository.existsByStartDateAndEndDate(dateIntervalObj.getStartDate(), dateIntervalObj.getEndDate())) {
+                reportEntityRepository.save(getReportEntity(report.getUser(), report.getReportType(), dateIntervalObj , fileName));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private DateInterval getDateIntervalfromString(String dateInterval) {
+        String[] dates = dateInterval.split("-");
+        String startDate = dates[0] + "-" + dates[1] + "-" + dates[2];
+        String endDate = dates[3] + "-" + dates[4] + "-" + dates[5];
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        return new DateInterval(start, end);
     }
 
 

@@ -6,7 +6,9 @@ import lombok.Setter;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 import pl.sonmiike.reportsservice.user.UserEntityService;
 
@@ -34,18 +36,35 @@ public class ReportExecutor {
 
     @Scheduled(cron = "0 1 0 * * 1") // AT 00:01 ON MONDAY
     public void executeWeeklyReportGeneration() {
-        executeReportGeneration(weeklyRoutingKey, WEEKLY_REPORT_GENERATING_FOR_USER);
+        initiateReportGenerationForAllUsers(weeklyRoutingKey, WEEKLY_REPORT_GENERATING_FOR_USER);
     }
 
     @Scheduled(cron = "0 1 0 1 * *") // AT 00:01 ON 1ST DAY OF MONTH
     public void executeMonthlyReportGeneration() {
-        executeReportGeneration(monthlyRoutingKey, MONTHLY_REPORT_GENERATING_FOR_USER);
+        initiateReportGenerationForAllUsers(monthlyRoutingKey, MONTHLY_REPORT_GENERATING_FOR_USER);
     }
 
-    private void executeReportGeneration(String routingKey, String messagePrefix) {
+    private void initiateReportGenerationForAllUsers(String routingKey, String messagePrefix) {
         Set<UserEntityReport> users = userEntityService.getAllUsers();
-        for (UserEntityReport user : users) {
-            rabbitTemplate.convertAndSend(topicExchangeName, routingKey, messagePrefix + user.getUserId());
-        }
+        users.forEach(user -> sendMessageToGenerateReport(routingKey, messagePrefix, user.getUserId().toString()));
+    }
+
+    private void initiateReportGenerationForUser(String routingKey, String messagePrefix, String userId) {
+        Assert.notNull(userId, "User ID must not be null");
+        sendMessageToGenerateReport(routingKey, messagePrefix, userId);
+    }
+
+    public void initiateMonthlyReportGenerationForUser(Long userId) {
+        initiateReportGenerationForUser(monthlyRoutingKey, MONTHLY_REPORT_GENERATING_FOR_USER, userId.toString());
+    }
+
+    public void initiateWeeklyReportGenerationForUser(Long userId) {
+        initiateReportGenerationForUser(weeklyRoutingKey, WEEKLY_REPORT_GENERATING_FOR_USER, userId.toString());
+    }
+
+    private void sendMessageToGenerateReport(String routingKey, String messagePrefix, String userId) {
+        Assert.hasText(routingKey, "Routing key must not be empty");
+        Assert.hasText(messagePrefix, "Message prefix must not be empty");
+        rabbitTemplate.convertAndSend(topicExchangeName, routingKey, messagePrefix + userId);
     }
 }

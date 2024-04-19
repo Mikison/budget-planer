@@ -55,7 +55,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING.RABBITMQ.HOST=rabbitmq
-
+    volumes:
+      - ./local/reports:../reports
   mail-service:
     build:
       context: ../mail-service

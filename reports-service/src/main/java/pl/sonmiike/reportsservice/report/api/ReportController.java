@@ -6,8 +6,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.sonmiike.reportsservice.report.database.ReportEntity;
 import pl.sonmiike.reportsservice.user.UserEntityService;
@@ -24,10 +22,10 @@ public class ReportController {
     private final UserEntityService userEntityService;
 
 
-    @GetMapping("/generate")
+    @GetMapping("/generate/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void generateReport(@RequestParam String type, Authentication authentication) {
-        Long userId = userEntityService.getUserId(authentication);
+    public void generateReport(@RequestParam String type, @PathVariable Long userId) {
+
         if (type.equals("weekly")) {
             reportService.callOnDemandWeeklyReport(userId);
         } else if (type.equals("monthly")) {
@@ -38,20 +36,17 @@ public class ReportController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ReportEntity>> getAllReports() {
         return ResponseEntity.ok(reportService.findAllReports());
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<List<ReportEntity>> getUserReports(Authentication authentication) {
-        Long userId = userEntityService.getUserId(authentication);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReportEntity>> getUserReports(@PathVariable Long userId) {
         return ResponseEntity.ok(reportService.findUserReports(userId));
     }
 
-    @GetMapping("/assets")
-    public ResponseEntity<Resource> getUserReport(Authentication authentication, @RequestParam String name) {
-        Long userId = userEntityService.getUserId(authentication);
+    @GetMapping("/assets/{userId}")
+    public ResponseEntity<Resource> getUserReport( @RequestParam String name, @PathVariable Long userId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(reportService.getPdfFile(name, userId));

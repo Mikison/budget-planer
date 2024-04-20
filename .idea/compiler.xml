@@ -16,6 +16,7 @@
       <module name="demo" target="17" />
       <module name="demo.main" target="17" />
       <module name="demo.test" target="17" />
+      <module name="jwt-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -23,6 +24,7 @@
       <module name="budget-finance" options="" />
       <module name="demo" options="-parameters" />
       <module name="finance-web-api" options="-parameters" />
+      <module name="jwt-service" options="-parameters" />
       <module name="mail-service" options="-parameters" />
       <module name="mail-template" options="-parameters" />
       <module name="reports-service" options="-parameters" />

@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.reportsservice.report.ReportExecutor;
 import pl.sonmiike.reportsservice.report.database.ReportEntity;
 import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
@@ -46,7 +43,7 @@ public class ReportService {
     public Resource getPdfFile(String name, Long userId) {
         List<ReportEntity> userReports = findUserReports(userId);
         if (userReports.stream().noneMatch(report -> report.getFileName().contains(name))) {
-            throw new ResourceNotFoundException("Error: File not found");
+            throw new RuntimeException("Error: File not found");
         }
 
         try {
@@ -54,10 +51,10 @@ public class ReportService {
             if (file.exists() || file.isReadable()) {
                 return file;
             } else {
-                throw new ResourceNotFoundException("Error: File not found");
+                throw new RuntimeException("Error: File not found");
             }
         } catch (MalformedURLException e) {
-            throw new ResourceNotFoundException("Error: " + e.getMessage());
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
 

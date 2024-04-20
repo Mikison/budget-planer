@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
-import pl.sonmiike.reportsservice.report.ReportExecutor;
 import pl.sonmiike.reportsservice.report.database.ReportEntity;
 import pl.sonmiike.reportsservice.user.UserEntityService;
 
@@ -35,7 +33,7 @@ public class ReportController {
         } else if (type.equals("monthly")) {
             reportService.callOnDemandMonthlyReport(userId);
         } else {
-            throw new ResourceNotFoundException("Report type not found");
+            throw new RuntimeException("Report type not found");
         }
     }
 

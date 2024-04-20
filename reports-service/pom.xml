@@ -81,9 +81,9 @@
             <version>${itext.version}</version>
         </dependency>
         <dependency>
-        <groupId>com.itextpdf</groupId>
-        <artifactId>pdfa</artifactId>
-        <version>${itext.version}</version>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>pdfa</artifactId>
+            <version>${itext.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

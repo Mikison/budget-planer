@@ -40,7 +40,6 @@ public class ExpenseMapper {
     }
 
 
-
     public PagedExpensesDTO toPagedDTO(Page<Expense> expenses) {
         return PagedExpensesDTO.builder()
                 .page(expenses.getNumber())

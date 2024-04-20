@@ -8,6 +8,8 @@ import java.util.Map;
 
 public interface Report {
     Map<String, Object> getReportData();
+
     UserEntityReport getUser();
+
     ReportType getReportType();
 }

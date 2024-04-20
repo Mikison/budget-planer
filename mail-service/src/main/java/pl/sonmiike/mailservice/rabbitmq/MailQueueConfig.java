@@ -25,7 +25,6 @@ public class MailQueueConfig {
     private String routingKey;
 
 
-
     @Bean
     Queue mailQueue() {
         return new Queue(mailQueue, true);

@@ -50,12 +50,12 @@ public class AuthService {
 
 
     public AuthResponse login(LoginRequest loginRequest) {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(),
-                            loginRequest.getPassword()
-                    )
-            );
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
         var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         var accessToken = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user.getUsername());
@@ -65,7 +65,6 @@ public class AuthService {
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
-
 
 
     public Long getUserId(Authentication authentication) {

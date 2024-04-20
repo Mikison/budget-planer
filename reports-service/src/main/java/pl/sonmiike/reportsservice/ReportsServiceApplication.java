@@ -10,8 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class ReportsServiceApplication {
 
 
-
-
     public static void main(String[] args) {
         SpringApplication.run(ReportsServiceApplication.class, args);
     }

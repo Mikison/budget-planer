@@ -75,8 +75,6 @@ public class AuthControllerTest {
     }
 
 
-
-
     @Test
     void refreshToken_ShouldReturnOk_WhenValidRequest() throws Exception {
         RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest();
@@ -98,10 +96,6 @@ public class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
     }
-
-
-
-
 
 
 }

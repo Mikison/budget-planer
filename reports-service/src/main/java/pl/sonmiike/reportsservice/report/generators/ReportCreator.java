@@ -6,9 +6,7 @@ import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.assemblers.CustomDateReportAssembler;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
 import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
-import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.report.types.Report;
-import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 import pl.sonmiike.reportsservice.user.UserEntityService;
 

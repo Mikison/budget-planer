@@ -8,8 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = "pl.sonmiike")
 @EnableRabbit
 @RequiredArgsConstructor
-public class MailServiceApplication  {
-
+public class MailServiceApplication {
 
 
     public static void main(String[] args) {

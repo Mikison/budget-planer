@@ -43,8 +43,8 @@ public class IncomeEntityServiceTest {
     void getIncomesFromDateInterval() {
         // given
         List<IncomeEntity> incomeEntities = List.of(new IncomeEntity());
-        LocalDate startDate = LocalDate.of(2024,4,1);
-        LocalDate endDate = LocalDate.of(2024,4,7);
+        LocalDate startDate = LocalDate.of(2024, 4, 1);
+        LocalDate endDate = LocalDate.of(2024, 4, 7);
         Long userId = 1L;
         // when
         when(incomeEntityService.getIncomesFromDateInterval(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(incomeEntities));

@@ -42,7 +42,6 @@ public class UserControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-
     @BeforeEach
     public void setup() {
 

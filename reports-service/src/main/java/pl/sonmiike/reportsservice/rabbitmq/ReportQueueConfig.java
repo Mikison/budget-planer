@@ -23,7 +23,6 @@ public class ReportQueueConfig {
     private String reportsQueueName;
 
 
-
     @Bean
     Queue reportsQueue() {
         return new Queue(reportsQueueName, true);

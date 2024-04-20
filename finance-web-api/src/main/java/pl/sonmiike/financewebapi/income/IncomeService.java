@@ -16,13 +16,13 @@ import java.time.LocalDate;
 @Service
 @RequiredArgsConstructor
 public class IncomeService {
-    
+
     private final IncomeRepository incomeRepository;
     private final IncomeMapper incomeMapper;
     private final UserService userService;
 
     public PagedIncomesDTO getUserIncome(Long userId, int page, int size) {
-        Page<Income> incomes = incomeRepository.findByUserUserId(userId, PageRequest.of(page,size));
+        Page<Income> incomes = incomeRepository.findByUserUserId(userId, PageRequest.of(page, size));
         return incomeMapper.toPagedDTO(incomes);
     }
 

@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface ExpenseRepository extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
 
     Page<Expense> findExpenseByUserUserId(Long userId, Pageable pageable);
+
     Page<Expense> findExpenseByUserUserIdAndCategoryId(Long userId, Long categoryId, Pageable pageable);
 
     Optional<Expense> findByIdAndUserUserId(Long id, Long userId);

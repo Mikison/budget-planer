@@ -35,7 +35,7 @@ public class MailConsumerTest {
 
     @Test
     void testConsume() {
-        MailDTO mail = new MailDTO(Template.GREETING,"recipient@example.com", "Subject", new HashMap<>());
+        MailDTO mail = new MailDTO(Template.GREETING, "recipient@example.com", "Subject", new HashMap<>());
         MimeMessage mockMimeMessage = mock(MimeMessage.class);
 
         when(mailCreator.createMailToSend(any(MailDTO.class))).thenReturn(mockMimeMessage);

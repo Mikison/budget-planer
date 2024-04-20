@@ -39,10 +39,10 @@ public class CategoryService {
     }
 
     public Set<CategoryDTO> getUserCategories(Long userId) {
-       List<Category> categories = categoryRepository.findAllCategoriesByUserId(userId);
-       return categories.stream()
-               .map(categoryMapper::toDTO)
-               .collect(Collectors.toSet());
+        List<Category> categories = categoryRepository.findAllCategoriesByUserId(userId);
+        return categories.stream()
+                .map(categoryMapper::toDTO)
+                .collect(Collectors.toSet());
     }
 
     public Category getCategoryById(Long id) {
@@ -88,6 +88,7 @@ public class CategoryService {
 
         userCategoryRepository.delete(userCategory);
     }
+
     public MonthlyBudgetDTO setCategoryBudgetAmount(Long userId, MonthlyBudgetDTO monthlyBudgetDTO) {
         UserCategory userCategory = userCategoryRepository.findByUserUserIdAndCategoryId(userId, monthlyBudgetDTO.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("User does not have this category assigned"));

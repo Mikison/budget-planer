@@ -44,7 +44,7 @@ public class ReportController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<ReportEntity> >getUserReports(Authentication authentication) {
+    public ResponseEntity<List<ReportEntity>> getUserReports(Authentication authentication) {
         Long userId = userEntityService.getUserId(authentication);
         return ResponseEntity.ok(reportService.findUserReports(userId));
     }

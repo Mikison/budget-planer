@@ -123,7 +123,6 @@ public class ReportCreatorTest {
     }
 
 
-
     private WeeklyReport getWeeklyReport() {
         return WeeklyReport.builder()
                 .user(getUser())

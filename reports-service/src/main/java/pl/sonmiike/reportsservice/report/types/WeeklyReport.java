@@ -57,7 +57,6 @@ public class WeeklyReport implements Report {
     }
 
 
-
     private String dateIntervalToString(DateInterval dateInterval) {
         return dateInterval.getStartDate() + "-" + dateInterval.getEndDate();
     }

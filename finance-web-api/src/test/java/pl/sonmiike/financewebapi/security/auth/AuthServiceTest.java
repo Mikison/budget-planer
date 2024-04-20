@@ -72,7 +72,7 @@ public class AuthServiceTest {
                 .role(UserRole.ROLE_USER)
                 .build();
         String uuid = UUID.randomUUID().toString();
-        RefreshToken refreshToken = new RefreshToken(1L, uuid , Instant.now().plusSeconds(86400), null);
+        RefreshToken refreshToken = new RefreshToken(1L, uuid, Instant.now().plusSeconds(86400), null);
 
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);

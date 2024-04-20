@@ -44,7 +44,6 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     private final ReportEntityRepository reportEntityRepository;
 
 
-
     @Value("${reports.folder.root}")
     private String basePath;
 
@@ -59,7 +58,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
     @Override
     public void generatePDF(T report) {
-        generatePdf(report,basePath);
+        generatePdf(report, basePath);
     }
 
     private void generatePdf(T report, String baseOutputPath) {
@@ -110,7 +109,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
             System.out.println("Report saved to: " + outputPath);
             DateInterval dateIntervalObj = getDateIntervalfromString(dateInterval);
             if (!reportEntityRepository.existsByStartDateAndEndDate(dateIntervalObj.getStartDate(), dateIntervalObj.getEndDate())) {
-                reportEntityRepository.save(getReportEntity(report.getUser(), report.getReportType(), dateIntervalObj , fileName));
+                reportEntityRepository.save(getReportEntity(report.getUser(), report.getReportType(), dateIntervalObj, fileName));
             }
         } catch (IOException e) {
             e.printStackTrace();

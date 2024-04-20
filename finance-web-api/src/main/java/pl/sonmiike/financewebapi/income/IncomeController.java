@@ -44,7 +44,7 @@ public class IncomeController {
             @RequestParam(value = "dateTo", required = false) LocalDate dateTo,
             @RequestParam(value = "fromAmount", required = false) BigDecimal fromAmount,
             @RequestParam(value = "toAmount", required = false) BigDecimal toAmount,
-            @PageableDefault(sort = "date", direction = Sort.Direction.DESC)Pageable pageable) {
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(incomeService.findIncomesWithFilters(keyword, dateFrom, dateTo, fromAmount, toAmount, pageable));
     }
 

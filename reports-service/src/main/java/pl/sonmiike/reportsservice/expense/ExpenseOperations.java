@@ -93,7 +93,6 @@ public class ExpenseOperations {
     }
 
 
-
     private static void validateExpensesList(List<ExpenseEntity> expenses) {
         if (expenses == null) throw new NullPointerException("Expenses list cannot be null");
     }

@@ -48,7 +48,7 @@ public class ExpensesEntityServiceTest {
         LocalDate endDate = LocalDate.of(2024, 4, 27);
         Long userId = 1L;
 
-       List<ExpenseEntity> expenseEntities = List.of(new ExpenseEntity());
+        List<ExpenseEntity> expenseEntities = List.of(new ExpenseEntity());
 
         when(expenseEntityService.getExpensesFromDateBetween(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(expenseEntities));
 

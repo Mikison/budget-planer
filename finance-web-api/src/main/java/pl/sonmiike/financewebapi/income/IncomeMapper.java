@@ -38,7 +38,7 @@ public class IncomeMapper {
     public PagedIncomesDTO toPagedDTO(Page<Income> incomes) {
         return PagedIncomesDTO.builder()
                 .currentPage(incomes.getNumber())
-                .totalPages(incomes.getTotalPages() > 1 ? incomes.getTotalPages() - 1 : incomes.getTotalPages() )
+                .totalPages(incomes.getTotalPages() > 1 ? incomes.getTotalPages() - 1 : incomes.getTotalPages())
                 .incomes(incomes.map(this::toDTO).getContent())
                 .build();
     }

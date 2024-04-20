@@ -25,7 +25,6 @@ public class UserService {
     private final UserMapper userMapper;
 
 
-
     public PagedUsersDTO getAllUsers(int page, int size) {
         Page<UserEntity> users = userRepository.findAll(PageRequest.of(page, size));
         return userMapper.toPagedDTO(users);

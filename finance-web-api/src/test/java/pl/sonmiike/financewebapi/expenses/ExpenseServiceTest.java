@@ -31,15 +31,18 @@ class ExpenseServiceTest {
 
     @Mock
     private ExpenseRepository expenseRepository;
+
     @Mock
     private UserCategoryRepository userCategoryRepository;
+
     @Mock
     private UserService userService;
+
     @Mock
     private CategoryService categoryService;
+
     @Mock
     private ExpenseMapper expenseMapper;
-
 
     @InjectMocks
     private ExpenseService expenseService;

@@ -7,7 +7,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.sonmiike.financewebapi.exceptions.ResponseExceptionHandler;
 import pl.sonmiike.financewebapi.security.testconfig.TestSecurityConfig;
 import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;
@@ -20,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
-@Import(TestSecurityConfig.class)
+@Import({TestSecurityConfig.class, ResponseExceptionHandler.class})
 public class AuthControllerTest {
 
     @Autowired
@@ -33,6 +35,9 @@ public class AuthControllerTest {
     private RefreshTokenService refreshTokenService;
 
     @MockBean
+    private AuthenticationManager authenticationManager;
+
+    @MockBean
     private JwtService jwtService;
 
     private static final String TEST_EMAIL = "test@example.com";
@@ -42,7 +47,7 @@ public class AuthControllerTest {
 
 
     @Test
-    public void register_ShouldReturnOk_WhenValidRequest() throws Exception {
+    void register_ShouldReturnOk_WhenValidRequest() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest("TestUser", TEST_EMAIL, "tester", TEST_PASSWORD);
         AuthResponse expectedResponse = new AuthResponse("accessToken", "refreshToken");
 
@@ -56,7 +61,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void login_ShouldReturnOk_WhenValidRequest() throws Exception {
+    void login_ShouldReturnOk_WhenValidRequest() throws Exception {
         LoginRequest loginRequest = new LoginRequest(TEST_EMAIL, TEST_PASSWORD);
         AuthResponse expectedResponse = new AuthResponse("accessToken", "refreshToken");
 
@@ -69,8 +74,11 @@ public class AuthControllerTest {
                 .andExpect(content().json("{\"accessToken\":\"accessToken\",\"refreshToken\":\"refreshToken\"}"));
     }
 
+
+
+
     @Test
-    public void refreshToken_ShouldReturnOk_WhenValidRequest() throws Exception {
+    void refreshToken_ShouldReturnOk_WhenValidRequest() throws Exception {
         RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest();
         refreshTokenRequest.setRefreshToken("validRefreshToken");
 

@@ -35,12 +35,12 @@ public class RefreshTokenServiceTest {
     private AutoCloseable openMocks;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         openMocks = MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         openMocks.close();
     }
 
@@ -62,7 +62,7 @@ public class RefreshTokenServiceTest {
     }
 
     @Test
-    public void whenUserExistsAndHasRefreshToken_ThenNoNewRefreshTokenCreated() {
+    void whenUserExistsAndHasRefreshToken_ThenNoNewRefreshTokenCreated() {
         String username = "test@example.com";
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(username);

@@ -194,8 +194,7 @@ public class IncomeServiceTest {
     }
 
     @Test
-    public void testFindIncomesWithFilters() {
-        // Setup
+    void testFindIncomesWithFilters() {
         String keyword = "test";
         LocalDate dateFrom = LocalDate.of(2022, 1, 1);
         LocalDate dateTo = LocalDate.of(2022, 12, 31);
@@ -210,10 +209,8 @@ public class IncomeServiceTest {
         when(incomeRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(mockPage);
         when(incomeMapper.toPagedDTO(mockPage)).thenReturn(mockPagedIncomesDTO);
 
-        // Execute
         PagedIncomesDTO result = incomeService.findIncomesWithFilters(keyword, dateFrom, dateTo, amountFrom, amountTo, pageable);
 
-        // Assert
         assertEquals(mockPagedIncomesDTO, result);
         verify(incomeRepository, times(1)).findAll(any(Specification.class), eq(pageable));
         verify(incomeMapper, times(1)).toPagedDTO(mockPage);

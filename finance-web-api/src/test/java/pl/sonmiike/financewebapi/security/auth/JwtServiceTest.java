@@ -15,7 +15,6 @@ public class JwtServiceTest {
 
     private JwtService jwtService;
 
-    // Secret key used in your JwtService
     private final String SECRET_KEY = "OXgzaGZ3OTMzdWRpendib281cHF1bTRsODl1YWx5ejloc2E5Zm16bW5hNzBrcmt5c2p0c3Q5dXhrMDV6YWUzOGFldDNlNHZlajllZWduenlzdTd1Y3RyN2d6dWF1MjBiNm5ib2tjeW9hb3l4aTg3NGMybmV5a3F6NG1zN2E2c20=";
     private final UserEntity USER_DETAILS = UserEntity.builder()
             .userId(1L)
@@ -26,14 +25,14 @@ public class JwtServiceTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         jwtService = new JwtService();
         jwtService.setSecretKey(SECRET_KEY) ;
         jwtService.init();
     }
 
     @Test
-    public void whenGenerateToken_thenSuccess() {
+    void whenGenerateToken_thenSuccess() {
         // Given
         // When
         String token = jwtService.generateToken(USER_DETAILS);
@@ -44,7 +43,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void whenTokenIsValid_thenSuccess() {
+    void whenTokenIsValid_thenSuccess() {
         // Given
 
         String token = jwtService.generateToken(USER_DETAILS);
@@ -57,7 +56,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void whenTokenIsInvalid_thenFailure() {
+    void whenTokenIsInvalid_thenFailure() {
         // Given
         UserEntity anotherUserDetails = UserEntity.builder()
                 .userId(2L)

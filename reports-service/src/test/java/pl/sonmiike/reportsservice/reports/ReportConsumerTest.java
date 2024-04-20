@@ -23,26 +23,26 @@ public class ReportConsumerTest {
     private ReportConsumer reportConsumer;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testReceiveWeeklyReportMessage() {
+    void testReceiveWeeklyReportMessage() {
         String message = "[>] Weekly Report: Generating for User: 12345";
         reportConsumer.receiveReportMessage(message);
         verify(reportCreator).generateReport(12345L, ReportType.WEEKLY_REPORT);
     }
 
     @Test
-    public void testReceiveMonthlyReportMessage() {
+    void testReceiveMonthlyReportMessage() {
         String message = "[>] Monthly Report: Generating for User: 12345";
         reportConsumer.receiveReportMessage(message);
         verify(reportCreator).generateReport(12345L, ReportType.MONTHLY_REPORT);
     }
 
     @Test
-    public void testReceiveInvalidMessage() {
+    void testReceiveInvalidMessage() {
         String message = "Invalid Message Content";
         reportConsumer.receiveReportMessage(message);
         verify(reportCreator, never()).generateReport(anyLong(), any(ReportType.class));

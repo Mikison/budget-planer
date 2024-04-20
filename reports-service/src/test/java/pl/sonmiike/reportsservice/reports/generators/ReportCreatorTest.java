@@ -50,7 +50,7 @@ public class ReportCreatorTest {
 
 
     @Test
-    public void testGenerateWeeklyReport_WhenReportIsCreated() {
+    void testGenerateWeeklyReport_WhenReportIsCreated() {
         Long userId = 1L;
         UserEntityReport user = getUser(); // Assuming existence of such a class
         WeeklyReport weeklyReport = getWeeklyReport();
@@ -67,7 +67,7 @@ public class ReportCreatorTest {
     }
 
     @Test
-    public void testGenerateWeeklyReport_WhenReportIsNull() {
+    void testGenerateWeeklyReport_WhenReportIsNull() {
         Long userId = 1L;
         UserEntityReport user = getUser();
 
@@ -83,7 +83,7 @@ public class ReportCreatorTest {
 
 
     @Test
-    public void testGenerateMonthlyReport_WhenReportIsCreated() {
+    void testGenerateMonthlyReport_WhenReportIsCreated() {
         Long userId = 1L;
         UserEntityReport user = getUser();
         MonthlyReport monthlyReport = mock(MonthlyReport.class);
@@ -100,7 +100,7 @@ public class ReportCreatorTest {
     }
 
     @Test
-    public void testGenerateMonthlyReport_WhenReportIsNull() {
+    void testGenerateMonthlyReport_WhenReportIsNull() {
         Long userId = 1L;
         UserEntityReport user = getUser();
 

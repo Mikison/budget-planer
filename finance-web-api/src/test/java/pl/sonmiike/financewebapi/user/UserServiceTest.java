@@ -58,7 +58,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetAllUsers() {
+    void testGetAllUsers() {
         // Prepare your test data
         List<UserEntity> userList = List.of(
                 UserEntity.builder().userId(1L).build(),
@@ -151,7 +151,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldDeleteUserAndRelatedDataWhenUserExists() {
+    void shouldDeleteUserAndRelatedDataWhenUserExists() {
         Long userId = 1L;
         when(userRepository.existsById(userId)).thenReturn(true);
 
@@ -165,7 +165,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenUserDoesNotExist() {
+    void shouldThrowExceptionWhenUserDoesNotExist() {
         Long userId = 2L;
         when(userRepository.existsById(userId)).thenReturn(false);
 

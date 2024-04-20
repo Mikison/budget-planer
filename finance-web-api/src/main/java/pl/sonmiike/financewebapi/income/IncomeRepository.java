@@ -16,7 +16,5 @@ public interface IncomeRepository extends JpaRepository<Income, Long>, JpaSpecif
     void deleteIncomeByIdAndUserUserId(Long id, Long userId);
 
     void deleteAllByUserUserId(Long userId);
-
-//    Page<Income> findIncomesByUserUserIdAndIncomeDateBetweenAndAmountBetweenAndDescriptionNotContainsIgnoreCase
 }
 

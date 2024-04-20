@@ -41,12 +41,12 @@ public class MonthlyReportAssemblerTest {
     private MonthlyReportAssembler monthlyReportAssembler;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testCreateMonthlyReport_WithData() {
+    void testCreateMonthlyReport_WithData() {
         UserEntityReport user = getUser();
         List<IncomeEntity> incomes = getIncomes();
         List<ExpenseEntity> expenses = getExpenses();
@@ -69,7 +69,7 @@ public class MonthlyReportAssemblerTest {
     }
 
     @Test
-    public void testCreateMonthlyReport_NoData() {
+    void testCreateMonthlyReport_NoData() {
         UserEntityReport user = getUser();
         when(incomeEntityService.getIncomesFromDateInterval(any(), any(), anyLong())).thenReturn(Optional.empty());
         when(expenseEntityService.getExpensesFromDateBetween(any(), any(), anyLong())).thenReturn(Optional.empty());

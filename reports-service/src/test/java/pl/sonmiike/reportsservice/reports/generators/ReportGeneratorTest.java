@@ -16,53 +16,29 @@ import static org.mockito.Mockito.when;
 public class ReportGeneratorTest {
 
     @Mock
-    private UserEntityService userEntityService;  // Assuming this is a dependency
+    private UserEntityService userEntityService;
 
     @InjectMocks
     private ReportGenerator<WeeklyReport> reportGenerator;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testGeneratePdf_NullReport() {
+    void testGeneratePdf_NullReport() {
         assertDoesNotThrow(() -> reportGenerator.generatePDF(null));
-        // Verify that no PDF operations are performed when report is null
     }
 
     @Test
-    public void testGeneratePdf_NullUser() {
+    void testGeneratePdf_NullUser() {
         WeeklyReport report = mock(WeeklyReport.class);
         when(report.getUser()).thenReturn(null);
 
         assertDoesNotThrow(() -> reportGenerator.generatePDF(report));
-        // Check for handling of null user inside the PDF generation
     }
 
-//    @Test
-//    public void testPdfContent() throws Exception {
-//        String basePath = "test-output";
-//        WeeklyReport report = createSampleReport();
-//        reportGenerator.generatePDF(report);
-//
-//        String outputPath = Paths.get(basePath, "generated_report.pdf").toString();
-//
-//        PdfDocument pdfDoc = new PdfDocument(new PdfReader(outputPath));
-//        String pdfContent = PdfTextExtractor.getTextFromPage(pdfDoc.getPage(1));
-//
-//        assertTrue(pdfContent.contains("Expected text or data"));
-//
-//        pdfDoc.close();
-//
-//        new File(outputPath).delete();
-//    }
-//
-//    private WeeklyReport createSampleReport() {
-//        return WeeklyReport.builder()
-//                .build();
-//    }
 
 
 

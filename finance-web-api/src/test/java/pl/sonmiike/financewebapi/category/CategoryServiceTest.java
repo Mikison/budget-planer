@@ -60,7 +60,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void getAllCategories_ShouldReturnAllCategories() {
+    void getAllCategories_ShouldReturnAllCategories() {
         List<Category> categories = Arrays.asList(Category.builder().id(1L).name("Food").build(), Category.builder().id(2L).name("Utilities").build());
         Set<CategoryDTO> categoryDTOs = categories.stream().map(category -> new CategoryDTO(category.getId(), category.getName())).collect(Collectors.toSet());
 

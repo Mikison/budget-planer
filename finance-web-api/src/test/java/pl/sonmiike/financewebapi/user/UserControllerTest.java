@@ -49,7 +49,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getAllUsersTest() throws Exception {
+    void getAllUsersTest() throws Exception {
         // Given
         int page = 0;
         int size = 10;
@@ -65,7 +65,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUserByIdTest() throws Exception {
+    void getUserByIdTest() throws Exception {
         // Given
         Long id = 1L;
         UserEntity userEntity = mock(UserEntity.class);
@@ -83,7 +83,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUserByEmailTest() throws Exception {
+    void getUserByEmailTest() throws Exception {
         // Given
         String email = "test@example.com";
         UserDTO userDTO = mock(UserDTO.class);
@@ -98,7 +98,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteUserByIdTest() throws Exception {
+    void deleteUserByIdTest() throws Exception {
         // Given
         Long id = 1L;
 

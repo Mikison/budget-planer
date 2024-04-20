@@ -172,7 +172,7 @@ class ExpenseControllerTest {
     }
 
     @Test
-    public void updateExpense_ThrowsIdNotMatchingException() throws Exception {
+    void updateExpense_ThrowsIdNotMatchingException() throws Exception {
         Long id = 1L;
         ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", null, 1L);
         ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", 1L, 1L);

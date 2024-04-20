@@ -6,9 +6,6 @@ import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.util.Map;
 
-
-
-
 public interface Report {
     Map<String, Object> getReportData();
     UserEntityReport getUser();

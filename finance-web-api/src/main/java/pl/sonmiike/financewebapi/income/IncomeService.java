@@ -52,6 +52,7 @@ public class IncomeService {
         income.setUser(userService.getUserById(userId));
         return incomeMapper.toDTO(incomeRepository.save(income));
     }
+
     @Transactional
     public void deleteIncome(Long incomeId, Long userId) {
         incomeRepository.deleteIncomeByIdAndUserUserId(incomeId, userId);

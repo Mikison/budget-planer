@@ -31,12 +31,16 @@ public class AuthServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private JwtService jwtService;
+
     @Mock
     private RefreshTokenService refreshTokenService;
+
     @Mock
     private AuthenticationManager authenticationManager;
 
@@ -123,7 +127,6 @@ public class AuthServiceTest {
         assertEquals("accessToken123", response.getAccessToken());
         assertEquals("refreshToken123", response.getRefreshToken());
 
-        // Verify the interactions
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(userRepository).findByEmail(loginRequest.getEmail());
         verify(jwtService).generateToken(user);
@@ -139,9 +142,7 @@ public class AuthServiceTest {
         // When & Then
         assertThrows(UsernameNotFoundException.class, () -> authService.login(loginRequest));
 
-        // Verify userRepository was called
         verify(userRepository).findByEmail(loginRequest.getEmail());
-        // Ensure no other interactions
         verifyNoInteractions(jwtService);
         verifyNoInteractions(refreshTokenService);
     }

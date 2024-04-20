@@ -30,12 +30,12 @@ public class IncomeEntityServiceTest {
 
 
     @BeforeEach
-    public void init() {
+    void init() {
         openMocks = MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
-    public void close() throws Exception {
+    void close() throws Exception {
         openMocks.close();
     }
 

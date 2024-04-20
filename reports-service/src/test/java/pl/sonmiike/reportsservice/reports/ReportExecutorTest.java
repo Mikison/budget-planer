@@ -32,7 +32,7 @@ public class ReportExecutorTest {
     private final String monthlyRoutingKey = "monthly";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         reportExecutor = new ReportExecutor(rabbitTemplate, userEntityService);
         reportExecutor.setTopicExchangeName(topicExchangeName);
@@ -42,7 +42,7 @@ public class ReportExecutorTest {
     }
 
     @Test
-    public void testExecuteWeeklyReportGeneration() {
+    void testExecuteWeeklyReportGeneration() {
         Set<UserEntityReport> users = Set.of(new UserEntityReport(1L), new UserEntityReport(2L));
         when(userEntityService.getAllUsers()).thenReturn(users);
 
@@ -58,7 +58,7 @@ public class ReportExecutorTest {
     }
 
     @Test
-    public void testExecuteMonthlyReportGeneration() {
+    void testExecuteMonthlyReportGeneration() {
         Set<UserEntityReport> users = Set.of(new UserEntityReport(1L), new UserEntityReport(2L));
         when(userEntityService.getAllUsers()).thenReturn(users);
 

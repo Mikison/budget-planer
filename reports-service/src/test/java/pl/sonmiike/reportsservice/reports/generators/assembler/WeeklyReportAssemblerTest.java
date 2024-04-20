@@ -40,12 +40,12 @@ public class WeeklyReportAssemblerTest {
     private WeeklyReportAssembler weeklyReportAssembler;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testCreateWeeklyReport_WithData() {
+    void testCreateWeeklyReport_WithData() {
         UserEntityReport user = getUser();
         LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
@@ -69,7 +69,7 @@ public class WeeklyReportAssemblerTest {
     }
 
     @Test
-    public void testCreateWeeklyReport_NoData() {
+    void testCreateWeeklyReport_NoData() {
         UserEntityReport user = new UserEntityReport(1L);
         LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));

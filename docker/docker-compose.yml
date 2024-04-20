@@ -13,8 +13,6 @@ services:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
       - rabbitmq_data:/var/lib/rabbitmq
-    networks:
-      - app-network
 
   db:
     image: postgres:latest
@@ -24,9 +22,6 @@ services:
       - POSTGRES_DB=finance
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    networks:
-      - app-network
-
   webapi:
     build:
       context: ../finance-web-api
@@ -39,8 +34,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-    networks:
-      - app-network
 
   reports-service:
     build:
@@ -57,8 +50,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING.RABBITMQ.HOST=rabbitmq
-    networks:
-      - app-network
 
   mail-service:
     build:
@@ -74,8 +65,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING.RABBITMQ.HOST=rabbitmq
-    networks:
-      - app-network
 
 networks:
   app-network:

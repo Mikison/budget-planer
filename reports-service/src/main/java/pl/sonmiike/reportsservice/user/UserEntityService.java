@@ -3,6 +3,7 @@ package pl.sonmiike.reportsservice.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -24,7 +25,7 @@ public class UserEntityService {
     }
 
     public Long getUserId(Authentication authentication) {
-        UserEntityReport user = (UserEntityReport) authentication.getPrincipal();
-        return user.getUserId();
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        return userEntityRepository.findByEmail(user.getUsername()).getUserId();
     }
 }

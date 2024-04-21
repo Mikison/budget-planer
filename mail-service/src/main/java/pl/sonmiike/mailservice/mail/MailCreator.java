@@ -36,7 +36,9 @@ public class MailCreator {
             helper.setTo(mail.recipient());
             helper.setSubject(mail.title());
             helper.setText(getHtmlTemplate(mail), true);
-            helper.addAttachment(mail.fileName(), attachment);
+            if (attachment.exists()) {
+                helper.addAttachment(mail.fileName(), attachment);
+            }
 
             return helper.getMimeMessage();
         } catch (MessagingException e) {

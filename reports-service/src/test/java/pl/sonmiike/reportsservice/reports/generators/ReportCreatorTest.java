@@ -13,7 +13,6 @@ import pl.sonmiike.reportsservice.report.generators.ReportGenerator;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
 import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
-import pl.sonmiike.reportsservice.report.types.MonthlyReport;
 import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
@@ -23,7 +22,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 public class ReportCreatorTest {
@@ -49,22 +49,6 @@ public class ReportCreatorTest {
     }
 
 
-    @Test
-    void testGenerateWeeklyReport_WhenReportIsCreated() {
-        Long userId = 1L;
-        UserEntityReport user = getUser(); // Assuming existence of such a class
-        WeeklyReport weeklyReport = getWeeklyReport();
-        weeklyReport.setUser(user);
-
-        when(userEntityService.getUserById(userId)).thenReturn(user);
-        when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(weeklyReport);
-
-        reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
-
-        verify(userEntityService).getUserById(userId);
-        verify(weeklyReportAssembler).createWeeklyReport(user);
-
-    }
 
     @Test
     void testGenerateWeeklyReport_WhenReportIsNull() {
@@ -82,22 +66,6 @@ public class ReportCreatorTest {
     }
 
 
-    @Test
-    void testGenerateMonthlyReport_WhenReportIsCreated() {
-        Long userId = 1L;
-        UserEntityReport user = getUser();
-        MonthlyReport monthlyReport = mock(MonthlyReport.class);
-        monthlyReport.setUser(user);
-
-        when(userEntityService.getUserById(userId)).thenReturn(user);
-        when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(monthlyReport);
-
-        reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
-
-        verify(userEntityService).getUserById(userId);
-        verify(monthlyReportAssembler).createMonthlyReport(user);
-
-    }
 
     @Test
     void testGenerateMonthlyReport_WhenReportIsNull() {

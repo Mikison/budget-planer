@@ -48,7 +48,7 @@ public class MailCreatorTest {
 
     @Test
     void testCreateMailToSend() throws MessagingException, MessagingException {
-        MailDTO mail = new MailDTO(Template.GREETING, "recipient@example.com", "Subject", new HashMap<>());
+        MailDTO mail = new MailDTO(Template.GREETING, "recipient@example.com", "Subject", new HashMap<>(), "");
         when(templateEngine.process(anyString(), any(Context.class))).thenReturn("Processed HTML content");
 
         MimeMessage result = mailCreator.createMailToSend(mail);
@@ -64,7 +64,7 @@ public class MailCreatorTest {
     void testCreateMailToSendWithException() throws MessagingException {
         doThrow(new MessagingException()).when(mimeMessage).setContent(any(), anyString());
 
-        MailDTO mail = new MailDTO(Template.GREETING, "recipient@example.com", "Subject", new HashMap<>());
+        MailDTO mail = new MailDTO(Template.GREETING, "recipient@example.com", "Subject", new HashMap<>(), "");
         assertThrows(RuntimeException.class, () -> {
             mailCreator.createMailToSend(mail);
         });

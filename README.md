@@ -27,7 +27,7 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
   <img alt="Lombok" src="https://img.shields.io/badge/Lombok-000000?style=for-the-badge&logo=lombok&logoColor=white"/>
 </p>
 
-### Frontend
+### Frontend (Under Development)
 <p>
   <img alt="Angular" src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white"/>
   <img alt="RxJS" src="https://img.shields.io/badge/RxJS-B7178C?style=for-the-badge&logo=reactivex&logoColor=white"/>

@@ -17,23 +17,32 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
 ## Tech Stack
 
 ### Backend
-- Spring Boot
-- Spring Web
-- Spring Security
-- Spring Data JPA
-- Spring AMQP with RabbitMQ
-- Lombok
+<p>
+  <img alt="Spring Boot" src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white"/>
+  <img alt="Spring Web" src="https://img.shields.io/badge/Spring%20Web-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
+  <img alt="Spring Security" src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white"/>
+  <img alt="Spring Data JPA" src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
+  <img alt="Spring AMQP" src="https://img.shields.io/badge/Spring%20AMQP-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
+  <img alt="RabbitMQ" src="https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white"/>
+  <img alt="Lombok" src="https://img.shields.io/badge/Lombok-000000?style=for-the-badge&logo=lombok&logoColor=white"/>
+</p>
 
 ### Testing
-- JUnit
-- Mockito
+<p>
+  <img alt="JUnit" src="https://img.shields.io/badge/JUnit-25A162?style=for-the-badge&logo=junit5&logoColor=white"/>
+  <img alt="Mockito" src="https://img.shields.io/badge/Mockito-25A162?style=for-the-badge&logo=mockito&logoColor=white"/>
+</p>
 
 ### Database
-- PostgreSQL
+<p>
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white"/>
+</p>
 
 ### Other Technologies
-- Docker for containerization
-- Swagger for API documentation
+<p>
+  <img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
+  <img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white"/>
+</p>
 
 ### CI/CD
 - Jenkins: Automated Jenkins pipeline for continuous integration and deployment to Docker Hub.

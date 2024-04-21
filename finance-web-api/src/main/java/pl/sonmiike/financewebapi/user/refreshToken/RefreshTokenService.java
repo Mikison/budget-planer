@@ -24,7 +24,6 @@ public class RefreshTokenService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found + " + username));
 
         RefreshToken refreshToken = user.getRefreshToken();
-        // TODO If login and refresh is expired create new one
         if (refreshToken == null) {
             long refreshTokenExpiration = 5 * 60 * 60 * 10000;
             refreshToken = RefreshToken.builder()

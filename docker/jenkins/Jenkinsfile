@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    tools {
+        maven "M3"
+    }
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = 'docker-hub-pwd'
+        IMAGE_WEB_API = 'sonmiike/docker-webapi:latest'
+        IMAGE_REPORTS_SERVICE = 'sonmiike/docker-reports-service:latest'
+        IMAGE_MAIL_SERVICE = 'sonmiike/docker-mail-service:latest'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Mikison/budget-planer.git']])
+            }
+        }
+
+        stage('Build Maven Project') {
+            steps {
+                sh "mvn -Dmaven.test.failure.ignore=true clean install"
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                dir('docker') {
+                    sh 'docker compose build'
+                }
+            }
+        }
+
+        stage('Tag Docker Images') {
+            steps {
+                sh "docker tag docker-webapi ${IMAGE_WEB_API}"
+                sh "docker tag docker-reports-service ${IMAGE_REPORTS_SERVICE}"
+                sh "docker tag docker-mail-service ${IMAGE_MAIL_SERVICE}"
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: "${DOCKER_HUB_CREDENTIALS}", variable: 'DOCKER_HUB_PWD')]) {
+                        sh "echo ${DOCKER_HUB_PWD} | docker login -u sonmiike --password-stdin"
+                        try {
+                            sh "docker push ${IMAGE_MAIL_SERVICE}"
+                            sh "docker push ${IMAGE_REPORTS_SERVICE}"
+                            sh "docker push ${IMAGE_WEB_API}"
+                        } catch (Exception e) {
+                            echo "Failed to push images: ${e}"
+                            throw e
+                        } finally {
+                            sh 'docker logout'
+                        }
+                    }
+                }
+            }
+        }
+
+}
+
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Build and push completed successfully.'
+        }
+        failure {
+            echo 'Build or push failed.'
+        }
+    }
+}

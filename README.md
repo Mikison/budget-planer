@@ -26,7 +26,8 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
   <img alt="RabbitMQ" src="https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white"/>
   <img alt="Lombok" src="https://img.shields.io/badge/Lombok-000000?style=for-the-badge&logo=lombok&logoColor=white"/>
 </p>
-### Frontend (Under Development)
+
+### Frontend
 <p>
   <img alt="Angular" src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white"/>
   <img alt="RxJS" src="https://img.shields.io/badge/RxJS-B7178C?style=for-the-badge&logo=reactivex&logoColor=white"/>
@@ -47,10 +48,9 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
 <p>
   <img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
   <img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white"/>
+  <img alt="Jenkins" src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white"/>
 </p>
 
-### CI/CD
-<img alt="Jenkins" src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white"/>
 
 
 ## Getting Started

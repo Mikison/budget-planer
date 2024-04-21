@@ -51,7 +51,11 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
   <img alt="Jenkins" src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white"/>
 </p>
 
-
+## Documentation
+``` bash
+http://localhost:8080/swagger-ui/index.html
+http://localhost:8081/swagger-ui/index.html
+```
 
 ## Getting Started
 

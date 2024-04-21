@@ -57,14 +57,14 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
     }
 
     @Override
-    public void generatePDF(T report) {
-        generatePdf(report, basePath);
+    public String generatePDF(T report) {
+        return generatePdf(report, basePath);
     }
 
-    private void generatePdf(T report, String baseOutputPath) {
+    private String generatePdf(T report, String baseOutputPath) {
         if (report == null || report.getUser() == null) {
             System.out.println("Report or user is null, aborting PDF generation.");
-            return;
+            return "";
         }
         String username = report.getUser().getUsername();
         String dateInterval = report.getReportData().get("Date Interval").toString();
@@ -107,17 +107,18 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
             document.add(new Paragraph("Report Generated on: " + new Date()));
             System.out.println("Report saved to: " + outputPath);
-            DateInterval dateIntervalObj = getDateIntervalfromString(dateInterval);
+            DateInterval dateIntervalObj = getDateIntervalFromString(dateInterval);
             if (!reportEntityRepository.existsByStartDateAndEndDate(dateIntervalObj.getStartDate(), dateIntervalObj.getEndDate())) {
                 reportEntityRepository.save(getReportEntity(report.getUser(), report.getReportType(), dateIntervalObj, fileName));
             }
+            return fileName;
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return "";
     }
 
-    private DateInterval getDateIntervalfromString(String dateInterval) {
+    private DateInterval getDateIntervalFromString(String dateInterval) {
         String[] dates = dateInterval.split("-");
         String startDate = dates[0] + "-" + dates[1] + "-" + dates[2];
         String endDate = dates[3] + "-" + dates[4] + "-" + dates[5];

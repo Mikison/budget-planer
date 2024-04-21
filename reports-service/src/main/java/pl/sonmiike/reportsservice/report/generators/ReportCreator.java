@@ -2,6 +2,7 @@ package pl.sonmiike.reportsservice.report.generators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.sonmiike.reportsservice.report.ReportMailSender;
 import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.assemblers.CustomDateReportAssembler;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
@@ -19,6 +20,7 @@ public class ReportCreator {
     private final MonthlyReportAssembler monthlyReportAssembler;
     private final CustomDateReportAssembler customDateIntervalReportGenerator;
     private final ReportGenerator<Report> reportGenerator;
+    private final ReportMailSender reportMailSender;
 
     public void generateReport(Long userId, ReportType reportType) {
         UserEntityReport user = userEntityService.getUserById(userId);
@@ -33,8 +35,10 @@ public class ReportCreator {
             return;
         }
 
-        reportGenerator.generatePDF(report);
+        String fileName = reportGenerator.generatePDF(report);
         System.out.println(reportType + " Report Generated for user: " + userId);
+        reportMailSender.sendReportMail(reportType, fileName, user.getEmail());
+
     }
 
     private Report generateReport(UserEntityReport user, ReportType reportType) {

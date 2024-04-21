@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.io.File;
+
 
 @Component
 @RequiredArgsConstructor
@@ -28,11 +30,13 @@ public class MailCreator {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
+            File attachment = new File("../reports/" + mail.fileName());
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(sender);
             helper.setTo(mail.recipient());
             helper.setSubject(mail.title());
             helper.setText(getHtmlTemplate(mail), true);
+            helper.addAttachment(mail.fileName(), attachment);
 
             return helper.getMimeMessage();
         } catch (MessagingException e) {

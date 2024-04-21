@@ -6,6 +6,7 @@ public record MailDTO(
         Template template,
         String recipient,
         String title,
-        Map<String, Object> templateProperties
+        Map<String, Object> templateProperties,
+        String fileName
 ) {
 }

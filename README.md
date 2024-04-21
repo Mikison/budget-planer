@@ -45,7 +45,8 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
 </p>
 
 ### CI/CD
-- Jenkins: Automated Jenkins pipeline for continuous integration and deployment to Docker Hub.
+<img alt="Jenkins" src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white"/>
+
 
 ## Getting Started
 

@@ -7,8 +7,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.report.ReportExecutor;
-import pl.sonmiike.reportsservice.report.database.ReportEntity;
+import pl.sonmiike.reportsservice.report.database.ReportDTO;
 import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
+import pl.sonmiike.reportsservice.report.database.ReportMapper;
 
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ public class ReportService {
 
     private final ReportExecutor reportExecutor;
     private final ReportEntityRepository reportEntityRepository;
+    private final ReportMapper reportMapper;
 
     public void callOnDemandWeeklyReport(Long userId) {
         reportExecutor.initiateWeeklyReportGenerationForUser(userId);
@@ -32,16 +34,22 @@ public class ReportService {
         reportExecutor.initiateMonthlyReportGenerationForUser(userId);
     }
 
-    public List<ReportEntity> findAllReports() {
-        return reportEntityRepository.findAll();
+    public List<ReportDTO> findAllReports() {
+        return reportEntityRepository.findAll()
+                .stream()
+                .map(reportMapper::toDTO)
+                .toList();
     }
 
-    public List<ReportEntity> findUserReports(Long id) {
-        return reportEntityRepository.findAllByUserUserId(id);
+    public List<ReportDTO> findUserReports(Long id) {
+        return reportEntityRepository.findAllByUserUserId(id)
+                .stream()
+                .map(reportMapper::toDTO)
+                .toList();
     }
 
     public Resource getPdfFile(String name, Long userId) {
-        List<ReportEntity> userReports = findUserReports(userId);
+        List<ReportDTO> userReports = findUserReports(userId);
         if (userReports.stream().noneMatch(report -> report.getFileName().contains(name))) {
             throw new RuntimeException("Error: File not found");
         }

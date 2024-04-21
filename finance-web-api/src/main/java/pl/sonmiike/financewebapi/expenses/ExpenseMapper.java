@@ -43,7 +43,7 @@ public class ExpenseMapper {
     public PagedExpensesDTO toPagedDTO(Page<Expense> expenses) {
         return PagedExpensesDTO.builder()
                 .page(expenses.getNumber())
-                .totalPages(expenses.getTotalPages() > 1 ? expenses.getTotalPages() - 1 : expenses.getTotalPages())
+                .totalPages(expenses.getTotalPages())
                 .expenses(expenses.getContent().stream().map(this::toDTO).toList())
                 .build();
     }

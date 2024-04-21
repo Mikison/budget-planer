@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget, Long> {
 
@@ -14,6 +15,9 @@ public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget, Lo
     @Transactional
     @Query("UPDATE MonthlyBudget mb SET mb.budgetAmount = :budgetAmount, mb.updatedAt = CURRENT_TIMESTAMP WHERE mb.user.userId = :userId AND mb.category.id = :categoryId AND mb.yearMonth = :yearMonth")
     int updateBudgetAmountByUserIdAndCategoryIdAndYearMonth(@Param("userId") Long userId, @Param("categoryId") Long categoryId, @Param("yearMonth") String yearMonth, @Param("budgetAmount") BigDecimal budgetAmount);
+
+    List<MonthlyBudget> findAllByUserUserId(Long userId);
+
 
     void deleteByUserUserIdAndCategoryIdAndYearMonth(Long userId, Long categoryId, String string);
 }

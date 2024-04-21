@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.sonmiike.reportsservice.report.database.ReportEntity;
+import pl.sonmiike.reportsservice.report.database.ReportDTO;
 import pl.sonmiike.reportsservice.user.UserEntityService;
 
 import java.util.List;
@@ -36,12 +36,12 @@ public class ReportController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ReportEntity>> getAllReports() {
+    public ResponseEntity<List<ReportDTO>> getAllReports() {
         return ResponseEntity.ok(reportService.findAllReports());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReportEntity>> getUserReports(@PathVariable Long userId) {
+    public ResponseEntity<List<ReportDTO>> getUserReports(@PathVariable Long userId) {
         return ResponseEntity.ok(reportService.findUserReports(userId));
     }
 

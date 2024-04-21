@@ -1,5 +1,6 @@
 package pl.sonmiike.financewebapi.expenses;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -22,6 +23,7 @@ public class ExpenseDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private String date;
     @NotBlank
+    @DecimalMin(value = "0.0", message = "Amount must be greater than 0", inclusive = false)
     private String amount;
 
     private Long userId;

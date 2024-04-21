@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,8 +41,20 @@ public class CategoryService {
 
     public Set<CategoryDTO> getUserCategories(Long userId) {
         List<Category> categories = categoryRepository.findAllCategoriesByUserId(userId);
+        List<MonthlyBudget> budgets = monthlyBudgetRepository.findAllByUserUserId(userId);
+        Map<Long, BigDecimal> budgetMap = budgets.stream()
+                .collect(Collectors.groupingBy(
+                        budget -> budget.getCategory().getId(),
+                        Collectors.reducing(
+                                BigDecimal.ZERO, MonthlyBudget::getBudgetAmount, BigDecimal::add
+                        )
+                ));
         return categories.stream()
-                .map(categoryMapper::toDTO)
+                .map(category -> {
+                    CategoryDTO dto = categoryMapper.toDTO(category);
+                    dto.setBudget(budgetMap.getOrDefault(category.getId(), BigDecimal.ZERO));
+                    return dto;
+                })
                 .collect(Collectors.toSet());
     }
 

@@ -22,7 +22,7 @@ public class ReportController {
     private final UserEntityService userEntityService;
 
 
-    @GetMapping("/generate/{userId}")
+    @PostMapping("/generate/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void generateReport(@RequestParam String type, @PathVariable Long userId) {
 

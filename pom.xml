@@ -18,9 +18,11 @@
         <java.version>17</java.version>
     </properties>
     <modules>
-        <module>finance-web-api</module>
+        <module>budget-app</module>
         <module>reports-service</module>
-        <module>mail-service</module>
+        <module>mail-app</module>
         <module>mail-template</module>
+        <module>budget-api-gateway</module>
+        <module>budget-service-registry</module>
     </modules>
 </project>

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   rabbitmq:
@@ -29,51 +29,80 @@ services:
 
   webapi:
     build:
-      context: ../finance-web-api
-      dockerfile: ../finance-web-api/Dockerfile
+      context: ../budget-app
+      dockerfile: ../budget-app/Dockerfile
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - db
+      - eureka-server
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
         - app-network
 
   reports-service:
     build:
-      context: ../reports-service
-      dockerfile: ../reports-service/Dockerfile
+      context: ../reports-app
+      dockerfile: ../reports-app/Dockerfile
     ports:
-      - "8081:8081"
+      - "8083:8083"
     depends_on:
       - db
       - webapi
       - rabbitmq
+      - eureka-server
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING.RABBITMQ.HOST=rabbitmq
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
       - app-network
 
   mail-service:
     build:
-      context: ../mail-service
-      dockerfile: ../mail-service/Dockerfile
+      context: ../mail-app
+      dockerfile: ../mail-app/Dockerfile
     ports:
       - "8082:8082"
     depends_on:
       - db
       - rabbitmq
+      - eureka-server
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING.RABBITMQ.HOST=rabbitmq
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+        - app-network
+
+
+  eureka-server:
+    build:
+      context: ../budget-service-registry
+      dockerfile: ../budget-service-registry/Dockerfile
+    ports:
+        - "8761:8761"
+    networks:
+        - app-network
+
+  cloud-gateway:
+    build:
+      context: ../budget-api-gateway
+      dockerfile: ../budget-api-gateway/Dockerfile
+    ports:
+        - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+        - eureka-server
     networks:
         - app-network
 

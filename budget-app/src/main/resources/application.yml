@@ -1,6 +1,6 @@
 spring:
   application:
-    name: REPORTS-SERVICE
+    name: BUDGET-APP
   datasource:
     url: jdbc:postgresql://localhost:5432/finance
     username: postgres
@@ -13,26 +13,16 @@ spring:
       ddl-auto: update
     generate-ddl: true
     show-sql: true
-  rabbitmq:
-    exchange: reports-exchange
-    routing:
-      key:
-        weekly: reports.weekly
-        monthly: reports.monthly
-    queue: reports-queue
+  docker:
+    compose:
+      enabled: false
 jwt:
   secretKey: "OXgzaGZ3OTMzdWRpendib281cHF1bTRsODl1YWx5ejloc2E5Zm16bW5hNzBrcmt5c2p0c3Q5dXhrMDV6YWUzOGFldDNlNHZlajllZWduenlzdTd1Y3RyN2d6dWF1MjBiNm5ib2tjeW9hb3l4aTg3NGMybmV5a3F6NG1zN2E2c20="
+
 server:
-  port: 8083
-  address: 0.0.0.0
-
-
-
-reports:
-  folder:
-    root: ../reports
+  port: 8081
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+        defaultZone: http://localhost:8761/eureka/

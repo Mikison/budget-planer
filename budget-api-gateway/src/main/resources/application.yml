@@ -1,0 +1,32 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: budget-app
+          uri: lb://BUDGET-APP
+          predicates:
+            - Path=/me/expenses/**
+            - Path=/me/category/**
+            - Path=/me/income/**
+#          filters:
+#            - AuthenticationFilter
+
+        - id: reports-service
+          uri: lb://REPORTS-SERVICE
+          predicates:
+            - Path=/report/**
+#          filters:
+#            - AuthenticationFilter
+#
+#        - id: identity-service
+#          uri: lb://IDENTITY-SERVICE
+#          predicates:
+#            - Path=/auth/**
+
+  application:
+    name: BUDGET-GATEWAY
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/

@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sonmiike.reportsservice.report.database.ReportDTO;
-import pl.sonmiike.reportsservice.user.UserEntityService;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ public class ReportController {
 
 
     private final ReportService reportService;
-    private final UserEntityService userEntityService;
 
 
     @PostMapping("/generate/{userId}")

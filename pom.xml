@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>pl.sonmiike</groupId>
     <artifactId>budget-finance</artifactId>
@@ -24,5 +24,6 @@
         <module>mail-template</module>
         <module>budget-api-gateway</module>
         <module>budget-service-registry</module>
+        <module>authentication-service</module>
     </modules>
 </project>

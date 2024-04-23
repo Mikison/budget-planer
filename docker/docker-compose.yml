@@ -46,8 +46,8 @@ services:
 
   reports-service:
     build:
-      context: ../reports-app
-      dockerfile: ../reports-app/Dockerfile
+      context: ../reports-service
+      dockerfile: ../reports-service/Dockerfile
     ports:
       - "8083:8083"
     depends_on:
@@ -105,6 +105,22 @@ services:
         - eureka-server
     networks:
         - app-network
+
+  authentication-service:
+    build:
+      context: ../authentication-service
+      dockerfile: ../authentication-service/Dockerfile
+    ports:
+      - "9898:9898"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/finance
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - eureka-server
+    networks:
+      - app-network
 
 networks:
   app-network:

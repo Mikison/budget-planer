@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: AUTHENTICATION-SERVICE
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finance
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
+
+
+server:
+  port: 9898
+
+
+jwt:
+  secret: MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP
+  expiration: 86400

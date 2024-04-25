@@ -12,6 +12,7 @@ import pl.sonmiike.financewebapi.exceptions.custom.EmailAlreadyTakenException;
 import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -51,5 +52,17 @@ public class ResponseExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException e, HttpServletRequest request) {
+        ApiError apiError = new ApiError(
+                request.getRequestURI(),
+                e.getMessage(),
+                HttpStatus.FORBIDDEN.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 }

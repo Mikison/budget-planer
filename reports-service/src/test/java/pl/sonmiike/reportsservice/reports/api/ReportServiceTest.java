@@ -75,7 +75,7 @@ public class ReportServiceTest {
         String fileName = "nonexistent";
         when(reportEntityRepository.findAllByUserUserId(userId)).thenReturn(Collections.emptyList());
 
-        assertThrows(RuntimeException.class, () -> reportService.getPdfFile(fileName, userId));
+        assertThrows(RuntimeException.class, () -> reportService.fetchPdfFile(fileName, userId));
     }
 
     private ReportEntity getReport() {

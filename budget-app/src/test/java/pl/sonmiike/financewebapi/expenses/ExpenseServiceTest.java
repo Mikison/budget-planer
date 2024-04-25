@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import pl.sonmiike.financewebapi.category.Category;
-import pl.sonmiike.financewebapi.category.CategoryService;
+import pl.sonmiike.financewebapi.category.CategoryServiceImpl;
 import pl.sonmiike.financewebapi.category.UserCategory;
 import pl.sonmiike.financewebapi.category.UserCategoryRepository;
 import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
@@ -39,7 +39,7 @@ class ExpenseServiceTest {
     private UserService userService;
 
     @Mock
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryServiceImpl;
 
     @Mock
     private ExpenseMapper expenseMapper;
@@ -149,7 +149,7 @@ class ExpenseServiceTest {
         when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(true);
         when(expenseMapper.toEntity(expenseDTO)).thenReturn(expense);
         when(userService.getUserById(userId)).thenReturn(new UserEntity());
-        when(categoryService.getCategoryById(categoryId)).thenReturn(new Category());
+        when(categoryServiceImpl.getCategoryById(categoryId)).thenReturn(new Category());
         when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
 

@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.sonmiike.reportsservice.report.database.ReportDTO;
@@ -22,9 +23,13 @@ public class ReportController {
     private final ReportService reportService;
 
 
-    @PostMapping("/generate/{userId}")
+    @PostMapping("/generate")
     @ResponseStatus(HttpStatus.CREATED)
-    public void generateReport(@RequestParam String type, @PathVariable Long userId) {
+    public void generateReport(@RequestParam String type, Authentication authentication) {
+        Long userId = getUserId(authentication);
+
+
+
 
         if (type.equals("weekly")) {
             reportService.callOnDemandWeeklyReport(userId);
@@ -36,21 +41,23 @@ public class ReportController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ReportDTO>> getAllReports(Authentication authentication) {
-        System.out.println(getUserId(authentication));
-        return ResponseEntity.ok(reportService.findAllReports());
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ReportDTO>> getAllReports() {
+        return ResponseEntity.ok(reportService.fetchAllReports());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReportDTO>> getUserReports(@PathVariable Long userId) {
-        return ResponseEntity.ok(reportService.findUserReports(userId));
+    @GetMapping("/user")
+    public ResponseEntity<List<ReportDTO>> getUserReports(Authentication authentication) {
+        Long userId = getUserId(authentication);
+        return ResponseEntity.ok(reportService.fetchUserReports(userId));
     }
 
-    @GetMapping("/assets/{userId}")
-    public ResponseEntity<Resource> getUserReport( @RequestParam String name, @PathVariable Long userId) {
+    @GetMapping("/assets")
+    public ResponseEntity<Resource> getPdfUserReport( @RequestParam String name, Authentication authentication) {
+        Long userId = getUserId(authentication);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(reportService.getPdfFile(name, userId));
+                .body(reportService.fetchPdfFile(name, userId));
     }
 
     public Long getUserId(Authentication authentication) {

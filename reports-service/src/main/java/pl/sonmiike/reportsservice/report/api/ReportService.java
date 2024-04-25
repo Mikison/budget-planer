@@ -34,22 +34,22 @@ public class ReportService {
         reportExecutor.initiateMonthlyReportGenerationForUser(userId);
     }
 
-    public List<ReportDTO> findAllReports() {
+    public List<ReportDTO> fetchAllReports() {
         return reportEntityRepository.findAll()
                 .stream()
                 .map(reportMapper::toDTO)
                 .toList();
     }
 
-    public List<ReportDTO> findUserReports(Long id) {
+    public List<ReportDTO> fetchUserReports(Long id) {
         return reportEntityRepository.findAllByUserUserId(id)
                 .stream()
                 .map(reportMapper::toDTO)
                 .toList();
     }
 
-    public Resource getPdfFile(String name, Long userId) {
-        List<ReportDTO> userReports = findUserReports(userId);
+    public Resource fetchPdfFile(String name, Long userId) {
+        List<ReportDTO> userReports = fetchUserReports(userId);
         if (userReports.stream().noneMatch(report -> report.getFileName().contains(name))) {
             throw new RuntimeException("Error: File not found");
         }

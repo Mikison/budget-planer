@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.sonmiike.financewebapi.category.CategoryService;
+import pl.sonmiike.financewebapi.category.CategoryServiceImpl;
 import pl.sonmiike.financewebapi.category.UserCategoryRepository;
 import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
@@ -23,7 +23,7 @@ public class ExpenseService {
     private final UserCategoryRepository userCategoryRepository;
 
     private final UserService userService;
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryServiceImpl;
 
     private final ExpenseMapper expenseMapper;
 
@@ -51,7 +51,7 @@ public class ExpenseService {
         Expense expense = expenseMapper.toEntity(expenseDTO);
         expense.setUser(userService.getUserById(userId));
 
-        expense.setCategory(categoryService.getCategoryById(categoryId));
+        expense.setCategory(categoryServiceImpl.getCategoryById(categoryId));
         expenseRepository.save(expense);
     }
 
@@ -70,7 +70,7 @@ public class ExpenseService {
         }
         Expense expense = expenseMapper.toEntity(expenseDTOtoUpdate);
         expense.setUser(userService.getUserById(userId));
-        expense.setCategory(categoryService.getCategoryById(expenseDTOtoUpdate.getCategoryId()));
+        expense.setCategory(categoryServiceImpl.getCategoryById(expenseDTOtoUpdate.getCategoryId()));
         expenseRepository.save(expense);
         return expenseMapper.toDTO(expense);
     }

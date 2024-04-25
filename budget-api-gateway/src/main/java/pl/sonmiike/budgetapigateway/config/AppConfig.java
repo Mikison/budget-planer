@@ -1,4 +1,4 @@
-package pl.sonmiike.budgetapigateway.Config;
+package pl.sonmiike.budgetapigateway.config;
 
 
 import org.springframework.context.annotation.Bean;
@@ -12,4 +12,5 @@ public class AppConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 }

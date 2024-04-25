@@ -18,18 +18,18 @@ public class UserController {
     @GetMapping
     public ResponseEntity<PagedUsersDTO> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(userService.getAllUsers(page, size));
+        return ResponseEntity.ok(userService.fetchAllUsers(page, size));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserEntity userById = userService.getUserById(id);
+        UserEntity userById = userService.fetchUserById(id);
         return ResponseEntity.ok(userMapper.toDTO(userById));
     }
 
     @GetMapping("/email")
     public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
-        UserDTO userByEmail = userService.getUserByEmail(email);
+        UserDTO userByEmail = userService.fetchUserByEmail(email);
         return ResponseEntity.ok(userByEmail);
     }
 

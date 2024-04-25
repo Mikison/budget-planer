@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -40,7 +40,7 @@ public class UserServiceTest {
     private UserMapper userMapper;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private AutoCloseable openMocks;
 
@@ -55,7 +55,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testGetAllUsers() {
+    void testFetchAllUsers() {
         // Prepare your test data
         List<UserEntity> userList = List.of(
                 UserEntity.builder().userId(1L).build(),
@@ -65,20 +65,16 @@ public class UserServiceTest {
         int page = 0;
         int size = 5;
 
-        // Mock the userRepository to return a page of users
         Page<UserEntity> userPage = new PageImpl<>(userList, PageRequest.of(page, size), userList.size());
         when(userRepository.findAll(PageRequest.of(page, size))).thenReturn(userPage);
 
-        // Explicitly mock the userMapper toDTO method to return a non-null UserDTO for each UserEntity
         when(userMapper.toDTO(any(UserEntity.class))).thenAnswer(invocation -> {
             UserEntity userEntity = invocation.getArgument(0);
             return UserDTO.builder()
                     .id(userEntity.getUserId())
-                    // Add other fields as needed
                     .build();
         });
 
-        // Now, when toPagedDTO is called, it should return a PagedUsersDTO with non-null users content
         PagedUsersDTO expectedDTO = PagedUsersDTO.builder()
                 .currentPage(0)
                 .totalPages(1)
@@ -87,36 +83,34 @@ public class UserServiceTest {
 
         when(userMapper.toPagedDTO(userPage)).thenReturn(expectedDTO);
 
-        // Call the method under test
-        PagedUsersDTO actualDTO = userService.getAllUsers(page, size);
+        PagedUsersDTO actualDTO = userService.fetchAllUsers(page, size);
 
-        // Assert that the actualDTO matches the expectedDTO
         assertEquals(expectedDTO.getCurrentPage(), actualDTO.getCurrentPage());
         assertEquals(expectedDTO.getTotalPages(), actualDTO.getTotalPages());
         assertNotNull(actualDTO.getUsers());
     }
 
     @Test
-    void testGetUserById_Success() {
+    void testFetchUserById_Success() {
         Long userId = 1L;
         UserEntity userEntity = UserEntity.builder().userId(userId).build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(userEntity));
 
 
-        UserEntity userById = userService.getUserById(userId);
+        UserEntity userById = userService.fetchUserById(userId);
         assertNotNull(userById);
         assertEquals(userById, userEntity);
         verify(userRepository, times(1)).findById(userId);
     }
 
     @Test
-    void testGetUserById_Failure() {
+    void testFetchUserById_Failure() {
         Long userId = 1L;
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(userId));
+        assertThrows(ResourceNotFoundException.class, () -> userService.fetchUserById(userId));
         verify(userRepository, times(1)).findById(userId);
     }
 
@@ -129,7 +123,7 @@ public class UserServiceTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(userEntity));
         when(userMapper.toDTO(userEntity)).thenReturn(dto);
 
-        UserDTO userByEmail = userService.getUserByEmail(email);
+        UserDTO userByEmail = userService.fetchUserByEmail(email);
 
         assertEquals(userByEmail, dto);
         verify(userRepository, times(1)).findByEmail(email);
@@ -142,7 +136,7 @@ public class UserServiceTest {
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.getUserByEmail(email));
+        assertThrows(ResourceNotFoundException.class, () -> userService.fetchUserByEmail(email));
         verify(userRepository, times(1)).findByEmail(email);
 
     }

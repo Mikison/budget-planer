@@ -58,7 +58,7 @@ public class IncomeControllerTest {
         Long userId = 1L;
 
         Mockito.when(authService.getUserId(any())).thenReturn(userId);
-        Mockito.when(incomeService.getUserIncome(userId, 0, 10)).thenReturn(pagedIncomesDTO);
+        Mockito.when(incomeService.fetchUserIncome(userId, 0, 10)).thenReturn(pagedIncomesDTO);
 
         mockMvc.perform(get("/me/income")
                         .param("page", "0")
@@ -78,7 +78,7 @@ public class IncomeControllerTest {
         Long incomeId = 2L;
 
         Mockito.when(authService.getUserId(any())).thenReturn(userId);
-        Mockito.when(incomeService.getIncomeById(incomeId, userId)).thenReturn(incomeDTO);
+        Mockito.when(incomeService.fetchIncomeById(incomeId, userId)).thenReturn(incomeDTO);
 
         mockMvc.perform(get("/me/income/{incomeId}", incomeId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ public class IncomeControllerTest {
         Long userId = 1L;
 
         Mockito.when(authService.getUserId(any())).thenReturn(userId);
-        Mockito.when(incomeService.findIncomesWithFilters(anyString(), any(), any(), any(), any(), any())).thenReturn(pagedIncomesDTO);
+        Mockito.when(incomeService.fetchIncomesWithFilters(anyString(), any(), any(), any(), any(), any())).thenReturn(pagedIncomesDTO);
 
         mockMvc.perform(get("/me/income/filter")
                         .param("keyword", "salary")
@@ -113,7 +113,7 @@ public class IncomeControllerTest {
         AddIncomeDTO addIncomeDTO = new AddIncomeDTO(LocalDate.now(), "Salary", "Monthly salary", new BigDecimal("1000"));
 
         Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.doNothing().when(incomeService).createIncome(addIncomeDTO, userId);
+        Mockito.doNothing().when(incomeService).addIncome(addIncomeDTO, userId);
 
         mockMvc.perform(post("/me/income")
                         .contentType(MediaType.APPLICATION_JSON)

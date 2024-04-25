@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import pl.sonmiike.financewebapi.category.Category;
-import pl.sonmiike.financewebapi.category.CategoryServiceImpl;
+import pl.sonmiike.financewebapi.category.CategoryService;
 import pl.sonmiike.financewebapi.category.UserCategory;
 import pl.sonmiike.financewebapi.category.UserCategoryRepository;
 import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class ExpenseServiceTest {
+class ExpenseServiceImplTest {
 
     @Mock
     private ExpenseRepository expenseRepository;
@@ -39,13 +39,13 @@ class ExpenseServiceTest {
     private UserService userService;
 
     @Mock
-    private CategoryServiceImpl categoryServiceImpl;
+    private CategoryService categoryService;
 
     @Mock
     private ExpenseMapper expenseMapper;
 
     @InjectMocks
-    private ExpenseService expenseService;
+    private ExpenseServiceImpl expenseService;
 
     @Captor
     private ArgumentCaptor<Expense> expenseCaptor;
@@ -66,7 +66,7 @@ class ExpenseServiceTest {
 
 
     @Test
-    void testGetUserExpenses() {
+    void testFetchUserExpenses() {
         Long userId = 1L;
         int page = 0;
         int size = 10;
@@ -79,7 +79,7 @@ class ExpenseServiceTest {
         when(expenseRepository.findExpenseByUserUserId(eq(userId), any(PageRequest.class))).thenReturn(expensePage);
         when(expenseMapper.toPagedDTO(any(Page.class))).thenReturn(mockPagedExpensesDTO);
 
-        PagedExpensesDTO result = expenseService.getUserExpenses(userId, page, size);
+        PagedExpensesDTO result = expenseService.fetchUserExpenses(userId, page, size);
         assertEquals(mockPagedExpensesDTO, result);
         verify(expenseRepository).findExpenseByUserUserId(eq(userId), eq(PageRequest.of(page, size)));
         verify(expenseMapper).toPagedDTO(expensePage);
@@ -87,7 +87,7 @@ class ExpenseServiceTest {
 
 
     @Test
-    void testGetUserExpensesByCategory() {
+    void testFetchUserExpensesByCategory() {
         Long userId = 1L;
         Long categoryId = 1L;
         int page = 0;
@@ -101,7 +101,7 @@ class ExpenseServiceTest {
         when(expenseRepository.findExpenseByUserUserIdAndCategoryId(eq(userId), eq(categoryId), any(PageRequest.class))).thenReturn(expensePage);
         when(expenseMapper.toPagedDTO(any(Page.class))).thenReturn(expectedDto);
 
-        PagedExpensesDTO result = expenseService.getUserExpensesByCategory(userId, categoryId, page, size);
+        PagedExpensesDTO result = expenseService.fetchUserExpensesByCategory(userId, categoryId, page, size);
 
         assertEquals(expectedDto, result);
         verify(expenseRepository).findExpenseByUserUserIdAndCategoryId(eq(userId), eq(categoryId), eq(PageRequest.of(page, size)));
@@ -109,7 +109,7 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void testGetExpenseById_Success() {
+    void testFetchExpenseById_Success() {
         Long id = 1L;
         Long userId = 1L;
         Expense testExpense = new Expense();
@@ -118,7 +118,7 @@ class ExpenseServiceTest {
         when(expenseRepository.findByIdAndUserUserId(eq(id), eq(userId))).thenReturn(Optional.of(testExpense));
         when(expenseMapper.toDTO(any(Expense.class))).thenReturn(expectedDto);
 
-        ExpenseDTO result = expenseService.getExpenseById(id, userId);
+        ExpenseDTO result = expenseService.fetchExpenseById(id, userId);
 
         assertNotNull(result, "The result should not be null.");
         assertEquals(expectedDto, result, "The returned DTO should match the expected DTO.");
@@ -127,20 +127,20 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void testGetExpenseById_NotFound_ThrowsException() {
+    void testFetchExpenseById_NotFound_ThrowsException() {
         Long id = 1L;
         Long userId = 1L;
 
         when(expenseRepository.findByIdAndUserUserId(eq(id), eq(userId))).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> expenseService.getExpenseById(id, userId), "Expected getExpenseById to throw, but it didn't");
+        assertThrows(ResourceNotFoundException.class, () -> expenseService.fetchExpenseById(id, userId), "Expected getExpenseById to throw, but it didn't");
 
         verify(expenseRepository).findByIdAndUserUserId(id, userId);
         verify(expenseMapper, never()).toDTO(any(Expense.class));
     }
 
     @Test
-    void createExpense_SuccessfulCreation() {
+    void addExpense_SuccessfulCreation() {
         Long userId = 1L, categoryId = 1L;
         AddExpesneDTO expenseDTO = new AddExpesneDTO("apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150));
         Expense expense = new Expense(1L, "apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150), null, null);
@@ -148,18 +148,18 @@ class ExpenseServiceTest {
         UserCategory userCategory = new UserCategory();
         when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(true);
         when(expenseMapper.toEntity(expenseDTO)).thenReturn(expense);
-        when(userService.getUserById(userId)).thenReturn(new UserEntity());
-        when(categoryServiceImpl.getCategoryById(categoryId)).thenReturn(new Category());
+        when(userService.fetchUserById(userId)).thenReturn(new UserEntity());
+        when(categoryService.fetchCategoryById(categoryId)).thenReturn(new Category());
         when(expenseRepository.save(any(Expense.class))).thenReturn(expense);
 
 
-        expenseService.createExpense(expenseDTO, userId, categoryId);
+        expenseService.addExpense(expenseDTO, userId, categoryId);
 
         verify(expenseRepository).save(any(Expense.class));
     }
 
     @Test
-    void createExpense_IdNotMatchingException() {
+    void addExpense_IdNotMatchingException() {
         Long userId = 1L, categoryId = 1L;
         AddExpesneDTO expenseDTO = new AddExpesneDTO();
 
@@ -167,11 +167,11 @@ class ExpenseServiceTest {
                 .thenReturn(Optional.empty());
 
 
-        assertThrows(IdNotMatchingException.class, () -> expenseService.createExpense(expenseDTO, userId, categoryId));
+        assertThrows(IdNotMatchingException.class, () -> expenseService.addExpense(expenseDTO, userId, categoryId));
     }
 
     @Test
-    void findExpensesWithFilters_AllFilters() {
+    void fetchExpensesWithFilters_AllFilters() {
         String keyword = "test";
         LocalDate dateFrom = LocalDate.of(2020, 1, 1);
         LocalDate dateTo = LocalDate.of(2020, 12, 31);
@@ -186,7 +186,7 @@ class ExpenseServiceTest {
         when(expenseRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(pagedExpenses);
         when(expenseMapper.toPagedDTO(any())).thenReturn(expectedDTO);
 
-        PagedExpensesDTO result = expenseService.findExpensesWithFilters(keyword, dateFrom, dateTo, amountFrom, amountTo, pageable);
+        PagedExpensesDTO result = expenseService.fetchExpensesWithFilters(keyword, dateFrom, dateTo, amountFrom, amountTo, pageable);
 
 
         assertEquals(expectedDTO, result);
@@ -205,7 +205,7 @@ class ExpenseServiceTest {
 
         when(expenseRepository.existsById(expenseDTO.getId())).thenReturn(true);
         when(expenseMapper.toEntity(expenseDTO)).thenReturn(expense);
-        when(userService.getUserById(userId)).thenReturn(user);
+        when(userService.fetchUserById(userId)).thenReturn(user);
         when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, expenseDTO.getCategoryId())).thenReturn(true);
 
         expenseService.updateExpense(expenseDTO, userId);

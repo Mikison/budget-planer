@@ -27,13 +27,13 @@ public class IncomeController {
     @GetMapping
     public ResponseEntity<PagedIncomesDTO> getUserIncome(Authentication authentication, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Long userId = authService.getUserId(authentication);
-        return ResponseEntity.ok(incomeService.getUserIncome(userId, page, size));
+        return ResponseEntity.ok(incomeService.fetchUserIncome(userId, page, size));
     }
 
     @GetMapping("/{incomeId}") // TODO Make it for either admin or user scope only
     public ResponseEntity<IncomeDTO> getIncomeById(@PathVariable Long incomeId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        IncomeDTO incomeDTO = incomeService.getIncomeById(incomeId, userId);
+        IncomeDTO incomeDTO = incomeService.fetchIncomeById(incomeId, userId);
         return ResponseEntity.ok(incomeDTO);
     }
 
@@ -45,14 +45,14 @@ public class IncomeController {
             @RequestParam(value = "fromAmount", required = false) BigDecimal fromAmount,
             @RequestParam(value = "toAmount", required = false) BigDecimal toAmount,
             @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(incomeService.findIncomesWithFilters(keyword, dateFrom, dateTo, fromAmount, toAmount, pageable));
+        return ResponseEntity.ok(incomeService.fetchIncomesWithFilters(keyword, dateFrom, dateTo, fromAmount, toAmount, pageable));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createIncome(@RequestBody @Valid AddIncomeDTO incomeDTO, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        incomeService.createIncome(incomeDTO, userId);
+        incomeService.addIncome(incomeDTO, userId);
 
     }
 

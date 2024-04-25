@@ -1,87 +1,23 @@
 package pl.sonmiike.financewebapi.expenses;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import pl.sonmiike.financewebapi.category.CategoryServiceImpl;
-import pl.sonmiike.financewebapi.category.UserCategoryRepository;
-import pl.sonmiike.financewebapi.exceptions.custom.IdNotMatchingException;
-import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
-import pl.sonmiike.financewebapi.user.UserService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Service
-@RequiredArgsConstructor
-public class ExpenseService {
+public interface ExpenseService {
 
-    private final ExpenseRepository expenseRepository;
-    private final UserCategoryRepository userCategoryRepository;
+    PagedExpensesDTO fetchUserExpenses(Long userId, int page, int size);
 
-    private final UserService userService;
-    private final CategoryServiceImpl categoryServiceImpl;
+    PagedExpensesDTO fetchUserExpensesByCategory(Long userId, Long categoryId, int page, int size);
 
-    private final ExpenseMapper expenseMapper;
+    ExpenseDTO fetchExpenseById(Long id, Long userId);
 
-    public PagedExpensesDTO getUserExpenses(Long userId, int page, int size) {
-        Page<Expense> pagedExpenses = expenseRepository.findExpenseByUserUserId(userId, PageRequest.of(page, size));
-        return expenseMapper.toPagedDTO(pagedExpenses);
-    }
+    void addExpense(AddExpesneDTO expenseDTO, Long userId, Long categoryId);
 
-    public PagedExpensesDTO getUserExpensesByCategory(Long userId, Long categoryId, int page, int size) {
-        Page<Expense> pagedExpenses = expenseRepository.findExpenseByUserUserIdAndCategoryId(userId, categoryId, PageRequest.of(page, size));
-        return expenseMapper.toPagedDTO(pagedExpenses);
-    }
+    PagedExpensesDTO fetchExpensesWithFilters(String keyword, LocalDate dateFrom, LocalDate dateTo, BigDecimal amountFrom, BigDecimal amountTo, Pageable pageable);
 
-    public ExpenseDTO getExpenseById(Long id, Long userId) {
-        return expenseRepository.findByIdAndUserUserId(id, userId)
-                .map(expenseMapper::toDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Expense with that id not found in database"));
+    ExpenseDTO updateExpense(ExpenseDTO expenseDTOtoUpdate, Long userId);
 
-    }
-
-    public void createExpense(AddExpesneDTO expenseDTO, Long userId, Long categoryId) {
-        if (!userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)) {
-            throw new IdNotMatchingException("User does not have category with that id assigned");
-        }
-        Expense expense = expenseMapper.toEntity(expenseDTO);
-        expense.setUser(userService.getUserById(userId));
-
-        expense.setCategory(categoryServiceImpl.getCategoryById(categoryId));
-        expenseRepository.save(expense);
-    }
-
-    public PagedExpensesDTO findExpensesWithFilters(String keyword, LocalDate dateFrom, LocalDate dateTo, BigDecimal amountFrom, BigDecimal amountTo, Pageable pageable) {
-        Page<Expense> pagedFilteredExpenses = expenseRepository.findAll(ExpenseFilterSortingSpecifications.withFilters(keyword, dateFrom, dateTo, amountFrom, amountTo), pageable);
-        return expenseMapper.toPagedDTO(pagedFilteredExpenses);
-    }
-
-    @Transactional
-    public ExpenseDTO updateExpense(ExpenseDTO expenseDTOtoUpdate, Long userId) {
-        if (!expenseRepository.existsById(expenseDTOtoUpdate.getId())) {
-            throw new IdNotMatchingException("Expense not found");
-        }
-        if (!userCategoryRepository.existsByUserUserIdAndCategoryId(userId, expenseDTOtoUpdate.getCategoryId())) {
-            throw new IdNotMatchingException("User does not have category with that id assigned");
-        }
-        Expense expense = expenseMapper.toEntity(expenseDTOtoUpdate);
-        expense.setUser(userService.getUserById(userId));
-        expense.setCategory(categoryServiceImpl.getCategoryById(expenseDTOtoUpdate.getCategoryId()));
-        expenseRepository.save(expense);
-        return expenseMapper.toDTO(expense);
-    }
-
-
-    @Transactional
-    public void deleteExpense(Long expenseId, Long userId) {
-        if (!expenseRepository.existsByIdAndUserUserId(expenseId, userId)) {
-            throw new ResourceNotFoundException("Expense not found for that user assigned");
-        }
-        expenseRepository.deleteByIdAndUserUserId(expenseId, userId);
-    }
-
+    void deleteExpense(Long expenseId, Long userId);
 }

@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class IncomeServiceTest {
+public class IncomeServiceImplTest {
 
 
     @Mock
@@ -37,7 +37,7 @@ public class IncomeServiceTest {
     private UserService userService;
 
     @InjectMocks
-    private IncomeService incomeService;
+    private IncomeServiceImpl incomeService;
 
     private AutoCloseable openMocks;
 
@@ -53,7 +53,7 @@ public class IncomeServiceTest {
     }
 
     @Test
-    void testGetUserIncome() {
+    void testFetchUserIncome() {
         Long userId = 1L;
         int page = 0;
         int size = 10;
@@ -90,7 +90,7 @@ public class IncomeServiceTest {
         when(incomeMapper.toPagedDTO(incomePage)).thenReturn(expectedPagedIncomesDTO);
 
         // When
-        PagedIncomesDTO result = incomeService.getUserIncome(userId, page, size);
+        PagedIncomesDTO result = incomeService.fetchUserIncome(userId, page, size);
 
         // Then
         assertNotNull(result);
@@ -100,14 +100,14 @@ public class IncomeServiceTest {
     }
 
     @Test
-    void getIncomeById_ShouldReturnIncomeDTO() {
+    void fetchIncomeById_ShouldReturnIncomeDTO() {
         Long incomeId = 1L, userId = 1L;
         Income income = new Income(incomeId, LocalDate.now(), "Test", "beka", BigDecimal.valueOf(100.00), null);
         IncomeDTO incomeDTO = new IncomeDTO(incomeId, LocalDate.now(), "Test", "beka", BigDecimal.valueOf(100.00), userId);
         when(incomeRepository.findByIdAndUserUserId(eq(incomeId), eq(userId))).thenReturn(Optional.of(income));
         when(incomeMapper.toDTO(eq(income))).thenReturn(incomeDTO);
 
-        IncomeDTO result = incomeService.getIncomeById(incomeId, userId);
+        IncomeDTO result = incomeService.fetchIncomeById(incomeId, userId);
 
         assertEquals(incomeDTO, result);
         assertNotNull(result);
@@ -116,30 +116,30 @@ public class IncomeServiceTest {
     }
 
     @Test
-    void getIncomeById_ShouldThrowResourceNotFoundException() {
+    void fetchIncomeById_ShouldThrowResourceNotFoundException() {
         Long incomeId = 1L, userId = 1L;
 
         when(incomeRepository.findByIdAndUserUserId(eq(incomeId), eq(userId))).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> incomeService.getIncomeById(incomeId, userId));
+        assertThrows(ResourceNotFoundException.class, () -> incomeService.fetchIncomeById(incomeId, userId));
 
         verify(incomeRepository).findByIdAndUserUserId(incomeId, userId);
         verify(incomeMapper, never()).toDTO(any(Income.class));
     }
 
     @Test
-    void createIncome_SuccessfulCreation() {
+    void addIncome_SuccessfulCreation() {
         Long userId = 1L;
         AddIncomeDTO addIncomeDTO = new AddIncomeDTO(LocalDate.now(), "Salary", "May Salary", BigDecimal.valueOf(150.00));
         Income income = new Income(1L, LocalDate.now(), "Salary", "May Salary", BigDecimal.valueOf(150.00), UserEntity.builder().userId(userId).build());
 
         when(incomeMapper.toEntity(eq(addIncomeDTO))).thenReturn(income);
-        when(userService.getUserById(eq(userId))).thenReturn(UserEntity.builder().userId(userId).build());
+        when(userService.fetchUserById(eq(userId))).thenReturn(UserEntity.builder().userId(userId).build());
 
-        incomeService.createIncome(addIncomeDTO, userId);
+        incomeService.addIncome(addIncomeDTO, userId);
 
         verify(incomeMapper, times(1)).toEntity(eq(addIncomeDTO));
-        verify(userService, times(1)).getUserById(eq(userId));
+        verify(userService, times(1)).fetchUserById(eq(userId));
         verify(incomeRepository, times(1)).save(eq(income));
 
 
@@ -152,7 +152,7 @@ public class IncomeServiceTest {
         Income income = new Income(1L, LocalDate.now(), "Salary", "May Salary", BigDecimal.valueOf(150.00), UserEntity.builder().userId(userId).build());
 
         when(incomeMapper.toEntity(eq(incomeDTO))).thenReturn(income);
-        when(userService.getUserById(eq(userId))).thenReturn(UserEntity.builder().userId(userId).build());
+        when(userService.fetchUserById(eq(userId))).thenReturn(UserEntity.builder().userId(userId).build());
         when(incomeRepository.save(eq(income))).thenReturn(income);
         when(incomeMapper.toDTO(eq(income))).thenReturn(incomeDTO);
         when(incomeRepository.existsById(eq(incomeDTO.getId()))).thenReturn(true);
@@ -162,7 +162,7 @@ public class IncomeServiceTest {
         assertNotNull(result);
         assertEquals(incomeDTO, result);
         verify(incomeMapper, times(1)).toEntity(eq(incomeDTO));
-        verify(userService, times(1)).getUserById(eq(userId));
+        verify(userService, times(1)).fetchUserById(eq(userId));
         verify(incomeRepository, times(1)).save(eq(income));
         verify(incomeMapper, times(1)).toDTO(eq(income));
     }
@@ -178,7 +178,7 @@ public class IncomeServiceTest {
 
         verify(incomeRepository, times(1)).existsById(eq(incomeDTO.getId()));
         verify(incomeMapper, never()).toEntity(any(IncomeDTO.class));
-        verify(userService, never()).getUserById(any(Long.class));
+        verify(userService, never()).fetchUserById(any(Long.class));
         verify(incomeRepository, never()).save(any(Income.class));
         verify(incomeMapper, never()).toDTO(any(Income.class));
     }
@@ -194,7 +194,7 @@ public class IncomeServiceTest {
     }
 
     @Test
-    void testFindIncomesWithFilters() {
+    void testFetchIncomesWithFilters() {
         String keyword = "test";
         LocalDate dateFrom = LocalDate.of(2022, 1, 1);
         LocalDate dateTo = LocalDate.of(2022, 12, 31);
@@ -209,7 +209,7 @@ public class IncomeServiceTest {
         when(incomeRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(mockPage);
         when(incomeMapper.toPagedDTO(mockPage)).thenReturn(mockPagedIncomesDTO);
 
-        PagedIncomesDTO result = incomeService.findIncomesWithFilters(keyword, dateFrom, dateTo, amountFrom, amountTo, pageable);
+        PagedIncomesDTO result = incomeService.fetchIncomesWithFilters(keyword, dateFrom, dateTo, amountFrom, amountTo, pageable);
 
         assertEquals(mockPagedIncomesDTO, result);
         verify(incomeRepository, times(1)).findAll(any(Specification.class), eq(pageable));

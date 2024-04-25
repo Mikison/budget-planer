@@ -53,14 +53,14 @@ public class UserControllerTest {
         int page = 0;
         int size = 10;
         PagedUsersDTO pagedUsersDTO = mock(PagedUsersDTO.class); // Mock the DTO
-        when(userService.getAllUsers(page, size)).thenReturn(pagedUsersDTO);
+        when(userService.fetchAllUsers(page, size)).thenReturn(pagedUsersDTO);
 
         // When & Then
         mockMvc.perform(get("/api/v1/admin/users?page=" + page + "&size=" + size))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(pagedUsersDTO)));
 
-        verify(userService).getAllUsers(page, size);
+        verify(userService).fetchAllUsers(page, size);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class UserControllerTest {
         Long id = 1L;
         UserEntity userEntity = mock(UserEntity.class);
         UserDTO userDTO = mock(UserDTO.class);
-        when(userService.getUserById(id)).thenReturn(userEntity);
+        when(userService.fetchUserById(id)).thenReturn(userEntity);
         when(userMapper.toDTO(userEntity)).thenReturn(userDTO);
 
         // When & Then
@@ -77,7 +77,7 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
 
-        verify(userService).getUserById(id);
+        verify(userService).fetchUserById(id);
         verify(userMapper).toDTO(userEntity);
     }
 
@@ -86,14 +86,14 @@ public class UserControllerTest {
         // Given
         String email = "test@example.com";
         UserDTO userDTO = mock(UserDTO.class);
-        when(userService.getUserByEmail(email)).thenReturn(userDTO);
+        when(userService.fetchUserByEmail(email)).thenReturn(userDTO);
 
         // When & Then
         mockMvc.perform(get("/api/v1/admin/users/email").param("email", email))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
 
-        verify(userService).getUserByEmail(email);
+        verify(userService).fetchUserByEmail(email);
     }
 
     @Test

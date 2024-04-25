@@ -18,27 +18,27 @@ import java.util.Set;
 @RequestMapping("/me/category")
 public class CategoryController {
 
-    private final CategoryServiceImpl categoryServiceImpl;
+    private final CategoryService categoryService;
     private final AuthService authService;
 
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Set<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(categoryServiceImpl.fetchAllCategories());
+        return ResponseEntity.ok(categoryService.fetchAllCategories());
     }
 
     @GetMapping
     public ResponseEntity<Set<CategoryDTO>> getUserCategories(Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        return ResponseEntity.ok(categoryServiceImpl.fetchUserCategories(userId));
+        return ResponseEntity.ok(categoryService.fetchUserCategories(userId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createCategory(@RequestBody @Valid AddCategoryDTO categoryDTO, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        categoryServiceImpl.createAndAssignCategoryToUser(userId, categoryDTO);
+        categoryService.createAndAssignCategoryToUser(userId, categoryDTO);
     }
 
 
@@ -46,20 +46,20 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unassignCategory(@PathVariable Long categoryId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        categoryServiceImpl.removeCategoryFromUser(userId, categoryId);
+        categoryService.removeCategoryFromUser(userId, categoryId);
     }
 
     @PostMapping("/budget")
     public ResponseEntity<MonthlyBudgetDTO> setBudgetForSpecificCategory(@RequestBody @Valid MonthlyBudgetDTO monthlyBudgetDTO, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        return ResponseEntity.ok(categoryServiceImpl.setBudgetAmountForCategory(userId, monthlyBudgetDTO));
+        return ResponseEntity.ok(categoryService.setBudgetAmountForCategory(userId, monthlyBudgetDTO));
     }
 
     @DeleteMapping("/budget/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBudgetForSpecificCategory(@PathVariable Long categoryId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        categoryServiceImpl.deleteMonthlyBudget(userId, categoryId);
+        categoryService.deleteMonthlyBudget(userId, categoryId);
     }
 
 

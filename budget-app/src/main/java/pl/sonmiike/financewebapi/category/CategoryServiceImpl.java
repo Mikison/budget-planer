@@ -59,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toSet());
     }
 
-    public Category getCategoryById(Long id) {
+    public Category fetchCategoryById(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with that id not found in database"));
     }

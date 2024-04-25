@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
 import pl.sonmiike.reportsservice.report.database.ReportEntity;
@@ -95,7 +95,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                     continue;
                 }
                 if (key.equals("Category Expenses")) {
-                    createCategoryExpensesTable(document, (Map<CategoryEntity, BigDecimal>) value);
+                    createCategoryExpensesTable(document, (Map<Category, BigDecimal>) value);
                     continue;
                 }
                 if (value instanceof List) {
@@ -183,13 +183,13 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
         return p;
     }
 
-    private void createCategoryExpensesTable(Document document, Map<CategoryEntity, BigDecimal> categoryExpenses) {
+    private void createCategoryExpensesTable(Document document, Map<Category, BigDecimal> categoryExpenses) {
         if (categoryExpenses != null && !categoryExpenses.isEmpty()) {
             Table table = new Table(UnitValue.createPercentArray(2)).useAllAvailableWidth();
             table.addHeaderCell("Category Name").setTextAlignment(TextAlignment.CENTER);
             table.addHeaderCell("Amount Spent").setTextAlignment(TextAlignment.CENTER);
 
-            for (Map.Entry<CategoryEntity, BigDecimal> entry : categoryExpenses.entrySet()) {
+            for (Map.Entry<Category, BigDecimal> entry : categoryExpenses.entrySet()) {
                 table.addCell(new Cell().add(new Paragraph(entry.getKey().getName())).setTextAlignment(TextAlignment.CENTER));
                 table.addCell(new Cell().add(new Paragraph(entry.getValue().toPlainString()).setTextAlignment(TextAlignment.CENTER)));
             }

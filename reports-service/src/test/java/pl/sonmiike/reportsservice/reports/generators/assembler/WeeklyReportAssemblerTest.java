@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
@@ -53,7 +53,7 @@ public class WeeklyReportAssemblerTest {
 
         List<IncomeEntity> incomes = getIncomes();
         List<ExpenseEntity> expenses = getExpenses();
-        List<CategoryEntity> categories = List.of(getCategory());
+        List<Category> categories = List.of(getCategory());
 
         when(incomeEntityService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.of(incomes));
         when(expenseEntityService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
@@ -88,8 +88,8 @@ public class WeeklyReportAssemblerTest {
         return new UserEntityReport(1L);
     }
 
-    private CategoryEntity getCategory() {
-        return new CategoryEntity(1L, "Shopping");
+    private Category getCategory() {
+        return new Category(1L, "Shopping");
     }
 
     private List<ExpenseEntity> getExpenses() {

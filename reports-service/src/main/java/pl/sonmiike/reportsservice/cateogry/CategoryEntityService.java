@@ -12,7 +12,7 @@ public class CategoryEntityService {
 
     private final CategoryEntityRepository categoryEntityRepository;
 
-    public List<CategoryEntity> getCategories() {
+    public List<Category> getCategories() {
         return categoryEntityRepository.findAll();
     }
 }

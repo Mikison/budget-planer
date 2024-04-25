@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.user.UserEntityReport;
 
 import java.math.BigDecimal;
@@ -34,7 +34,7 @@ public class ExpenseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
-    private CategoryEntity category;
+    private Category category;
 
 
     public ExpenseEntity(BigDecimal amount) {

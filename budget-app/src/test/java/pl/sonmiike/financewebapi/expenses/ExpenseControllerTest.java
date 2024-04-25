@@ -66,7 +66,7 @@ class ExpenseControllerTest {
     void getUserExpenses_ReturnsExpenses() throws Exception {
         Long userId = 1L;
         when(authService.getUserId(any())).thenReturn(userId);
-        when(expenseService.getUserExpenses(userId, 0, 10)).thenReturn(pagedExpensesDTO);
+        when(expenseService.fetchUserExpenses(userId, 0, 10)).thenReturn(pagedExpensesDTO);
 
         mockMvc.perform(get("/me/expenses")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,7 +78,7 @@ class ExpenseControllerTest {
         Long userId = 1L;
         Long categoryId = 2L;
         when(authService.getUserId(any())).thenReturn(userId);
-        when(expenseService.getUserExpensesByCategory(userId, categoryId, 0, 10)).thenReturn(pagedExpensesDTO);
+        when(expenseService.fetchUserExpensesByCategory(userId, categoryId, 0, 10)).thenReturn(pagedExpensesDTO);
 
         mockMvc.perform(get("/me/expenses/category/{categoryId}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -90,7 +90,7 @@ class ExpenseControllerTest {
         Long userId = 1L;
         Long expenseId = 3L;
         when(authService.getUserId(any())).thenReturn(userId);
-        when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
+        when(expenseService.fetchExpenseById(expenseId, userId)).thenReturn(expenseDTO);
 
         mockMvc.perform(get("/me/expenses/{expenseId}", expenseId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -102,7 +102,7 @@ class ExpenseControllerTest {
         Long userId = 1L;
         when(authService.getUserId(any())).thenReturn(userId);
 
-        when(expenseService.findExpensesWithFilters(anyString(), any(), any(), any(), any(), any())).thenReturn(pagedExpensesDTO);
+        when(expenseService.fetchExpensesWithFilters(anyString(), any(), any(), any(), any(), any())).thenReturn(pagedExpensesDTO);
 
         mockMvc.perform(get("/me/expenses/filter")
                         .param("keyword", "food")
@@ -116,7 +116,7 @@ class ExpenseControllerTest {
         Long categoryId = 2L;
         AddExpesneDTO addExpesneDTO = new AddExpesneDTO("Groceries", "Walmart", LocalDate.now(), BigDecimal.valueOf(100));
         when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.doNothing().when(expenseService).createExpense(addExpesneDTO, userId, categoryId);
+        Mockito.doNothing().when(expenseService).addExpense(addExpesneDTO, userId, categoryId);
 
         mockMvc.perform(post("/me/expenses/{categoryId}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +130,7 @@ class ExpenseControllerTest {
         Long expenseId = 3L;
         expenseDTO.setUserId(userId);
         when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        when(expenseService.getExpenseById(expenseId, userId)).thenReturn(expenseDTO);
+        when(expenseService.fetchExpenseById(expenseId, userId)).thenReturn(expenseDTO);
         Mockito.doNothing().when(expenseService).deleteExpense(expenseId, userId);
 
         mockMvc.perform(delete("/me/expenses/{expenseId}", expenseId)

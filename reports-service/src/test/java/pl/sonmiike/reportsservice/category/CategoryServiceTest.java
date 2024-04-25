@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntityRepository;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class CategoryEntityServiceTest {
+public class CategoryServiceTest {
 
 
     @Mock
@@ -42,10 +42,10 @@ public class CategoryEntityServiceTest {
     @Test
     void getCategories() {
         // given
-        List<CategoryEntity> categoryEntities = List.of(new CategoryEntity());
+        List<Category> categoryEntities = List.of(new Category());
         // when
         when(categoryEntityService.getCategories()).thenReturn(categoryEntities);
-        List<CategoryEntity> result = categoryEntityService.getCategories();
+        List<Category> result = categoryEntityService.getCategories();
 
         // then
         assertEquals(categoryEntities, result);

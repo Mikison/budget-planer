@@ -33,7 +33,7 @@ class CategoryControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CategoryServiceImpl categoryServiceImpl;
+    private CategoryService categoryService;
 
     @MockBean
     private UserCategoryRepository userCategoryRepository;
@@ -60,7 +60,7 @@ class CategoryControllerTest {
 
     @Test
     void getAllCategories_ShouldReturnAllCategoriesForAdmin() throws Exception {
-        given(categoryServiceImpl.fetchAllCategories()).willReturn(Set.of(categoryDTO));
+        given(categoryService.fetchAllCategories()).willReturn(Set.of(categoryDTO));
 
         mockMvc.perform(get("/me/category/all"))
                 .andExpect(status().isOk())
@@ -72,7 +72,7 @@ class CategoryControllerTest {
 
     @Test
     void getUserCategories_ShouldReturnUserAssignedCategories() throws Exception {
-        given(categoryServiceImpl.fetchUserCategories(anyLong())).willReturn(Set.of(categoryDTO));
+        given(categoryService.fetchUserCategories(anyLong())).willReturn(Set.of(categoryDTO));
 
         mockMvc.perform(get("/me/category")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -91,7 +91,7 @@ class CategoryControllerTest {
 
 
         Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.when(categoryServiceImpl.createAndAssignCategoryToUser(userId, addCategoryDTO)).thenReturn(category);
+        Mockito.when(categoryService.createAndAssignCategoryToUser(userId, addCategoryDTO)).thenReturn(category);
 
         mockMvc.perform(post("/me/category")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +104,7 @@ class CategoryControllerTest {
         Long userId = 1L;
         Long categoryId = 2L;
 
-        Mockito.doNothing().when(categoryServiceImpl).removeCategoryFromUser(userId, categoryId);
+        Mockito.doNothing().when(categoryService).removeCategoryFromUser(userId, categoryId);
         Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
 
         mockMvc.perform(delete("/me/category/{categoryId}", categoryId)
@@ -118,7 +118,7 @@ class CategoryControllerTest {
         MonthlyBudgetDTO monthlyBudgetDTO = new MonthlyBudgetDTO(1L, BigDecimal.valueOf(100));
 
         Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.when(categoryServiceImpl.setBudgetAmountForCategory(userId, monthlyBudgetDTO)).thenReturn(monthlyBudgetDTO);
+        Mockito.when(categoryService.setBudgetAmountForCategory(userId, monthlyBudgetDTO)).thenReturn(monthlyBudgetDTO);
 
         mockMvc.perform(post("/me/category/budget")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +134,7 @@ class CategoryControllerTest {
         Long userId = 1L;
         Long categoryId = 2L;
 
-        Mockito.doNothing().when(categoryServiceImpl).deleteMonthlyBudget(userId, categoryId);
+        Mockito.doNothing().when(categoryService).deleteMonthlyBudget(userId, categoryId);
         Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
 
         mockMvc.perform(delete("/me/category/budget/{categoryId}", categoryId)

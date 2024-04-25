@@ -2,7 +2,7 @@ package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
@@ -43,17 +43,17 @@ public abstract class BaseReportAssembler {
                 .toList();
     }
 
-    protected HashMap<CategoryEntity, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<CategoryEntity> categories) {
+    protected HashMap<Category, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<Category> categories) {
         Set<Long> categoryIds = expenses.stream()
                 .map(ExpenseEntity::getCategory)
-                .map(CategoryEntity::getId)
+                .map(Category::getId)
                 .collect(Collectors.toSet());
-        List<CategoryEntity> userCategories = categories.stream()
+        List<Category> userCategories = categories.stream()
                 .filter(category -> categoryIds.contains(category.getId()))
                 .toList();
 
-        HashMap<CategoryEntity, BigDecimal> categoryExpenses = new HashMap<>();
-        for (CategoryEntity category : userCategories) {
+        HashMap<Category, BigDecimal> categoryExpenses = new HashMap<>();
+        for (Category category : userCategories) {
             BigDecimal categoryExpense = ExpenseOperations.calculateTotalExpenses(expenses.stream()
                     .filter(expense -> expense.getCategory().getId().equals(category.getId()))
                     .collect(Collectors.toList()));
@@ -64,13 +64,13 @@ public abstract class BaseReportAssembler {
 
     protected <T extends Report> T createReport(UserEntityReport user, ReportDataProcessor<T> processor) {
         DateInterval date = getDateInterval();
-        List<CategoryEntity> categories = categoryEntityService.getCategories();
+        List<Category> categories = categoryEntityService.getCategories();
         List<IncomeEntity> incomes = fetchSortedIncomes(date, user.getUserId());
         List<ExpenseEntity> expenses = fetchSortedExpenses(date, user.getUserId());
 
         if (incomes.isEmpty() && expenses.isEmpty()) return null;
 
-        HashMap<CategoryEntity, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, categories);
+        HashMap<Category, BigDecimal> categoryExpenses = calculateCategoryExpenses(expenses, categories);
 
         return processor.buildReport(user, date, incomes, expenses, categoryExpenses);
     }

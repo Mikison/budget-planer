@@ -28,7 +28,7 @@ public class ExpenseController {
                                                             @RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10") int size) {
         Long userId = authService.getUserId(authentication);
-        return ResponseEntity.ok(expenseService.getUserExpenses(userId, page, size));
+        return ResponseEntity.ok(expenseService.fetchUserExpenses(userId, page, size));
     }
 
     @GetMapping("/category/{categoryId}")
@@ -37,13 +37,13 @@ public class ExpenseController {
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
         Long userId = authService.getUserId(authentication);
-        return ResponseEntity.ok(expenseService.getUserExpensesByCategory(userId, categoryId, page, size));
+        return ResponseEntity.ok(expenseService.fetchUserExpensesByCategory(userId, categoryId, page, size));
     }
 
     @GetMapping("/{expenseId}")
     public ResponseEntity<ExpenseDTO> getExpenseById(@PathVariable Long expenseId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        return ResponseEntity.ok(expenseService.getExpenseById(expenseId, userId));
+        return ResponseEntity.ok(expenseService.fetchExpenseById(expenseId, userId));
     }
 
     @GetMapping("/filter")
@@ -55,14 +55,14 @@ public class ExpenseController {
             @RequestParam(value = "toAmount", required = false) BigDecimal toAmount,
             @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(expenseService.findExpensesWithFilters(keyword, dateFrom, dateTo, fromAmount, toAmount, pageable));
+        return ResponseEntity.ok(expenseService.fetchExpensesWithFilters(keyword, dateFrom, dateTo, fromAmount, toAmount, pageable));
     }
 
     @PostMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void createExpense(@RequestBody @Valid AddExpesneDTO expenseDTO, @PathVariable Long categoryId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        expenseService.createExpense(expenseDTO, userId, categoryId);
+        expenseService.addExpense(expenseDTO, userId, categoryId);
     }
 
     @PutMapping("/{id}")

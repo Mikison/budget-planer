@@ -41,7 +41,7 @@ public class CategoryServiceImplTest {
     private CategoryMapper categoryMapper;
 
     @InjectMocks
-    private CategoryServiceImpl categoryServiceImpl;
+    private CategoryServiceImpl categoryService;
 
     private AutoCloseable openMocks;
 
@@ -60,25 +60,25 @@ public class CategoryServiceImplTest {
 
 
     @Test
-    void getCategoryById_ShouldReturnCategorySuccess() {
+    void fetchCategoryById_ShouldReturnCategorySuccess() {
         Long categoryId = 1L;
         Category category = Category.builder().id(categoryId).name("Food").build();
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 
-        Category result = categoryServiceImpl.getCategoryById(categoryId);
+        Category result = categoryService.fetchCategoryById(categoryId);
 
         assertEquals(category, result);
         verify(categoryRepository).findById(categoryId);
     }
 
     @Test
-    void getCategoryById_ShouldThrowResourceNotFoundException() {
+    void fetchCategoryById_ShouldThrowResourceNotFoundException() {
         Long categoryId = 1L;
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> categoryServiceImpl.getCategoryById(categoryId));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.fetchCategoryById(categoryId));
         verify(categoryRepository).findById(categoryId);
     }
 
@@ -97,7 +97,7 @@ public class CategoryServiceImplTest {
         when(userCategoryRepository.save(any(UserCategory.class))).thenReturn(new UserCategory());
 
         // When
-        Category createdCategory = categoryServiceImpl.createAndAssignCategoryToUser(userId, categoryDTO);
+        Category createdCategory = categoryService.createAndAssignCategoryToUser(userId, categoryDTO);
 
         assertEquals(category.getName(), createdCategory.getName());
         verify(categoryRepository, times(1)).save(category);
@@ -119,7 +119,7 @@ public class CategoryServiceImplTest {
         when(userCategoryRepository.save(any(UserCategory.class))).thenReturn(new UserCategory());
 
         // When
-        Category createdCategory = categoryServiceImpl.createAndAssignCategoryToUser(userId, categoryDTO);
+        Category createdCategory = categoryService.createAndAssignCategoryToUser(userId, categoryDTO);
 
         assertEquals(category.getName(), createdCategory.getName());
         verify(categoryRepository, never()).save(category);
@@ -135,7 +135,7 @@ public class CategoryServiceImplTest {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(UserEntity.builder().userId(userId).build()));
 
-        assertThrows(ResourceNotFoundException.class, () -> categoryServiceImpl.assignCategoryToUser(userId, categoryId, ""));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.assignCategoryToUser(userId, categoryId, ""));
 
         verify(userCategoryRepository, never()).save(any(UserCategory.class));
     }
@@ -149,7 +149,7 @@ public class CategoryServiceImplTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
 
-        assertThrows(ResourceNotFoundException.class, () -> categoryServiceImpl.assignCategoryToUser(userId, categoryId, ""));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.assignCategoryToUser(userId, categoryId, ""));
 
         verify(userCategoryRepository, never()).save(any(UserCategory.class));
     }
@@ -163,7 +163,7 @@ public class CategoryServiceImplTest {
 
         when(userCategoryRepository.findByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(Optional.of(userCategory));
 
-        categoryServiceImpl.removeCategoryFromUser(userId, categoryId);
+        categoryService.removeCategoryFromUser(userId, categoryId);
 
         assertEquals(userCategoryRepository.count(), 0);
         verify(expenseRepository, times(1)).deleteAllByCategoryIdAndUserUserId(userId, categoryId);
@@ -178,7 +178,7 @@ public class CategoryServiceImplTest {
         when(userCategoryRepository.findByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(Optional.empty());
 
 
-        assertThrows(ResourceNotFoundException.class, () -> categoryServiceImpl.removeCategoryFromUser(userId, categoryId));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.removeCategoryFromUser(userId, categoryId));
 
         verify(expenseRepository, never()).deleteAllByCategoryIdAndUserUserId(userId, categoryId);
         verify(userCategoryRepository, never()).delete(any(UserCategory.class));
@@ -195,7 +195,7 @@ public class CategoryServiceImplTest {
         when(monthlyBudgetRepository.save(any(MonthlyBudget.class))).thenAnswer(i -> i.getArgument(0));
 
         // Execution
-        MonthlyBudgetDTO result = categoryServiceImpl.setBudgetAmountForCategory(userId, inputDTO);
+        MonthlyBudgetDTO result = categoryService.setBudgetAmountForCategory(userId, inputDTO);
 
         // Verification
         verify(monthlyBudgetRepository).save(any(MonthlyBudget.class));
@@ -212,7 +212,7 @@ public class CategoryServiceImplTest {
         when(userCategoryRepository.findByUserUserIdAndCategoryId(userId, inputDTO.getCategoryId())).thenReturn(Optional.of(mockUserCategory));
         when(monthlyBudgetRepository.updateBudgetAmountByUserIdAndCategoryIdAndYearMonth(eq(userId), eq(inputDTO.getCategoryId()), any(String.class), eq(inputDTO.getBudgetToSet()))).thenReturn(1);
 
-        MonthlyBudgetDTO result = categoryServiceImpl.setBudgetAmountForCategory(userId, inputDTO);
+        MonthlyBudgetDTO result = categoryService.setBudgetAmountForCategory(userId, inputDTO);
 
         // Verification
         verify(monthlyBudgetRepository, never()).save(any(MonthlyBudget.class));
@@ -227,7 +227,7 @@ public class CategoryServiceImplTest {
 
         when(userCategoryRepository.findByUserUserIdAndCategoryId(userId, inputDTO.getCategoryId())).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> categoryServiceImpl.setBudgetAmountForCategory(userId, inputDTO));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.setBudgetAmountForCategory(userId, inputDTO));
 
         verify(monthlyBudgetRepository, never()).save(any(MonthlyBudget.class));
     }
@@ -239,7 +239,7 @@ public class CategoryServiceImplTest {
         YearMonth currentYearMonth = YearMonth.now();
         when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(true);
 
-        categoryServiceImpl.deleteMonthlyBudget(userId, categoryId);
+        categoryService.deleteMonthlyBudget(userId, categoryId);
 
         verify(monthlyBudgetRepository, times(1)).deleteByUserUserIdAndCategoryIdAndYearMonth(userId, categoryId, currentYearMonth.toString());
     }
@@ -251,7 +251,7 @@ public class CategoryServiceImplTest {
         YearMonth currentYearMonth = YearMonth.now();
         when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(false);
 
-        assertThrows(ResourceNotFoundException.class, () -> categoryServiceImpl.deleteMonthlyBudget(userId, categoryId));
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.deleteMonthlyBudget(userId, categoryId));
 
         verify(monthlyBudgetRepository, never()).deleteByUserUserIdAndCategoryIdAndYearMonth(userId, categoryId, currentYearMonth.toString());
     }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntity;
+import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.expense.ExpenseEntity;
 import pl.sonmiike.reportsservice.income.IncomeEntity;
 import pl.sonmiike.reportsservice.report.database.ReportType;
@@ -33,7 +33,7 @@ public class MonthlyReport implements Report {
     private BigDecimal budgetSummary;
     private List<ExpenseEntity> expensesList;
     private List<IncomeEntity> incomeList;
-    private HashMap<CategoryEntity, BigDecimal> categoryExpenses;
+    private HashMap<Category, BigDecimal> categoryExpenses;
 
 
     @Override

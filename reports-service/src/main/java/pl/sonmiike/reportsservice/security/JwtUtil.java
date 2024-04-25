@@ -1,23 +1,22 @@
-package pl.sonmiike.financewebapi.security.auth;
+package pl.sonmiike.reportsservice.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import pl.sonmiike.financewebapi.user.UserEntity;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.function.Function;
 
-@Service
-public class JwtService {
+
+@Component
+public class JwtUtil {
+
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -29,9 +28,11 @@ public class JwtService {
         STATIC_SECRET_KEY = SECRET_KEY;
     }
 
+
     public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
 
     public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -53,23 +54,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserEntity userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
-
-    public String generateToken(HashMap<String, Object> extractClaims, UserEntity userDetails) {
-        return Jwts
-                .builder()
-                .setClaims(extractClaims)
-                .setSubject(userDetails.getUsername())
-                .claim("role", userDetails.getAuthorities())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 60))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
-
-    }
-
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -79,11 +63,9 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
+
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public void setSecretKey(String secretKey) {
-        SECRET_KEY = secretKey;
-    }
 }

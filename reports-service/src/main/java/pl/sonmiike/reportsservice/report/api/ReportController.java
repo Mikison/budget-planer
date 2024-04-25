@@ -6,8 +6,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.sonmiike.reportsservice.report.database.ReportDTO;
+import pl.sonmiike.reportsservice.security.CustomUserDetails;
 
 import java.util.List;
 
@@ -34,7 +36,8 @@ public class ReportController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ReportDTO>> getAllReports() {
+    public ResponseEntity<List<ReportDTO>> getAllReports(Authentication authentication) {
+        System.out.println(getUserId(authentication));
         return ResponseEntity.ok(reportService.findAllReports());
     }
 
@@ -48,5 +51,10 @@ public class ReportController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(reportService.getPdfFile(name, userId));
+    }
+
+    public Long getUserId(Authentication authentication) {
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+        return user.getUserId();
     }
 }

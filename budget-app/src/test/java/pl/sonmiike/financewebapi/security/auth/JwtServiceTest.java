@@ -15,7 +15,7 @@ public class JwtServiceTest {
 
     private JwtService jwtService;
 
-    private final String SECRET_KEY = "OXgzaGZ3OTMzdWRpendib281cHF1bTRsODl1YWx5ejloc2E5Zm16bW5hNzBrcmt5c2p0c3Q5dXhrMDV6YWUzOGFldDNlNHZlajllZWduenlzdTd1Y3RyN2d6dWF1MjBiNm5ib2tjeW9hb3l4aTg3NGMybmV5a3F6NG1zN2E2c20=";
+    private final String SECRET_KEY = "MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP";
     private final UserEntity USER_DETAILS = UserEntity.builder()
             .userId(1L)
             .email("test@test.com")

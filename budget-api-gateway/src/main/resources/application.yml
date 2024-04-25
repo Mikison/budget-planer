@@ -5,9 +5,7 @@ spring:
         - id: budget-app
           uri: lb://BUDGET-APP
           predicates:
-            - Path=/me/expenses/**
-            - Path=/me/category/**
-            - Path=/me/income/**
+            - Path=/me/**
           filters:
             - AuthenticationFilter
 
@@ -33,6 +31,3 @@ eureka:
 
 jwt:
   secret: MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP
-
-server:
-  max-

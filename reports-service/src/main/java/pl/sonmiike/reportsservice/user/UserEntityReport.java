@@ -15,7 +15,7 @@ import pl.sonmiike.reportsservice.user.refreshtoken.RefreshTokenEntity;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntityReport{
+public class UserEntityReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

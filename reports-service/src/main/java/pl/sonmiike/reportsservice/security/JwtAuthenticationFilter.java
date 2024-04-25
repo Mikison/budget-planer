@@ -1,4 +1,4 @@
-package pl.sonmiike.financewebapi.security.auth;
+package pl.sonmiike.reportsservice.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,9 +18,9 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class AuthFilterService extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
 
     private final UserDetailsService userDetailsService;
 
@@ -36,11 +36,11 @@ public class AuthFilterService extends OncePerRequestFilter {
         }
 
         String token = authorizationHeader.substring(7);
-        String username = JwtService.extractUsername(token);
+        String username = JwtUtil.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(token, userDetails)) {
+            if (jwtUtil.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

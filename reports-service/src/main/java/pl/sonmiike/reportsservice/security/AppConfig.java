@@ -1,4 +1,4 @@
-package pl.sonmiike.financewebapi.security.config;
+package pl.sonmiike.reportsservice.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,19 +9,24 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import pl.sonmiike.financewebapi.user.UserRepository;
+import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserEntityRepository;
 
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+public class AppConfig {
 
-    private final UserRepository userRepository;
+    private final UserEntityRepository userEntityRepository;
 
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return email -> {
+            Optional<UserEntityReport> userEntityReport = userEntityRepository.findByEmail(email);
+            return userEntityReport.map(CustomUserDetails::new).orElseThrow(() -> new UsernameNotFoundException("user not found with email :" + email));
+        };
     }
 
     @Bean
@@ -35,5 +40,6 @@ public class ApplicationConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
 
 }

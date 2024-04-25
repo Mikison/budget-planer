@@ -26,6 +26,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Autowired
     private RouteValidator validator;
+
     @Autowired
     private JwtUtil jwtUtils;
 
@@ -37,13 +38,13 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
             if (validator.isSecured.test(request)) {
                 if (authMissing(request)) {
-                    return onError(exchange, HttpStatus.UNAUTHORIZED);
+                    return onError(exchange);
                 }
 
                 final String token = request.getHeaders().getOrEmpty("Authorization").get(0);
 
                 if (jwtUtils.isExpired(token)) {
-                    return onError(exchange, HttpStatus.UNAUTHORIZED);
+                    return onError(exchange);
                 }
             }
             return chain.filter(exchange);
@@ -51,10 +52,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     }
 
 
-
-    private Mono<Void> onError(ServerWebExchange exchange, HttpStatus httpStatus) {
+    private Mono<Void> onError(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(httpStatus);
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return response.setComplete();
     }
 

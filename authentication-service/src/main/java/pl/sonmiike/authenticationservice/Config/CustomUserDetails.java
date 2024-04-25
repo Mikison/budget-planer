@@ -1,5 +1,6 @@
 package pl.sonmiike.authenticationservice.Config;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,8 +10,11 @@ import pl.sonmiike.authenticationservice.Entity.UserCredential;
 import java.util.Collection;
 import java.util.List;
 
+
 public class CustomUserDetails implements UserDetails {
 
+    @Getter
+    private final Long userId;
     private final String username;
     private final String password;
     private final RoleEnum role;
@@ -20,6 +24,7 @@ public class CustomUserDetails implements UserDetails {
         this.username = userCredential.getEmail();
         this.password = userCredential.getPassword();
         this.role = userCredential.getRole();
+        this.userId = userCredential.getUserId();
     }
 
 

@@ -9,7 +9,6 @@ import pl.sonmiike.financewebapi.category.UserCategoryRepository;
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.financewebapi.expenses.ExpenseRepository;
 import pl.sonmiike.financewebapi.income.IncomeRepository;
-import pl.sonmiike.financewebapi.user.refreshToken.RefreshTokenRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +19,6 @@ public class UserService {
     private final ExpenseRepository expenseRepository;
     private final IncomeRepository incomeRepository;
     private final UserCategoryRepository userCategoryRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     private final UserMapper userMapper;
 
@@ -51,7 +49,6 @@ public class UserService {
         incomeRepository.deleteAllByUserUserId(userid);
         expenseRepository.deleteAllByUserUserId(userid);
         userCategoryRepository.deleteAllByUserUserId(userid);
-        refreshTokenRepository.deleteAllByUserUserId(userid);
         userRepository.deleteById(userid);
 
     }

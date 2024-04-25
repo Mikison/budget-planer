@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.sonmiike.financewebapi.user.UserEntity;
 import pl.sonmiike.financewebapi.user.UserRepository;
-import pl.sonmiike.financewebapi.user.refreshToken.RefreshTokenService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,8 +29,6 @@ public class AuthServiceTest {
     @Mock
     private JwtService jwtService;
 
-    @Mock
-    private RefreshTokenService refreshTokenService;
 
     @Mock
     private AuthenticationManager authenticationManager;

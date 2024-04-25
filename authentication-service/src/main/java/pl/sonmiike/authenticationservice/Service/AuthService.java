@@ -24,6 +24,7 @@ public class AuthService {
         UserCredential userCredential = UserCredential.builder()
                 .name(registerRequest.getName())
                 .email(registerRequest.getEmail())
+                .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(RoleEnum.ROLE_USER)
                 .build();

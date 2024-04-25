@@ -8,7 +8,6 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.sonmiike.financewebapi.user.refreshToken.RefreshToken;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,8 +42,6 @@ public class UserEntity implements UserDetails {
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 
-    @OneToOne(mappedBy = "user")
-    private RefreshToken refreshToken;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

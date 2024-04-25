@@ -13,7 +13,6 @@ import pl.sonmiike.financewebapi.category.UserCategoryRepository;
 import pl.sonmiike.financewebapi.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.financewebapi.expenses.ExpenseRepository;
 import pl.sonmiike.financewebapi.income.IncomeRepository;
-import pl.sonmiike.financewebapi.user.refreshToken.RefreshTokenRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +35,6 @@ public class UserServiceTest {
     @Mock
     private UserCategoryRepository userCategoryRepository;
 
-    @Mock
-    private RefreshTokenRepository refreshTokenRepository;
 
     @Mock
     private UserMapper userMapper;
@@ -161,7 +158,7 @@ public class UserServiceTest {
         verify(incomeRepository).deleteAllByUserUserId(userId);
         verify(expenseRepository).deleteAllByUserUserId(userId);
         verify(userCategoryRepository).deleteAllByUserUserId(userId);
-        verify(refreshTokenRepository).deleteAllByUserUserId(userId);
+
     }
 
     @Test
@@ -175,6 +172,5 @@ public class UserServiceTest {
         verify(incomeRepository, never()).deleteAllByUserUserId(anyLong());
         verify(expenseRepository, never()).deleteAllByUserUserId(anyLong());
         verify(userCategoryRepository, never()).deleteAllByUserUserId(anyLong());
-        verify(refreshTokenRepository, never()).deleteAllByUserUserId(anyLong());
     }
 }

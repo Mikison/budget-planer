@@ -40,14 +40,14 @@ public class ReportServiceTest {
     void whenCallingWeeklyReport_thenInitiateWeeklyReportIsCalled() {
         Long userId = 1L;
         reportService.callOnDemandWeeklyReport(userId);
-        verify(reportExecutor).initiateWeeklyReportGenerationForUser(userId);
+        verify(reportExecutor).generateReportForUser(ReportType.WEEKLY_REPORT, userId);
     }
 
     @Test
     void whenCallingMonthlyReport_thenInitiateMonthlyReportIsCalled() {
         Long userId = 1L;
         reportService.callOnDemandMonthlyReport(userId);
-        verify(reportExecutor).initiateMonthlyReportGenerationForUser(userId);
+        verify(reportExecutor).generateReportForUser(ReportType.MONTHLY_REPORT, userId);
     }
 
 

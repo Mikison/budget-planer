@@ -1,28 +1,64 @@
 package pl.sonmiike.reportsservice.report.generators.assemblers;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
+import pl.sonmiike.reportsservice.cateogry.CategoryService;
 import pl.sonmiike.reportsservice.expense.ExpenseService;
 import pl.sonmiike.reportsservice.income.IncomeService;
-import pl.sonmiike.reportsservice.report.types.WeeklyReport;
-import pl.sonmiike.reportsservice.user.UserReportService;
+import pl.sonmiike.reportsservice.report.types.CustomDateReport;
+import pl.sonmiike.reportsservice.report.types.DateInterval;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.time.LocalDate;
+import java.time.Period;
+
+import static pl.sonmiike.reportsservice.expense.ExpenseOperations.*;
+import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes;
 
 
 @Component
-@RequiredArgsConstructor
-public class CustomDateReportAssembler {
+@Getter
+@Setter
+public class CustomDateReportAssembler extends BaseReportAssembler {
+
+    LocalDate startDate;
+    LocalDate endDate;
 
 
-    private final UserReportService userReportService;
-    private final IncomeService incomeService;
-    private final ExpenseService expenseService;
 
-    // TODO Implement this method
-    public WeeklyReport createCustomDateIntervalReport(Long userId, LocalDate startDate, LocalDate endDate) {
-        return null;
+
+    public CustomDateReportAssembler(IncomeService incomeService, ExpenseService expenseService, CategoryService categoryService) {
+        super(incomeService, expenseService, categoryService);
     }
 
 
+    @Override
+    protected DateInterval getDateInterval() {
+        return new DateInterval(this.startDate, this.endDate);
+    }
+
+
+
+    public CustomDateReport createCustomDateReport(UserReport user, LocalDate startDate, LocalDate endDate) {
+        setCustomDates(startDate, endDate);
+        return createReport(user, (userDetails, date, incomes, expenses, categoryExpenses) -> CustomDateReport.builder()
+                .user(userDetails)
+                .dateInterval(date)
+                .totalExpenses(calculateTotalExpenses(expenses))
+                .biggestExpense(findMaxExpense(expenses))
+                .smallestExpense(findMinExpense(expenses))
+                .averageDailyExpense(calculateAverageDailyExpenses(expenses, Period.between(date.getStartDate(), date.getEndDate()).getDays() + 1))
+                .totalIncomes(getTotalIncomes(incomes))
+                .budgetSummary(getTotalIncomes(incomes).subtract(calculateTotalExpenses(expenses)))
+                .expensesList(expenses)
+                .incomeList(incomes)
+                .categoryExpenses(categoryExpenses)
+                .build());
+    }
+
+    public void setCustomDates(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

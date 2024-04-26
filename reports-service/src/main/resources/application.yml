@@ -19,6 +19,7 @@ spring:
       key:
         weekly: reports.weekly
         monthly: reports.monthly
+        custom: reports.custom
     queue: reports-queue
 jwt:
     secret: MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP

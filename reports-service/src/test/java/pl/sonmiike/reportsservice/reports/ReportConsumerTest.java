@@ -29,14 +29,14 @@ public class ReportConsumerTest {
 
     @Test
     void testReceiveWeeklyReportMessage() {
-        String message = "[>] Weekly Report: Generating for User: 12345";
+        String message = "[>] WEEKLY_REPORT Report: Generating for User: 12345";
         reportConsumer.receiveReportMessage(message);
         verify(reportCreator).generateReport(12345L, ReportType.WEEKLY_REPORT);
     }
 
     @Test
     void testReceiveMonthlyReportMessage() {
-        String message = "[>] Monthly Report: Generating for User: 12345";
+        String message = "[>] MONTHLY_REPORT Report: Generating for User: 12345";
         reportConsumer.receiveReportMessage(message);
         verify(reportCreator).generateReport(12345L, ReportType.MONTHLY_REPORT);
     }

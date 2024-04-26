@@ -10,6 +10,7 @@ import pl.sonmiike.reportsservice.report.ReportExecutor;
 import pl.sonmiike.reportsservice.report.database.ReportDTO;
 import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
 import pl.sonmiike.reportsservice.report.database.ReportMapper;
+import pl.sonmiike.reportsservice.report.database.ReportType;
 
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
@@ -27,11 +28,13 @@ public class ReportService {
     private final ReportMapper reportMapper;
 
     public void callOnDemandWeeklyReport(Long userId) {
-        reportExecutor.initiateWeeklyReportGenerationForUser(userId);
+        reportExecutor.generateReportForUser(ReportType.WEEKLY_REPORT ,userId);
     }
 
-    public void callOnDemandMonthlyReport(Long userId) {
-        reportExecutor.initiateMonthlyReportGenerationForUser(userId);
+    public void callOnDemandMonthlyReport(Long userId) { reportExecutor.generateReportForUser(ReportType.MONTHLY_REPORT,userId); }
+
+    public void callOnDemandCustomReport(Long userId, String startDate, String endDate) {
+        reportExecutor.initiateCustomReportGenerationForUser(userId, startDate, endDate);
     }
 
     public List<ReportDTO> fetchAllReports() {

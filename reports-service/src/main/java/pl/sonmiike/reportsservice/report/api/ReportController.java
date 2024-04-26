@@ -25,18 +25,15 @@ public class ReportController {
 
     @PostMapping("/generate")
     @ResponseStatus(HttpStatus.CREATED)
-    public void generateReport(@RequestParam String type, Authentication authentication) {
+    public void generateReport(@RequestParam String type, Authentication authentication,
+                               @RequestParam(required = false) String startDate,
+                               @RequestParam(required = false) String endDate) {
         Long userId = getUserId(authentication);
-
-
-
-
-        if (type.equals("weekly")) {
-            reportService.callOnDemandWeeklyReport(userId);
-        } else if (type.equals("monthly")) {
-            reportService.callOnDemandMonthlyReport(userId);
-        } else {
-            throw new RuntimeException("Report type not found");
+        switch (type.toLowerCase()) {
+            case "weekly" -> reportService.callOnDemandWeeklyReport(userId);
+            case "monthly" -> reportService.callOnDemandMonthlyReport(userId);
+            case "custom" -> reportService.callOnDemandCustomReport(userId, startDate, endDate);
+            default -> throw new RuntimeException("Report type not found");
         }
     }
 

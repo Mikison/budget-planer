@@ -52,7 +52,7 @@ public class ReportExecutorTest {
             verify(rabbitTemplate).convertAndSend(
                     topicExchangeName,
                     weeklyRoutingKey,
-                    "[>] Weekly Report: Generating for User: " + user.getUserId()
+                    "[>] WEEKLY_REPORT Report: Generating for User: " + user.getUserId()
             );
         }
     }
@@ -68,7 +68,7 @@ public class ReportExecutorTest {
             verify(rabbitTemplate).convertAndSend(
                     topicExchangeName,
                     monthlyRoutingKey,
-                    "[>] Monthly Report: Generating for User: " + user.getUserId());
+                    "[>] MONTHLY_REPORT Report: Generating for User: " + user.getUserId());
         }
     }
 }

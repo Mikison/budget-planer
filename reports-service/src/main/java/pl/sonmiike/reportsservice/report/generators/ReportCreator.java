@@ -11,6 +11,8 @@ import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.user.UserReport;
 import pl.sonmiike.reportsservice.user.UserReportService;
 
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 public class ReportCreator {
@@ -18,9 +20,12 @@ public class ReportCreator {
     private final UserReportService userReportService;
     private final WeeklyReportAssembler weeklyReportAssembler;
     private final MonthlyReportAssembler monthlyReportAssembler;
-    private final CustomDateReportAssembler customDateIntervalReportGenerator;
+    private final CustomDateReportAssembler customDateIntervalReportAssembler;
     private final ReportGenerator<Report> reportGenerator;
     private final ReportMailSender reportMailSender;
+
+    private static LocalDate startDate;
+    private static LocalDate endDate;
 
     public void generateReport(Long userId, ReportType reportType) {
         UserReport user = userReportService.getUserById(userId);
@@ -45,8 +50,12 @@ public class ReportCreator {
         return switch (reportType) {
             case WEEKLY_REPORT -> weeklyReportAssembler.createWeeklyReport(user);
             case MONTHLY_REPORT -> monthlyReportAssembler.createMonthlyReport(user);
-//           case "Custom" -> customDateIntervalReportGenerator.createCustomReport(user);
-            default -> null;
+            case CUSTOM_DATE_REPORT -> customDateIntervalReportAssembler.createCustomDateReport(user, startDate, endDate);
         };
+    }
+
+    public void setCustomDates(LocalDate startDate, LocalDate endDate) {
+        ReportCreator.startDate = startDate;
+        ReportCreator.endDate = endDate;
     }
 }

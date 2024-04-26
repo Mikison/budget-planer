@@ -2,7 +2,6 @@ package pl.sonmiike.reportsservice.expense;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.sonmiike.reportsservice.cateogry.Category;
@@ -13,7 +12,6 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "expense")

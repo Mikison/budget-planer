@@ -16,7 +16,10 @@ import pl.sonmiike.budgetapp.user.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,6 +56,45 @@ public class CategoryServiceImplTest {
     @AfterEach
     public void close() throws Exception {
         openMocks.close();
+    }
+
+    @Test
+    void testFetchAllCategories() {
+        // Setup
+        List<Category> categories = Arrays.asList(new Category(1L, "Food"), new Category(2L, "Utilities"));
+        when(categoryRepository.findAll()).thenReturn(categories);
+        when(categoryMapper.toDTO(any(Category.class))).thenAnswer(invocation -> {
+            Category category = invocation.getArgument(0);
+            return new CategoryDTO(category.getId(), category.getName(), BigDecimal.ZERO);
+        });
+
+        // Execution
+        Set<CategoryDTO> results = categoryService.fetchAllCategories();
+
+        // Assertions
+        assertNotNull(results);
+        assertEquals(2, results.size());
+        verify(categoryRepository).findAll();
+        verify(categoryMapper, times(2)).toDTO(any(Category.class));
+    }
+
+    @Test
+    void testFetchUserCategories() {
+        Long userId = 1L;
+        List<Category> categories = Arrays.asList(new Category(1L, "Food"), new Category(2L, "Utilities"));
+        when(categoryRepository.findAllCategoriesByUserId(userId)).thenReturn(categories);
+        when(categoryMapper.toDTO(any(Category.class))).thenAnswer(invocation -> {
+            Category category = invocation.getArgument(0);
+            return new CategoryDTO(category.getId(), category.getName(), BigDecimal.ZERO);
+        });
+
+        // Execution
+        Set<CategoryDTO> results = categoryService.fetchUserCategories(userId);
+
+        assertNotNull(results);
+        assertEquals(2, results.size());
+        verify(categoryRepository).findAllCategoriesByUserId(userId);
+        verify(categoryMapper, times(2)).toDTO(any(Category.class));
     }
 
 

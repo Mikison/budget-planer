@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.time.LocalDate;
 
@@ -38,5 +38,5 @@ public class ReportEntity {
     private LocalDate generatedDate;
 
     @ManyToOne
-    private UserEntityReport user;
+    private UserReport user;
 }

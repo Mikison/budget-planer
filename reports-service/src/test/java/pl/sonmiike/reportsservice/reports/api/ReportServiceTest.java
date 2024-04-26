@@ -12,7 +12,7 @@ import pl.sonmiike.reportsservice.report.api.ReportService;
 import pl.sonmiike.reportsservice.report.database.ReportEntity;
 import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
 import pl.sonmiike.reportsservice.report.database.ReportType;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -81,7 +81,7 @@ public class ReportServiceTest {
     private ReportEntity getReport() {
         ReportEntity report = new ReportEntity();
         report.setFileName("testReport.pdf");
-        report.setUser(new UserEntityReport());
+        report.setUser(new UserReport());
         report.setType(ReportType.WEEKLY_REPORT);
         report.setStartDate(LocalDate.now());
         report.setEndDate(LocalDate.now().plusDays(7));

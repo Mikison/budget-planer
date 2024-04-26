@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.report.generators.ReportGenerator;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserReportService;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 public class ReportGeneratorTest {
 
     @Mock
-    private UserEntityService userEntityService;
+    private UserReportService userReportService;
 
     @InjectMocks
     private ReportGenerator<WeeklyReport> reportGenerator;

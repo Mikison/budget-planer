@@ -2,12 +2,12 @@ package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
-import pl.sonmiike.reportsservice.income.IncomeEntityService;
+import pl.sonmiike.reportsservice.cateogry.CategoryService;
+import pl.sonmiike.reportsservice.expense.ExpenseService;
+import pl.sonmiike.reportsservice.income.IncomeService;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -20,8 +20,8 @@ import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes
 @Component
 public class WeeklyReportAssembler extends BaseReportAssembler {
 
-    public WeeklyReportAssembler(IncomeEntityService incomeEntityService, ExpenseEntityService expenseEntityService, CategoryEntityService categoryEntityService) {
-        super(incomeEntityService, expenseEntityService, categoryEntityService);
+    public WeeklyReportAssembler(IncomeService incomeService, ExpenseService expenseService, CategoryService categoryService) {
+        super(incomeService, expenseService, categoryService);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class WeeklyReportAssembler extends BaseReportAssembler {
         return new DateInterval(startDate, endDate);
     }
 
-    public WeeklyReport createWeeklyReport(UserEntityReport user) {
+    public WeeklyReport createWeeklyReport(UserReport user) {
         return createReport(user, (userDetails, date, incomes, expenses, categoryExpenses) -> WeeklyReport.builder()
                 .user(userDetails)
                 .dateInterval(date)

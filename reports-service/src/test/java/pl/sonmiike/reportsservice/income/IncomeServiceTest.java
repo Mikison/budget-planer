@@ -18,13 +18,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class IncomeEntityServiceTest {
+public class IncomeServiceTest {
 
     @Mock
-    private IncomeEntityRepository incomeRepository;
+    private IncomeRepository incomeRepository;
 
     @InjectMocks
-    private IncomeEntityService incomeEntityService;
+    private IncomeService incomeService;
 
     private AutoCloseable openMocks;
 
@@ -42,14 +42,14 @@ public class IncomeEntityServiceTest {
     @Test
     void getIncomesFromDateInterval() {
         // given
-        List<IncomeEntity> incomeEntities = List.of(new IncomeEntity());
+        List<Income> incomeEntities = List.of(new Income());
         LocalDate startDate = LocalDate.of(2024, 4, 1);
         LocalDate endDate = LocalDate.of(2024, 4, 7);
         Long userId = 1L;
         // when
-        when(incomeEntityService.getIncomesFromDateInterval(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(incomeEntities));
+        when(incomeService.getIncomesFromDateInterval(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(incomeEntities));
 
-        Optional<List<IncomeEntity>> result = incomeEntityService.getIncomesFromDateInterval(startDate, endDate, userId);
+        Optional<List<Income>> result = incomeService.getIncomesFromDateInterval(startDate, endDate, userId);
 
         // then
         assertNotNull(result);

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "expense")
-public class ExpenseEntity {
+public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,18 +30,18 @@ public class ExpenseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntityReport user;
+    private UserReport user;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
 
-    public ExpenseEntity(BigDecimal amount) {
+    public Expense(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public ExpenseEntity(BigDecimal amount, LocalDate date) {
+    public Expense(BigDecimal amount, LocalDate date) {
         this.date = date;
         this.amount = amount;
     }

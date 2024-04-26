@@ -18,49 +18,49 @@ import java.util.stream.Collectors;
 public class ExpenseOperations {
 
 
-    public static BigDecimal calculateTotalExpenses(@NotNull List<ExpenseEntity> expenses) {
+    public static BigDecimal calculateTotalExpenses(@NotNull List<Expense> expenses) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .map(ExpenseEntity::getAmount)
+                .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public static ExpenseEntity findMaxExpense(@NotNull List<ExpenseEntity> expenses) {
+    public static Expense findMaxExpense(@NotNull List<Expense> expenses) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .max(Comparator.comparing(ExpenseEntity::getAmount))
+                .max(Comparator.comparing(Expense::getAmount))
                 .orElseThrow(() -> new NullPointerException("Cannot find max expense"));
     }
 
-    public static ExpenseEntity findMinExpense(@NotNull List<ExpenseEntity> expenses) {
+    public static Expense findMinExpense(@NotNull List<Expense> expenses) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .min(Comparator.comparing(ExpenseEntity::getAmount))
+                .min(Comparator.comparing(Expense::getAmount))
                 .orElseThrow(() -> new NullPointerException("Cannot find min expense"));
     }
 
-    public static BigDecimal calculateAverageDailyExpenses(@NotNull List<ExpenseEntity> expenses, int days) {
+    public static BigDecimal calculateAverageDailyExpenses(@NotNull List<Expense> expenses, int days) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .map(ExpenseEntity::getAmount)
+                .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .divide(BigDecimal.valueOf(days), RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal calculateAverageWeeklyExpenses(@NotNull List<ExpenseEntity> expenses) {
+    public static BigDecimal calculateAverageWeeklyExpenses(@NotNull List<Expense> expenses) {
         validateExpensesList(expenses);
         return expenses.stream()
-                .map(ExpenseEntity::getAmount)
+                .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .divide(BigDecimal.valueOf(4), RoundingMode.HALF_UP);
     }
 
-    public static DateInterval calculateWeekWithBiggestExpense(@NotNull List<ExpenseEntity> expenses) {
+    public static DateInterval calculateWeekWithBiggestExpense(@NotNull List<Expense> expenses) {
         validateExpensesList(expenses);
         Map<LocalDate, BigDecimal> weeklyTotalExpenses = expenses.stream()
                 .collect(Collectors.groupingBy(
                         expense -> expense.getDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)),
-                        Collectors.mapping(ExpenseEntity::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
+                        Collectors.mapping(Expense::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))
                 ));
 
         LocalDate startOfWeek = weeklyTotalExpenses.entrySet().stream()
@@ -73,12 +73,12 @@ public class ExpenseOperations {
         return new DateInterval(startOfWeek, endOfWeek);
     }
 
-    public static DayOfWeek getDayWithHighestAverageExpense(@NotNull List<ExpenseEntity> expenses) {
+    public static DayOfWeek getDayWithHighestAverageExpense(@NotNull List<Expense> expenses) {
         validateExpensesList(expenses);
         Map<DayOfWeek, List<BigDecimal>> expensesPriceByDay = expenses.stream()
                 .collect(Collectors.groupingBy(
                         expense -> expense.getDate().getDayOfWeek(),
-                        Collectors.mapping(ExpenseEntity::getAmount, Collectors.toList())
+                        Collectors.mapping(Expense::getAmount, Collectors.toList())
                 ));
 
         return expensesPriceByDay.entrySet().stream()
@@ -93,7 +93,7 @@ public class ExpenseOperations {
     }
 
 
-    private static void validateExpensesList(List<ExpenseEntity> expenses) {
+    private static void validateExpensesList(List<Expense> expenses) {
         if (expenses == null) throw new NullPointerException("Expenses list cannot be null");
     }
 

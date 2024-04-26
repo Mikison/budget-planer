@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserReport;
+import pl.sonmiike.reportsservice.user.UserReportService;
 
 import java.util.Set;
 
@@ -22,7 +22,7 @@ public class ReportExecutor {
     public static final String WEEKLY_REPORT_GENERATING_FOR_USER = "[>] Weekly Report: Generating for User: ";
 
     private final RabbitTemplate rabbitTemplate;
-    private final UserEntityService userEntityService;
+    private final UserReportService userReportService;
 
     @Value("${spring.rabbitmq.exchange}")
     private String topicExchangeName;
@@ -44,7 +44,7 @@ public class ReportExecutor {
     }
 
     private void initiateReportGenerationForAllUsers(String routingKey, String messagePrefix) {
-        Set<UserEntityReport> users = userEntityService.getAllUsers();
+        Set<UserReport> users = userReportService.getAllUsers();
         users.forEach(user -> sendMessageToGenerateReport(routingKey, messagePrefix, user.getUserId().toString()));
     }
 

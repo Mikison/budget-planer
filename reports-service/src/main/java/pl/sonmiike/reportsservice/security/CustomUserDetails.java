@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 import pl.sonmiike.reportsservice.user.UserRoleEnum;
 
 import java.util.Collection;
@@ -19,11 +19,11 @@ public class CustomUserDetails implements UserDetails {
     private final UserRoleEnum role;
 
 
-    public CustomUserDetails(UserEntityReport userEntityReport) {
-        this.userId = userEntityReport.getUserId();
-        this.username = userEntityReport.getEmail();
-        this.password = userEntityReport.getPassword();
-        this.role = userEntityReport.getRole();
+    public CustomUserDetails(UserReport userReport) {
+        this.userId = userReport.getUserId();
+        this.username = userReport.getEmail();
+        this.password = userReport.getPassword();
+        this.role = userReport.getRole();
     }
 
 

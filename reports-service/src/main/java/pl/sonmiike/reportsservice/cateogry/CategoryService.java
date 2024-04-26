@@ -8,11 +8,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryEntityService {
+public class CategoryService {
 
-    private final CategoryEntityRepository categoryEntityRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Category> getCategories() {
-        return categoryEntityRepository.findAll();
+        return categoryRepository.findAll();
     }
 }

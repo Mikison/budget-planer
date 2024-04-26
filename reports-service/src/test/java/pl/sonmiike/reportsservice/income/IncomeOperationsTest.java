@@ -14,9 +14,9 @@ public class IncomeOperationsTest {
 
     @Test
     void testCalculateTotalIncomes() {
-        List<IncomeEntity> incomes = Arrays.asList(
-                new IncomeEntity(BigDecimal.valueOf(100)),
-                new IncomeEntity(BigDecimal.valueOf(150))
+        List<Income> incomes = Arrays.asList(
+                new Income(BigDecimal.valueOf(100)),
+                new Income(BigDecimal.valueOf(150))
         );
         BigDecimal result = IncomeOperations.getTotalIncomes(incomes);
         assertEquals(BigDecimal.valueOf(250), result);
@@ -24,7 +24,7 @@ public class IncomeOperationsTest {
 
     @Test
     void testCalculateTotalIncomesWithNullList() {
-        List<IncomeEntity> incomes = null;
+        List<Income> incomes = null;
 
         assertThrows(IllegalArgumentException.class, () -> IncomeOperations.getTotalIncomes(incomes));
 

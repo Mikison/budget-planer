@@ -2,6 +2,6 @@ package pl.sonmiike.reportsservice.cateogry;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryEntityRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 }

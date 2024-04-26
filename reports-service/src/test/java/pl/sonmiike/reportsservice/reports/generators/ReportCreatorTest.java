@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 import pl.sonmiike.reportsservice.report.generators.ReportGenerator;
@@ -15,8 +15,8 @@ import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssem
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserReport;
+import pl.sonmiike.reportsservice.user.UserReportService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 public class ReportCreatorTest {
 
     @Mock
-    private UserEntityService userEntityService;
+    private UserReportService userReportService;
 
     @Mock
     private WeeklyReportAssembler weeklyReportAssembler;
@@ -53,14 +53,14 @@ public class ReportCreatorTest {
     @Test
     void testGenerateWeeklyReport_WhenReportIsNull() {
         Long userId = 1L;
-        UserEntityReport user = getUser();
+        UserReport user = getUser();
 
-        when(userEntityService.getUserById(userId)).thenReturn(user);
+        when(userReportService.getUserById(userId)).thenReturn(user);
         when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(null);
 
         reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
-        verify(userEntityService).getUserById(userId);
+        verify(userReportService).getUserById(userId);
         verify(weeklyReportAssembler).createWeeklyReport(user);
 
     }
@@ -70,20 +70,20 @@ public class ReportCreatorTest {
     @Test
     void testGenerateMonthlyReport_WhenReportIsNull() {
         Long userId = 1L;
-        UserEntityReport user = getUser();
+        UserReport user = getUser();
 
-        when(userEntityService.getUserById(userId)).thenReturn(user);
+        when(userReportService.getUserById(userId)).thenReturn(user);
         when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(null);
 
         reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
 
-        verify(userEntityService).getUserById(userId);
+        verify(userReportService).getUserById(userId);
         verify(monthlyReportAssembler).createMonthlyReport(user);
 
     }
 
-    private UserEntityReport getUser() {
-        return UserEntityReport.builder()
+    private UserReport getUser() {
+        return UserReport.builder()
                 .userId(1L)
                 .username("testUser")
                 .email("test@test.com")
@@ -96,13 +96,13 @@ public class ReportCreatorTest {
                 .user(getUser())
                 .dateInterval(new DateInterval(LocalDate.now().minusDays(7), LocalDate.now()))
                 .totalExpenses(BigDecimal.valueOf(100))
-                .biggestExpense(new ExpenseEntity())
-                .smallestExpense(new ExpenseEntity())
+                .biggestExpense(new Expense())
+                .smallestExpense(new Expense())
                 .averageDailyExpense(BigDecimal.valueOf(10))
                 .totalIncomes(BigDecimal.valueOf(200))
                 .budgetSummary(BigDecimal.valueOf(100))
-                .expensesList(List.of(new ExpenseEntity()))
-                .incomeList(List.of(new IncomeEntity()))
+                .expensesList(List.of(new Expense()))
+                .incomeList(List.of(new Income()))
                 .categoryExpenses(null)
                 .build();
     }

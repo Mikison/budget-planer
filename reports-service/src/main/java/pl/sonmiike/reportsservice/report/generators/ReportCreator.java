@@ -8,14 +8,14 @@ import pl.sonmiike.reportsservice.report.generators.assemblers.CustomDateReportA
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
 import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.Report;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserReport;
+import pl.sonmiike.reportsservice.user.UserReportService;
 
 @Component
 @RequiredArgsConstructor
 public class ReportCreator {
 
-    private final UserEntityService userEntityService;
+    private final UserReportService userReportService;
     private final WeeklyReportAssembler weeklyReportAssembler;
     private final MonthlyReportAssembler monthlyReportAssembler;
     private final CustomDateReportAssembler customDateIntervalReportGenerator;
@@ -23,7 +23,7 @@ public class ReportCreator {
     private final ReportMailSender reportMailSender;
 
     public void generateReport(Long userId, ReportType reportType) {
-        UserEntityReport user = userEntityService.getUserById(userId);
+        UserReport user = userReportService.getUserById(userId);
         if (user == null) {
             System.out.println("User not found");
             return;
@@ -41,7 +41,7 @@ public class ReportCreator {
 
     }
 
-    private Report generateReport(UserEntityReport user, ReportType reportType) {
+    private Report generateReport(UserReport user, ReportType reportType) {
         return switch (reportType) {
             case WEEKLY_REPORT -> weeklyReportAssembler.createWeeklyReport(user);
             case MONTHLY_REPORT -> monthlyReportAssembler.createMonthlyReport(user);

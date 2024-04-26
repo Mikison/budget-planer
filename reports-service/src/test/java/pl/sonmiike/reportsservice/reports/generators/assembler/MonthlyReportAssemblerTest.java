@@ -6,14 +6,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
-import pl.sonmiike.reportsservice.income.IncomeEntity;
-import pl.sonmiike.reportsservice.income.IncomeEntityService;
+import pl.sonmiike.reportsservice.cateogry.CategoryService;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.expense.ExpenseService;
+import pl.sonmiike.reportsservice.income.Income;
+import pl.sonmiike.reportsservice.income.IncomeService;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,13 +29,13 @@ import static org.mockito.Mockito.when;
 public class MonthlyReportAssemblerTest {
 
     @Mock
-    private IncomeEntityService incomeEntityService;
+    private IncomeService incomeService;
 
     @Mock
-    private ExpenseEntityService expenseEntityService;
+    private ExpenseService expenseService;
 
     @Mock
-    private CategoryEntityService categoryEntityService;
+    private CategoryService categoryService;
 
     @InjectMocks
     private MonthlyReportAssembler monthlyReportAssembler;
@@ -47,17 +47,17 @@ public class MonthlyReportAssemblerTest {
 
     @Test
     void testCreateMonthlyReport_WithData() {
-        UserEntityReport user = getUser();
-        List<IncomeEntity> incomes = getIncomes();
-        List<ExpenseEntity> expenses = getExpenses();
+        UserReport user = getUser();
+        List<Income> incomes = getIncomes();
+        List<Expense> expenses = getExpenses();
         List<Category> categories = List.of(getCategory());
 
         LocalDate startDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate endDate = LocalDate.now().withDayOfMonth(1).minusDays(1);
 
-        when(incomeEntityService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.of(incomes));
-        when(expenseEntityService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
-        when(categoryEntityService.getCategories()).thenReturn(categories);
+        when(incomeService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.of(incomes));
+        when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
+        when(categoryService.getCategories()).thenReturn(categories);
 
         MonthlyReport report = monthlyReportAssembler.createMonthlyReport(user);
 
@@ -70,26 +70,26 @@ public class MonthlyReportAssemblerTest {
 
     @Test
     void testCreateMonthlyReport_NoData() {
-        UserEntityReport user = getUser();
-        when(incomeEntityService.getIncomesFromDateInterval(any(), any(), anyLong())).thenReturn(Optional.empty());
-        when(expenseEntityService.getExpensesFromDateBetween(any(), any(), anyLong())).thenReturn(Optional.empty());
-        when(categoryEntityService.getCategories()).thenReturn(new ArrayList<>());
+        UserReport user = getUser();
+        when(incomeService.getIncomesFromDateInterval(any(), any(), anyLong())).thenReturn(Optional.empty());
+        when(expenseService.getExpensesFromDateBetween(any(), any(), anyLong())).thenReturn(Optional.empty());
+        when(categoryService.getCategories()).thenReturn(new ArrayList<>());
 
         MonthlyReport report = monthlyReportAssembler.createMonthlyReport(user);
 
         assertNull(report);
     }
 
-    private UserEntityReport getUser() {
-        return new UserEntityReport(1L);
+    private UserReport getUser() {
+        return new UserReport(1L);
     }
 
     private Category getCategory() {
         return new Category(1L, "Shopping");
     }
 
-    private List<ExpenseEntity> getExpenses() {
-        return List.of(new ExpenseEntity(
+    private List<Expense> getExpenses() {
+        return List.of(new Expense(
                 1L,
                 "Groceries",
                 "Weekly Groceries",
@@ -100,8 +100,8 @@ public class MonthlyReportAssemblerTest {
         ));
     }
 
-    private List<IncomeEntity> getIncomes() {
-        return List.of(new IncomeEntity(
+    private List<Income> getIncomes() {
+        return List.of(new Income(
                 1L,
                 LocalDate.now().minusDays(3),
                 "Monthly Salary",

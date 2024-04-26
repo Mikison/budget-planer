@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import pl.sonmiike.reportsservice.report.ReportExecutor;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserReport;
+import pl.sonmiike.reportsservice.user.UserReportService;
 
 import java.util.Set;
 
@@ -22,7 +22,7 @@ public class ReportExecutorTest {
     private RabbitTemplate rabbitTemplate;
 
     @Mock
-    private UserEntityService userEntityService;
+    private UserReportService userReportService;
 
     @InjectMocks
     private ReportExecutor reportExecutor;
@@ -34,7 +34,7 @@ public class ReportExecutorTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        reportExecutor = new ReportExecutor(rabbitTemplate, userEntityService);
+        reportExecutor = new ReportExecutor(rabbitTemplate, userReportService);
         reportExecutor.setTopicExchangeName(topicExchangeName);
         reportExecutor.setWeeklyRoutingKey(weeklyRoutingKey);
         reportExecutor.setMonthlyRoutingKey(monthlyRoutingKey);
@@ -43,12 +43,12 @@ public class ReportExecutorTest {
 
     @Test
     void testExecuteWeeklyReportGeneration() {
-        Set<UserEntityReport> users = Set.of(new UserEntityReport(1L), new UserEntityReport(2L));
-        when(userEntityService.getAllUsers()).thenReturn(users);
+        Set<UserReport> users = Set.of(new UserReport(1L), new UserReport(2L));
+        when(userReportService.getAllUsers()).thenReturn(users);
 
         reportExecutor.executeWeeklyReportGeneration();
 
-        for (UserEntityReport user : users) {
+        for (UserReport user : users) {
             verify(rabbitTemplate).convertAndSend(
                     topicExchangeName,
                     weeklyRoutingKey,
@@ -59,12 +59,12 @@ public class ReportExecutorTest {
 
     @Test
     void testExecuteMonthlyReportGeneration() {
-        Set<UserEntityReport> users = Set.of(new UserEntityReport(1L), new UserEntityReport(2L));
-        when(userEntityService.getAllUsers()).thenReturn(users);
+        Set<UserReport> users = Set.of(new UserReport(1L), new UserReport(2L));
+        when(userReportService.getAllUsers()).thenReturn(users);
 
         reportExecutor.executeMonthlyReportGeneration();
 
-        for (UserEntityReport user : users) {
+        for (UserReport user : users) {
             verify(rabbitTemplate).convertAndSend(
                     topicExchangeName,
                     monthlyRoutingKey,

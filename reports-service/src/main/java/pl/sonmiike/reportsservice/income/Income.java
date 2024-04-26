@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "income")
-public class IncomeEntity {
+public class Income {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +32,14 @@ public class IncomeEntity {
     private BigDecimal amount;
 
     @ManyToOne
-    private UserEntityReport user;
+    private UserReport user;
 
 
-    public IncomeEntity(BigDecimal amount) {
+    public Income(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public IncomeEntity(BigDecimal amount, LocalDate incomeDate) {
+    public Income(BigDecimal amount, LocalDate incomeDate) {
         this.amount = amount;
         this.incomeDate = incomeDate;
     }

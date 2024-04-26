@@ -3,15 +3,15 @@ package pl.sonmiike.reportsservice.report.generators.assemblers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
+import pl.sonmiike.reportsservice.cateogry.CategoryService;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.expense.ExpenseService;
 import pl.sonmiike.reportsservice.expense.ExpenseOperations;
-import pl.sonmiike.reportsservice.income.IncomeEntity;
-import pl.sonmiike.reportsservice.income.IncomeEntityService;
+import pl.sonmiike.reportsservice.income.Income;
+import pl.sonmiike.reportsservice.income.IncomeService;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -21,31 +21,31 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public abstract class BaseReportAssembler {
 
-    private final IncomeEntityService incomeEntityService;
-    private final ExpenseEntityService expenseEntityService;
-    private final CategoryEntityService categoryEntityService;
+    private final IncomeService incomeService;
+    private final ExpenseService expenseService;
+    private final CategoryService categoryService;
 
     protected abstract DateInterval getDateInterval();
 
-    protected List<IncomeEntity> fetchSortedIncomes(DateInterval date, Long userId) {
-        return incomeEntityService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), userId)
+    protected List<Income> fetchSortedIncomes(DateInterval date, Long userId) {
+        return incomeService.getIncomesFromDateInterval(date.getStartDate(), date.getEndDate(), userId)
                 .orElse(Collections.emptyList())
                 .stream()
-                .sorted(Comparator.comparing(IncomeEntity::getIncomeDate))
+                .sorted(Comparator.comparing(Income::getIncomeDate))
                 .toList();
     }
 
-    protected List<ExpenseEntity> fetchSortedExpenses(DateInterval date, Long userId) {
-        return expenseEntityService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), userId)
+    protected List<Expense> fetchSortedExpenses(DateInterval date, Long userId) {
+        return expenseService.getExpensesFromDateBetween(date.getStartDate(), date.getEndDate(), userId)
                 .orElse(Collections.emptyList())
                 .stream()
-                .sorted(Comparator.comparing(ExpenseEntity::getDate))
+                .sorted(Comparator.comparing(Expense::getDate))
                 .toList();
     }
 
-    protected HashMap<Category, BigDecimal> calculateCategoryExpenses(List<ExpenseEntity> expenses, List<Category> categories) {
+    protected HashMap<Category, BigDecimal> calculateCategoryExpenses(List<Expense> expenses, List<Category> categories) {
         Set<Long> categoryIds = expenses.stream()
-                .map(ExpenseEntity::getCategory)
+                .map(Expense::getCategory)
                 .map(Category::getId)
                 .collect(Collectors.toSet());
         List<Category> userCategories = categories.stream()
@@ -62,11 +62,11 @@ public abstract class BaseReportAssembler {
         return categoryExpenses;
     }
 
-    protected <T extends Report> T createReport(UserEntityReport user, ReportDataProcessor<T> processor) {
+    protected <T extends Report> T createReport(UserReport user, ReportDataProcessor<T> processor) {
         DateInterval date = getDateInterval();
-        List<Category> categories = categoryEntityService.getCategories();
-        List<IncomeEntity> incomes = fetchSortedIncomes(date, user.getUserId());
-        List<ExpenseEntity> expenses = fetchSortedExpenses(date, user.getUserId());
+        List<Category> categories = categoryService.getCategories();
+        List<Income> incomes = fetchSortedIncomes(date, user.getUserId());
+        List<Expense> expenses = fetchSortedExpenses(date, user.getUserId());
 
         if (incomes.isEmpty() && expenses.isEmpty()) return null;
 

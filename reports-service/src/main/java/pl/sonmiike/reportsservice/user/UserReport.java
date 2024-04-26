@@ -14,7 +14,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntityReport {
+public class UserReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class UserEntityReport {
     private UserRoleEnum role;
 
 
-    public UserEntityReport(Long userId) {
+    public UserReport(Long userId) {
         this.userId = userId;
     }
 

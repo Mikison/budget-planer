@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntityRepository;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
+import pl.sonmiike.reportsservice.cateogry.CategoryRepository;
+import pl.sonmiike.reportsservice.cateogry.CategoryService;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ public class CategoryServiceTest {
 
 
     @Mock
-    private CategoryEntityRepository categoryEntityRepository;
+    private CategoryRepository categoryRepository;
 
 
     @InjectMocks
-    private CategoryEntityService categoryEntityService;
+    private CategoryService categoryService;
 
     private AutoCloseable openMocks;
 
@@ -44,8 +44,8 @@ public class CategoryServiceTest {
         // given
         List<Category> categoryEntities = List.of(new Category());
         // when
-        when(categoryEntityService.getCategories()).thenReturn(categoryEntities);
-        List<Category> result = categoryEntityService.getCategories();
+        when(categoryService.getCategories()).thenReturn(categoryEntities);
+        List<Category> result = categoryService.getCategories();
 
         // then
         assertEquals(categoryEntities, result);

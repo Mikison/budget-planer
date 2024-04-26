@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityRepository;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.expense.ExpenseRepository;
+import pl.sonmiike.reportsservice.expense.ExpenseService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.when;
 public class ExpensesEntityServiceTest {
 
     @Mock
-    private ExpenseEntityRepository expenseEntityRepository;
+    private ExpenseRepository expenseRepository;
 
     @InjectMocks
-    private ExpenseEntityService expenseEntityService;
+    private ExpenseService expenseService;
 
     private AutoCloseable openMocks;
 
@@ -48,14 +48,14 @@ public class ExpensesEntityServiceTest {
         LocalDate endDate = LocalDate.of(2024, 4, 27);
         Long userId = 1L;
 
-        List<ExpenseEntity> expenseEntities = List.of(new ExpenseEntity());
+        List<Expense> expenseEntities = List.of(new Expense());
 
-        when(expenseEntityService.getExpensesFromDateBetween(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(expenseEntities));
+        when(expenseService.getExpensesFromDateBetween(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(expenseEntities));
 
-        Optional<List<ExpenseEntity>> result = expenseEntityService.getExpensesFromDateBetween(startDate, endDate, userId);
+        Optional<List<Expense>> result = expenseService.getExpensesFromDateBetween(startDate, endDate, userId);
 
         assertTrue(result.isPresent());
         assertEquals(1, result.get().size());
-        verify(expenseEntityRepository).findExpenseEntitiesByDateBetweenAndUserUserId(startDate, endDate, userId);
+        verify(expenseRepository).findExpenseEntitiesByDateBetweenAndUserUserId(startDate, endDate, userId);
     }
 }

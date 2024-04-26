@@ -6,15 +6,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryEntityService;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
-import pl.sonmiike.reportsservice.income.IncomeEntity;
-import pl.sonmiike.reportsservice.income.IncomeEntityService;
+import pl.sonmiike.reportsservice.cateogry.CategoryService;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.expense.ExpenseService;
+import pl.sonmiike.reportsservice.income.Income;
+import pl.sonmiike.reportsservice.income.IncomeService;
 import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -30,11 +30,11 @@ import static org.mockito.Mockito.when;
 public class WeeklyReportAssemblerTest {
 
     @Mock
-    private IncomeEntityService incomeEntityService;
+    private IncomeService incomeService;
     @Mock
-    private ExpenseEntityService expenseEntityService;
+    private ExpenseService expenseService;
     @Mock
-    private CategoryEntityService categoryEntityService;
+    private CategoryService categoryService;
 
     @InjectMocks
     private WeeklyReportAssembler weeklyReportAssembler;
@@ -46,18 +46,18 @@ public class WeeklyReportAssemblerTest {
 
     @Test
     void testCreateWeeklyReport_WithData() {
-        UserEntityReport user = getUser();
+        UserReport user = getUser();
         LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         DateInterval dateInterval = new DateInterval(startDate, endDate);
 
-        List<IncomeEntity> incomes = getIncomes();
-        List<ExpenseEntity> expenses = getExpenses();
+        List<Income> incomes = getIncomes();
+        List<Expense> expenses = getExpenses();
         List<Category> categories = List.of(getCategory());
 
-        when(incomeEntityService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.of(incomes));
-        when(expenseEntityService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
-        when(categoryEntityService.getCategories()).thenReturn(categories);
+        when(incomeService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.of(incomes));
+        when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
+        when(categoryService.getCategories()).thenReturn(categories);
 
         WeeklyReport report = weeklyReportAssembler.createWeeklyReport(user);
 
@@ -70,13 +70,13 @@ public class WeeklyReportAssemblerTest {
 
     @Test
     void testCreateWeeklyReport_NoData() {
-        UserEntityReport user = new UserEntityReport(1L);
+        UserReport user = new UserReport(1L);
         LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
-        when(incomeEntityService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
-        when(expenseEntityService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
-        when(categoryEntityService.getCategories()).thenReturn(Collections.emptyList());
+        when(incomeService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
+        when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
+        when(categoryService.getCategories()).thenReturn(Collections.emptyList());
 
         WeeklyReport report = weeklyReportAssembler.createWeeklyReport(user);
 
@@ -84,16 +84,16 @@ public class WeeklyReportAssemblerTest {
     }
 
 
-    private UserEntityReport getUser() {
-        return new UserEntityReport(1L);
+    private UserReport getUser() {
+        return new UserReport(1L);
     }
 
     private Category getCategory() {
         return new Category(1L, "Shopping");
     }
 
-    private List<ExpenseEntity> getExpenses() {
-        return List.of(new ExpenseEntity(
+    private List<Expense> getExpenses() {
+        return List.of(new Expense(
                 1L,
                 "Groceries",
                 "Weekly Groceries",
@@ -104,8 +104,8 @@ public class WeeklyReportAssemblerTest {
         ));
     }
 
-    private List<IncomeEntity> getIncomes() {
-        return List.of(new IncomeEntity(
+    private List<Income> getIncomes() {
+        return List.of(new Income(
                 1L,
                 LocalDate.now().minusDays(3),
                 "Monthly Salary",

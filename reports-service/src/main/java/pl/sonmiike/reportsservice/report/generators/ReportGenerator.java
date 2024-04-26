@@ -16,14 +16,14 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.report.database.ReportEntity;
 import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
 import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -137,7 +137,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
                     .setFontColor(summary.compareTo(BigDecimal.ZERO) > 0 ? DARK_GREEN_COLOR : DARK_RED_COLOR));
             document.add(summaryParagraph);
         } else {
-            ExpenseEntity expense = (ExpenseEntity) value;
+            Expense expense = (Expense) value;
             String expenseText = String.format("%s on %s spent %s",
                     expense.getDescription(),
                     expense.getDate().toString(),
@@ -148,7 +148,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
     private void createCenteredTable(Document document, String key, Object value) {
         List<?> list = (List<?>) value;
-        if (!list.isEmpty() && (list.get(0) instanceof IncomeEntity || list.get(0) instanceof ExpenseEntity)) {
+        if (!list.isEmpty() && (list.get(0) instanceof Income || list.get(0) instanceof Expense)) {
             Table table = new Table(UnitValue.createPercentArray(new float[]{0.8f, 2.5f, 0.8f, 1f}))
                     .setWidth(UnitValue.createPercentValue(100))
                     .setTextAlignment(TextAlignment.CENTER);
@@ -158,12 +158,12 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
             table.addHeaderCell(new Cell().add(new Paragraph("Category").setTextAlignment(TextAlignment.CENTER)));
 
             for (Object item : list) {
-                if (item instanceof ExpenseEntity expense) {
+                if (item instanceof Expense expense) {
                     table.addCell(new Cell().add(new Paragraph(expense.getDate().toString()).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph(expense.getDescription()).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph("-" + expense.getAmount().toPlainString()).setFontColor(DARK_RED_COLOR).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph(expense.getCategory().getName()).setTextAlignment(TextAlignment.CENTER)));
-                } else if (item instanceof IncomeEntity income) {
+                } else if (item instanceof Income income) {
                     table.addCell(new Cell().add(new Paragraph(income.getIncomeDate().toString()).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph(income.getDescription()).setTextAlignment(TextAlignment.CENTER)));
                     table.addCell(new Cell().add(new Paragraph("+" + income.getAmount().toPlainString()).setFontColor(DARK_GREEN_COLOR).setTextAlignment(TextAlignment.CENTER)));
@@ -211,7 +211,7 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
         };
     }
 
-    private ReportEntity getReportEntity(UserEntityReport user, ReportType reportType, DateInterval dateInterval, String outputPath) {
+    private ReportEntity getReportEntity(UserReport user, ReportType reportType, DateInterval dateInterval, String outputPath) {
         ReportEntity reportEntity = new ReportEntity();
         reportEntity.setStartDate(dateInterval.getStartDate());
         reportEntity.setEndDate(dateInterval.getEndDate());

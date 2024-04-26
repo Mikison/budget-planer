@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.expense.ExpenseEntity;
-import pl.sonmiike.reportsservice.income.IncomeEntity;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.report.database.ReportType;
-import pl.sonmiike.reportsservice.user.UserEntityReport;
+import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -22,17 +22,17 @@ import java.util.Map;
 @AllArgsConstructor
 public class MonthlyReport implements Report {
 
-    private UserEntityReport user;
+    private UserReport user;
     private DateInterval dateInterval;
     private BigDecimal totalExpenses;
-    private ExpenseEntity largestExpense;
+    private Expense largestExpense;
     private BigDecimal averageWeeklyExpense;
     private DateInterval weekWithHighestExpenses;
     private DayOfWeek dayWithHighestAverageExpense;
     private BigDecimal totalIncomes;
     private BigDecimal budgetSummary;
-    private List<ExpenseEntity> expensesList;
-    private List<IncomeEntity> incomeList;
+    private List<Expense> expensesList;
+    private List<Income> incomeList;
     private HashMap<Category, BigDecimal> categoryExpenses;
 
 

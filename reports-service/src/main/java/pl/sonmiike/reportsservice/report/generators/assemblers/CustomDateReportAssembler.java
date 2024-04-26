@@ -2,10 +2,10 @@ package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.expense.ExpenseEntityService;
-import pl.sonmiike.reportsservice.income.IncomeEntityService;
+import pl.sonmiike.reportsservice.expense.ExpenseService;
+import pl.sonmiike.reportsservice.income.IncomeService;
 import pl.sonmiike.reportsservice.report.types.WeeklyReport;
-import pl.sonmiike.reportsservice.user.UserEntityService;
+import pl.sonmiike.reportsservice.user.UserReportService;
 
 import java.time.LocalDate;
 
@@ -15,9 +15,9 @@ import java.time.LocalDate;
 public class CustomDateReportAssembler {
 
 
-    private final UserEntityService userEntityService;
-    private final IncomeEntityService incomeEntityService;
-    private final ExpenseEntityService expenseEntityService;
+    private final UserReportService userReportService;
+    private final IncomeService incomeService;
+    private final ExpenseService expenseService;
 
     // TODO Implement this method
     public WeeklyReport createCustomDateIntervalReport(Long userId, LocalDate startDate, LocalDate endDate) {

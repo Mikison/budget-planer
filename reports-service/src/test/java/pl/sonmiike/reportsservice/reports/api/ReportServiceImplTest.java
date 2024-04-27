@@ -1,7 +1,6 @@
 package pl.sonmiike.reportsservice.reports.api;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,32 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceImplTest {
 
+    private final String basePath = "dummy_path";
     @Mock
     private ReportExecutor reportExecutor;
-
     @Mock
     private ReportEntityRepository reportEntityRepository;
-
     @Mock
     private ReportMapper reportMapper;
-
     @Mock
     private Resource resource;
-
     @InjectMocks
     private ReportServiceImpl reportService;
-
-    private final String basePath = "dummy_path";
-
-    @BeforeEach
-    void setUp() {
-        openMocks(this);
-    }
 
     @Test
     void whenCallingWeeklyReport_thenInitiateWeeklyReportIsCalled() {
@@ -104,7 +92,6 @@ public class ReportServiceImplTest {
         verify(reportMapper).toDTO(any(ReportEntity.class));
         verify(reportEntityRepository).findAllByUserUserId(userId);
     }
-
 
 
     @Test

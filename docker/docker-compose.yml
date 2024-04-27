@@ -14,7 +14,7 @@ services:
       - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
-        - app-network
+      - app-network
 
   db:
     image: postgres:latest
@@ -25,7 +25,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     networks:
-        - app-network
+      - app-network
 
   webapi:
     build:
@@ -42,7 +42,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
-        - app-network
+      - app-network
 
   reports-service:
     build:
@@ -81,7 +81,7 @@ services:
       - SPRING.RABBITMQ.HOST=rabbitmq
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
-        - app-network
+      - app-network
 
 
   eureka-server:
@@ -89,22 +89,22 @@ services:
       context: ../budget-service-registry
       dockerfile: ../budget-service-registry/Dockerfile
     ports:
-        - "8761:8761"
+      - "8761:8761"
     networks:
-        - app-network
+      - app-network
 
   cloud-gateway:
     build:
       context: ../budget-api-gateway
       dockerfile: ../budget-api-gateway/Dockerfile
     ports:
-        - "8080:8080"
+      - "8080:8080"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
     depends_on:
-        - eureka-server
+      - eureka-server
     networks:
-        - app-network
+      - app-network
 
   authentication-service:
     build:

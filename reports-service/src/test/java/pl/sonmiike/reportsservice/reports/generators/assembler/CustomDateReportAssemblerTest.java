@@ -85,7 +85,6 @@ public class CustomDateReportAssemblerTest {
     }
 
 
-
     private UserReport getUser() {
         return new UserReport(1L);
     }

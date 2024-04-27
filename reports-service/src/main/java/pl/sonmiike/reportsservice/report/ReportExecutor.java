@@ -22,24 +22,17 @@ public class ReportExecutor {
     public static final String MONTHLY_REPORT_GENERATING_FOR_USER = "[>] Monthly Report: Generating for User: ";
     public static final String WEEKLY_REPORT_GENERATING_FOR_USER = "[>] Weekly Report: Generating for User: ";
     public static final String CUSTOM_REPORT_GENERATING_FOR_USER = "[>] Custom Report: Generating for User: ";
-
+    private static final String REPORT_GENERATING_FOR_USER = "[>] %s Report: Generating for User: ";
     private final RabbitTemplate rabbitTemplate;
     private final UserReportService userReportService;
-
     @Value("${spring.rabbitmq.exchange}")
     private String topicExchangeName;
-
     @Value("${spring.rabbitmq.routing.key.weekly}")
     private String weeklyRoutingKey;
-
     @Value("${spring.rabbitmq.routing.key.monthly}")
     private String monthlyRoutingKey;
-
     @Value("${spring.rabbitmq.routing.key.custom}")
     private String customRoutingKey;
-
-
-    private static final String REPORT_GENERATING_FOR_USER = "[>] %s Report: Generating for User: ";
 
     @Scheduled(cron = "0 1 0 * * 1") // AT 00:01 ON MONDAY
     public void executeWeeklyReportGeneration() {

@@ -202,9 +202,10 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
     private String[] getOrderForReportType(ReportType reportType) {
         return switch (reportType) {
-            case WEEKLY_REPORT, CUSTOM_DATE_REPORT -> new String[]{"User", "Date Interval", "Total Expenses", "Average Daily Expense",
-                    "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
-                    "Expenses List", "Income List", "Category Expenses"};
+            case WEEKLY_REPORT, CUSTOM_DATE_REPORT ->
+                    new String[]{"User", "Date Interval", "Total Expenses", "Average Daily Expense",
+                            "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
+                            "Expenses List", "Income List", "Category Expenses"};
             case MONTHLY_REPORT ->
                     new String[]{"User", "Date Interval", "Total Expenses", "Largest Expense", "Average Weekly Expense", "Week With Highest Expenses", "Day With Highest Average Expense", "Total Incomes", "Budget Summary", "Expenses List", "Income List", "Category Expenses"};
         };

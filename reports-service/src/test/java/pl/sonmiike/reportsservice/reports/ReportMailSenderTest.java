@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice;
+package pl.sonmiike.reportsservice.reports;
 
 import model.MailDTO;
 import model.Template;

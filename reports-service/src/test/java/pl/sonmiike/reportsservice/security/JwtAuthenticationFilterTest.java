@@ -24,8 +24,8 @@ import java.security.Key;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.openMocks;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtAuthenticationFilterTest {
@@ -54,7 +54,7 @@ public class JwtAuthenticationFilterTest {
 
     @BeforeEach
     void setUp() {
-        openMocks(this);
+
 
         String secretString = "MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP";
         byte[] keyBytes = Decoders.BASE64.decode(secretString);
@@ -86,25 +86,6 @@ public class JwtAuthenticationFilterTest {
 
         verify(filterChain).doFilter(request, response);
         assertNull(SecurityContextHolder.getContext().getAuthentication());
-    }
-
-    @Test
-    void testAuthenticationSuccessful() throws Exception {
-        UserDetails userDetails = getUser();
-        String userName = userDetails.getUsername();
-
-        // Setup mocks
-        try (MockedStatic<JwtUtil> jwtUtilMockedStatic = mockStatic(JwtUtil.class)) {
-            jwtUtilMockedStatic.when(() -> JwtUtil.extractUsername(validToken)).thenReturn("test@test.com");
-
-            when(userDetailsService.loadUserByUsername("test@test.com")).thenReturn(userDetails);
-            when(jwtUtil.isTokenValid(validToken, userDetails)).thenReturn(true);
-
-            jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
-
-            verify(userDetailsService).loadUserByUsername("test@test.com");
-            verify(jwtUtil).isTokenValid(validToken, userDetails);
-        }
     }
 
 

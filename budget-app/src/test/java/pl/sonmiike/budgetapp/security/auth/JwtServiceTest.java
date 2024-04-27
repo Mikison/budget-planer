@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MockitoExtension.class)
 public class JwtServiceTest {
 
-    private JwtService jwtService;
-
     private final String SECRET_KEY = "MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP";
     private final UserEntity USER_DETAILS = UserEntity.builder()
             .userId(1L)
@@ -22,7 +20,7 @@ public class JwtServiceTest {
             .username("testUser")
             .role(UserRole.ROLE_USER)
             .build();
-
+    private JwtService jwtService;
 
     @BeforeEach
     void setUp() {

@@ -18,15 +18,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReportCreator {
 
+    private static LocalDate startDate;
+    private static LocalDate endDate;
     private final UserReportService userReportService;
     private final WeeklyReportAssembler weeklyReportAssembler;
     private final MonthlyReportAssembler monthlyReportAssembler;
     private final CustomDateReportAssembler customDateIntervalReportAssembler;
     private final ReportGenerator<Report> reportGenerator;
     private final ReportMailSender reportMailSender;
-
-    private static LocalDate startDate;
-    private static LocalDate endDate;
 
     public void generateReport(Long userId, ReportType reportType) {
         Optional<UserReport> userOpt = userReportService.fetchUserById(userId);
@@ -51,7 +50,8 @@ public class ReportCreator {
         return switch (reportType) {
             case WEEKLY_REPORT -> weeklyReportAssembler.createWeeklyReport(user);
             case MONTHLY_REPORT -> monthlyReportAssembler.createMonthlyReport(user);
-            case CUSTOM_DATE_REPORT -> customDateIntervalReportAssembler.createCustomDateReport(user, startDate, endDate);
+            case CUSTOM_DATE_REPORT ->
+                    customDateIntervalReportAssembler.createCustomDateReport(user, startDate, endDate);
         };
     }
 

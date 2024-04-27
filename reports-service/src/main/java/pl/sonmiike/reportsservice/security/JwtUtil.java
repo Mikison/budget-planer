@@ -18,21 +18,13 @@ import java.util.function.Function;
 public class JwtUtil {
 
 
+    private static String STATIC_SECRET_KEY;
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-
-    private static String STATIC_SECRET_KEY;
-
-    @PostConstruct
-    public void init() {
-        STATIC_SECRET_KEY = SECRET_KEY;
-    }
-
 
     public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-
 
     public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -54,6 +46,15 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public static void setStaticSecretKey(String secretKey) {
+        STATIC_SECRET_KEY = secretKey;
+    }
+
+    @PostConstruct
+    public void init() {
+        STATIC_SECRET_KEY = SECRET_KEY;
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -63,15 +64,8 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
-    }
-
-
-
-    public static void setStaticSecretKey(String secretKey) {
-        STATIC_SECRET_KEY = secretKey;
     }
 
 }

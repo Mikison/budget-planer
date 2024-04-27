@@ -30,7 +30,7 @@ public class ReportConsumer {
             return;
         }
 
-        if (message.startsWith("[>] "  + ReportType.CUSTOM_DATE_REPORT.name())) {
+        if (message.startsWith("[>] " + ReportType.CUSTOM_DATE_REPORT.name())) {
             LocalDate[] dates = extractAndParseDates(message);
             reportCreator.setCustomDates(dates[0], dates[1]);
             reportCreator.generateReport(extractUserId(message), ReportType.CUSTOM_DATE_REPORT);

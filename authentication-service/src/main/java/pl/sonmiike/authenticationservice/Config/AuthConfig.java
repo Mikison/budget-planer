@@ -29,7 +29,6 @@ public class AuthConfig {
     private final UserCredentialRepository repository;
 
 
-
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {

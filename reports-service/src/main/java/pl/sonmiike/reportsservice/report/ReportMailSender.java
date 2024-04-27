@@ -20,7 +20,7 @@ public class ReportMailSender {
     public void sendReportMail(ReportType reportType, String fileName, String mail) {
         String routingKey = "mail-routing-key";
         String topicExchange = "mail-exchange";
-        rabbitTemplate.convertAndSend(topicExchange, routingKey,new MailDTO(
+        rabbitTemplate.convertAndSend(topicExchange, routingKey, new MailDTO(
                 Template.valueOf(reportType.name()),
                 mail,
                 reportType.name(),

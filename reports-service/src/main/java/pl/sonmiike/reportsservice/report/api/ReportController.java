@@ -51,7 +51,7 @@ public class ReportController {
     }
 
     @GetMapping("/assets")
-    public ResponseEntity<Resource> getPdfUserReport( @RequestParam String name, Authentication authentication) {
+    public ResponseEntity<Resource> getPdfUserReport(@RequestParam String name, Authentication authentication) {
         Long userId = getUserId(authentication);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)

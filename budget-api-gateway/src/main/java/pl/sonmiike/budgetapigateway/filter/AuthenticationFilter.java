@@ -17,19 +17,14 @@ import reactor.core.publisher.Mono;
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
 
-    public static class Config {
-    }
+    @Autowired
+    private RouteValidator validator;
+    @Autowired
+    private JwtUtil jwtUtils;
 
     public AuthenticationFilter() {
         super(Config.class);
     }
-
-    @Autowired
-    private RouteValidator validator;
-
-    @Autowired
-    private JwtUtil jwtUtils;
-
 
     @Override
     public GatewayFilter apply(Config config) {
@@ -51,7 +46,6 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
         });
     }
 
-
     private Mono<Void> onError(ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
@@ -60,6 +54,9 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     private boolean authMissing(ServerHttpRequest request) {
         return !request.getHeaders().containsKey("Authorization");
+    }
+
+    public static class Config {
     }
 
 }

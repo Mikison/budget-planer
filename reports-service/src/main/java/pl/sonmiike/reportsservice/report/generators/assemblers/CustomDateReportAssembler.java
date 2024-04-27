@@ -26,8 +26,6 @@ public class CustomDateReportAssembler extends BaseReportAssembler {
     LocalDate endDate;
 
 
-
-
     public CustomDateReportAssembler(IncomeService incomeService, ExpenseService expenseService, CategoryService categoryService) {
         super(incomeService, expenseService, categoryService);
     }
@@ -37,7 +35,6 @@ public class CustomDateReportAssembler extends BaseReportAssembler {
     protected DateInterval getDateInterval() {
         return new DateInterval(this.startDate, this.endDate);
     }
-
 
 
     public CustomDateReport createCustomDateReport(UserReport user, LocalDate startDate, LocalDate endDate) {

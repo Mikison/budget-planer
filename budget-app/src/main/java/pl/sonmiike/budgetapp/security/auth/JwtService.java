@@ -19,15 +19,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    private static String STATIC_SECRET_KEY;
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-
-    private static String STATIC_SECRET_KEY;
-
-    @PostConstruct
-    public void init() {
-        STATIC_SECRET_KEY = SECRET_KEY;
-    }
 
     public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -51,6 +45,11 @@ public class JwtService {
     private static Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(STATIC_SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @PostConstruct
+    public void init() {
+        STATIC_SECRET_KEY = SECRET_KEY;
     }
 
     public String generateToken(UserEntity userDetails) {

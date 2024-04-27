@@ -98,9 +98,6 @@ public class CategoryServiceImplTest {
     }
 
 
-
-
-
     @Test
     void fetchCategoryById_ShouldReturnCategorySuccess() {
         Long categoryId = 1L;

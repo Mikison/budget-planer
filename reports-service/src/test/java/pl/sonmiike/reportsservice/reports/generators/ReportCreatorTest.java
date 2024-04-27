@@ -43,7 +43,7 @@ public class ReportCreatorTest {
     private ReportGenerator<Report> reportGenerator;
 
     @Mock
-    private  ReportMailSender reportMailSender;
+    private ReportMailSender reportMailSender;
 
     @InjectMocks
     private ReportCreator reportCreator;
@@ -52,8 +52,6 @@ public class ReportCreatorTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-
 
 
     @Test

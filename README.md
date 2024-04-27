@@ -2,7 +2,11 @@
 
 ## Overview
 
-Home Budget Planner is a comprehensive web-based application designed to assist users in managing and planning their budgets on a monthly basis. Users can create categories for budgeting, log expenses within these categories, and track income. The application incorporates robust security features using Spring Security with JWT authentication, supporting two user roles: ADMIN and USER. It also features a report service that automatically generates and sends PDF reports weekly or monthly based on user preferences or on-demand.
+Home Budget Planner is a comprehensive web-based application designed to assist users in managing and planning their
+budgets on a monthly basis. Users can create categories for budgeting, log expenses within these categories, and track
+income. The application incorporates robust security features using Spring Security with JWT authentication, supporting
+two user roles: ADMIN and USER. It also features a report service that automatically generates and sends PDF reports
+weekly or monthly based on user preferences or on-demand.
 
 ## Features
 
@@ -17,6 +21,7 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
 ## Tech Stack
 
 ### Backend
+
 <p>
   <img alt="Spring Boot" src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white"/>
   <img alt="Spring Web" src="https://img.shields.io/badge/Spring%20Web-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
@@ -28,23 +33,27 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
 </p>
 
 ### Frontend (Under Development)
+
 <p>
   <img alt="Angular" src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white"/>
   <img alt="RxJS" src="https://img.shields.io/badge/RxJS-B7178C?style=for-the-badge&logo=reactivex&logoColor=white"/>
 </p>
 
 ### Testing
+
 <p>
   <img alt="JUnit" src="https://img.shields.io/badge/JUnit-25A162?style=for-the-badge&logo=junit5&logoColor=white"/>
   <img alt="Mockito" src="https://img.shields.io/badge/Mockito-25A162?style=for-the-badge&logo=mockito&logoColor=white"/>
 </p>
 
 ### Database
+
 <p>
   <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white"/>
 </p>
 
 ### Other Technologies
+
 <p>
   <img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
   <img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white"/>
@@ -52,6 +61,7 @@ Home Budget Planner is a comprehensive web-based application designed to assist 
 </p>
 
 ## Documentation
+
 ``` bash
 http://localhost:8080/swagger-ui/index.html
 http://localhost:8081/swagger-ui/index.html
@@ -60,12 +70,12 @@ http://localhost:8081/swagger-ui/index.html
 ## Getting Started
 
 ### Prerequisites
+
 - JDK 11 or higher
 - Docker and Docker Compose
 - Maven
 
 ### Installation and Local Development
-
 
 1. Clone project
 
@@ -74,6 +84,7 @@ http://localhost:8081/swagger-ui/index.html
   ```
 
 2. Open cloned directory
+
   ``` bash      
    cd budget-planer
   ```
@@ -90,7 +101,7 @@ http://localhost:8081/swagger-ui/index.html
    cd docker
   ```
 
-5. Run using docker-compose 
+5. Run using docker-compose
 
   ``` bash
   docker-compose up -d

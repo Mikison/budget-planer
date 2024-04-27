@@ -24,16 +24,13 @@ import static org.mockito.Mockito.when;
 
 public class JwtUtilTest {
 
+    private final String username = "test@test.com";
     @InjectMocks
     private JwtUtil jwtUtil;
-
     @Mock
     private UserDetails userDetails;
-
     private String validToken = "";
     private String expiredToken = "";
-
-    private final String username = "test@test.com";
     private Key key;
 
     @BeforeEach
@@ -108,7 +105,6 @@ public class JwtUtilTest {
     }
 
 
-
     @Test
     public void testIsTokenValid_expiresNowToken() {
         long now = System.currentTimeMillis();
@@ -121,8 +117,6 @@ public class JwtUtilTest {
         when(userDetails.getUsername()).thenReturn(username);
         assertThrows(ExpiredJwtException.class, () -> jwtUtil.isTokenValid(expiresNowToken, userDetails));
     }
-
-
 
 
     private String buildToken(long expirationTime) {

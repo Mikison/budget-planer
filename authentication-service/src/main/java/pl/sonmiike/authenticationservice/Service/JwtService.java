@@ -32,7 +32,6 @@ public class JwtService {
     }
 
 
-
     private String createToken(Map<String, Object> claims, String userName, String tokenType) {
         long expMillis = "ACCESS".equalsIgnoreCase(tokenType)
                 ? Long.parseLong(expiration) * 1000

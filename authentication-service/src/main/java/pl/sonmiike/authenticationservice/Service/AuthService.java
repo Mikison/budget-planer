@@ -29,7 +29,7 @@ public class AuthService {
                 .role(RoleEnum.ROLE_USER)
                 .build();
         userRepository.save(userCredential);
-        return new AuthResponse(generateToken(registerRequest.getEmail(),"ACCESS"), generateToken(registerRequest.getEmail(), "REFRESH") );
+        return new AuthResponse(generateToken(registerRequest.getEmail(), "ACCESS"), generateToken(registerRequest.getEmail(), "REFRESH"));
     }
 
     public String generateToken(String username, String tokenType) {

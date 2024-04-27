@@ -20,16 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    @Value("${reports.folder.root}")
-    private String basePath;
-
     private final ReportExecutor reportExecutor;
     private final ReportEntityRepository reportEntityRepository;
     private final ReportMapper reportMapper;
+    @Value("${reports.folder.root}")
+    private String basePath;
 
     public void callReportOnDemand(Long userId, ReportType type) {
-        reportExecutor.generateReportForUser(type ,userId);
+        reportExecutor.generateReportForUser(type, userId);
     }
+
 
     public void callCustomReportOnDemand(Long userId, String startDate, String endDate) {
         reportExecutor.initiateCustomReportGenerationForUser(userId, startDate, endDate);

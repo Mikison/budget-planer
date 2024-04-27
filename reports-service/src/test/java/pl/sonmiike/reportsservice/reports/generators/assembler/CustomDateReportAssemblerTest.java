@@ -4,30 +4,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.cateogry.CategoryService;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.expense.ExpenseService;
 import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.income.IncomeService;
-import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
-import pl.sonmiike.reportsservice.report.types.DateInterval;
-import pl.sonmiike.reportsservice.report.types.WeeklyReport;
+import pl.sonmiike.reportsservice.report.generators.assemblers.CustomDateReportAssembler;
+import pl.sonmiike.reportsservice.report.types.CustomDateReport;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-public class WeeklyReportAssemblerTest {
+public class CustomDateReportAssemblerTest {
+
 
     @Mock
     private IncomeService incomeService;
@@ -37,20 +35,19 @@ public class WeeklyReportAssemblerTest {
     private CategoryService categoryService;
 
     @InjectMocks
-    private WeeklyReportAssembler weeklyReportAssembler;
+    private CustomDateReportAssembler customDateReportAssembler;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
     }
 
-    @Test
-    void testCreateWeeklyReport_WithData() {
-        UserReport user = getUser();
-        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
-        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        DateInterval dateInterval = new DateInterval(startDate, endDate);
 
+    @Test
+    void testCreateCustomDateReport_WithData() {
+        UserReport user = getUser();
+        LocalDate startDate = LocalDate.now().minusDays(7);
+        LocalDate endDate = LocalDate.now();
         List<Income> incomes = getIncomes();
         List<Expense> expenses = getExpenses();
         List<Category> categories = List.of(getCategory());
@@ -59,29 +56,34 @@ public class WeeklyReportAssemblerTest {
         when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
         when(categoryService.getCategories()).thenReturn(categories);
 
-        WeeklyReport report = weeklyReportAssembler.createWeeklyReport(user);
+        CustomDateReport customDateReport = customDateReportAssembler.createCustomDateReport(user, startDate, endDate);
 
-        assertNotNull(report);
-        assertEquals(BigDecimal.valueOf(1000), report.getTotalIncomes());
-        assertEquals(BigDecimal.valueOf(100), report.getTotalExpenses());
-        assertEquals(BigDecimal.valueOf(900), report.getBudgetSummary());
-        assertFalse(report.getCategoryExpenses().isEmpty());
+        assertEquals(user, customDateReport.getUser());
+        assertEquals(startDate, customDateReport.getDateInterval().getStartDate());
+        assertEquals(endDate, customDateReport.getDateInterval().getEndDate());
+        assertEquals(BigDecimal.valueOf(100), customDateReport.getTotalExpenses());
+        assertEquals(BigDecimal.valueOf(1000), customDateReport.getTotalIncomes());
+        assertEquals(BigDecimal.valueOf(900), customDateReport.getBudgetSummary());
+        assertEquals(expenses, customDateReport.getExpensesList());
+        assertEquals(incomes, customDateReport.getIncomeList());
     }
 
     @Test
-    void testCreateWeeklyReport_NoData() {
+    void testCreateCustomDateReport_NoData() {
         UserReport user = getUser();
-        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
-        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate startDate = LocalDate.now().minusDays(7);
+        LocalDate endDate = LocalDate.now();
+        List<Category> categories = List.of(getCategory());
 
         when(incomeService.getIncomesFromDateInterval(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
         when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
-        when(categoryService.getCategories()).thenReturn(Collections.emptyList());
+        when(categoryService.getCategories()).thenReturn(categories);
 
-        WeeklyReport report = weeklyReportAssembler.createWeeklyReport(user);
+        CustomDateReport customDateReport = customDateReportAssembler.createCustomDateReport(user, startDate, endDate);
 
-        assertNull(report);
+        assertNull(customDateReport);
     }
+
 
 
     private UserReport getUser() {

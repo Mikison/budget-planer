@@ -2,7 +2,6 @@ package pl.sonmiike.reportsservice.report.types;
 
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import pl.sonmiike.reportsservice.cateogry.Category;
 import pl.sonmiike.reportsservice.expense.Expense;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Data
 @Builder
 @Getter
 public class WeeklyReport implements Report {

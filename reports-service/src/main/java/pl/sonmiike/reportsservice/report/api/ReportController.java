@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.sonmiike.reportsservice.report.database.ReportDTO;
+import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.security.CustomUserDetails;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ReportController {
 
 
-    private final ReportService reportService;
+    private final ReportServiceImpl reportServiceImpl;
 
 
     @PostMapping("/generate")
@@ -30,9 +31,9 @@ public class ReportController {
                                @RequestParam(required = false) String endDate) {
         Long userId = getUserId(authentication);
         switch (type.toLowerCase()) {
-            case "weekly" -> reportService.callOnDemandWeeklyReport(userId);
-            case "monthly" -> reportService.callOnDemandMonthlyReport(userId);
-            case "custom" -> reportService.callOnDemandCustomReport(userId, startDate, endDate);
+            case "weekly" -> reportServiceImpl.callReportOnDemand(userId, ReportType.WEEKLY_REPORT);
+            case "monthly" -> reportServiceImpl.callReportOnDemand(userId, ReportType.MONTHLY_REPORT);
+            case "custom" -> reportServiceImpl.callCustomReportOnDemand(userId, startDate, endDate);
             default -> throw new RuntimeException("Report type not found");
         }
     }
@@ -40,13 +41,13 @@ public class ReportController {
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ReportDTO>> getAllReports() {
-        return ResponseEntity.ok(reportService.fetchAllReports());
+        return ResponseEntity.ok(reportServiceImpl.fetchAllReports());
     }
 
     @GetMapping("/user")
     public ResponseEntity<List<ReportDTO>> getUserReports(Authentication authentication) {
         Long userId = getUserId(authentication);
-        return ResponseEntity.ok(reportService.fetchUserReports(userId));
+        return ResponseEntity.ok(reportServiceImpl.fetchUserReports(userId));
     }
 
     @GetMapping("/assets")
@@ -54,7 +55,7 @@ public class ReportController {
         Long userId = getUserId(authentication);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(reportService.fetchPdfFile(name, userId));
+                .body(reportServiceImpl.fetchPdfFile(name, userId));
     }
 
     public Long getUserId(Authentication authentication) {

@@ -1,6 +1,7 @@
 package pl.sonmiike.reportsservice.reports.api;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceImplTest {
@@ -38,19 +40,26 @@ public class ReportServiceImplTest {
     private Resource resource;
 
     @InjectMocks
-    private ReportServiceImpl reportServiceImpl;
+    private ReportServiceImpl reportService;
+
+    private final String basePath = "dummy_path";
+
+    @BeforeEach
+    void setUp() {
+        openMocks(this);
+    }
 
     @Test
     void whenCallingWeeklyReport_thenInitiateWeeklyReportIsCalled() {
         Long userId = 1L;
-        reportServiceImpl.callReportOnDemand(userId, ReportType.WEEKLY_REPORT);
+        reportService.callReportOnDemand(userId, ReportType.WEEKLY_REPORT);
         verify(reportExecutor).generateReportForUser(ReportType.WEEKLY_REPORT, userId);
     }
 
     @Test
     void whenCallingMonthlyReport_thenInitiateMonthlyReportIsCalled() {
         Long userId = 1L;
-        reportServiceImpl.callReportOnDemand(userId, ReportType.MONTHLY_REPORT);
+        reportService.callReportOnDemand(userId, ReportType.MONTHLY_REPORT);
         verify(reportExecutor).generateReportForUser(ReportType.MONTHLY_REPORT, userId);
     }
 
@@ -59,7 +68,7 @@ public class ReportServiceImplTest {
         Long userId = 1L;
         String startDate = LocalDate.now().toString();
         String endDate = LocalDate.now().plusDays(7).toString();
-        reportServiceImpl.callCustomReportOnDemand(userId, startDate, endDate);
+        reportService.callCustomReportOnDemand(userId, startDate, endDate);
         verify(reportExecutor).initiateCustomReportGenerationForUser(userId, startDate, endDate);
     }
 
@@ -71,7 +80,7 @@ public class ReportServiceImplTest {
         when(reportEntityRepository.findAll()).thenReturn(userReports);
         when(reportMapper.toDTO(any(ReportEntity.class))).thenReturn(expectedReports.get(0));
 
-        List<ReportDTO> actualReports = reportServiceImpl.fetchAllReports();
+        List<ReportDTO> actualReports = reportService.fetchAllReports();
 
         assertEquals(actualReports.size(), 1);
         assertEquals(actualReports.get(0), expectedReports.get(0));
@@ -88,7 +97,7 @@ public class ReportServiceImplTest {
         when(reportEntityRepository.findAllByUserUserId(userId)).thenReturn(userReports);
         when(reportMapper.toDTO(any(ReportEntity.class))).thenReturn(getReportDTO());
 
-        List<ReportDTO> actualReports = reportServiceImpl.fetchUserReports(userId);
+        List<ReportDTO> actualReports = reportService.fetchUserReports(userId);
 
         assertEquals(actualReports.size(), 1);
         assertEquals(actualReports.get(0), expectedReports.get(0));
@@ -97,13 +106,14 @@ public class ReportServiceImplTest {
     }
 
 
+
     @Test
     void whenGettingPdfFileAndFileDoesNotExist_thenExceptionIsThrown() {
         Long userId = 1L;
         String fileName = "nonexistent";
         when(reportEntityRepository.findAllByUserUserId(userId)).thenReturn(Collections.emptyList());
 
-        assertThrows(RuntimeException.class, () -> reportServiceImpl.fetchPdfFile(fileName, userId));
+        assertThrows(RuntimeException.class, () -> reportService.fetchPdfFile(fileName, userId));
     }
 
     private ReportEntity getReport() {

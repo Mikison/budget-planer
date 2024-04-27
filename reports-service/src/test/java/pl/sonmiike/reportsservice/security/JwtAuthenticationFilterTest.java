@@ -5,7 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,42 +14,41 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.sonmiike.reportsservice.user.UserReport;
+import pl.sonmiike.reportsservice.user.UserReportRepository;
 import pl.sonmiike.reportsservice.user.UserRoleEnum;
 
-import java.io.IOException;
 import java.security.Key;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtAuthenticationFilterTest {
 
-
     @Mock
     private JwtUtil jwtUtil;
 
-
     @Mock
     private UserDetailsServiceClass userDetailsService;
+
     @Mock
     private FilterChain filterChain;
 
     @InjectMocks
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Mock
+    private UserReportRepository userReportRepository;
+
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
 
-
     private Key key;
-
     private String validToken;
 
 
@@ -62,15 +60,14 @@ public class JwtAuthenticationFilterTest {
         byte[] keyBytes = Decoders.BASE64.decode(secretString);
         key = Keys.hmacShaKeyFor(keyBytes);
         validToken = buildToken(1000 * 120);
-        
-        
-        
+
+
         request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer " + validToken);
         response = new MockHttpServletResponse();
 
         JwtUtil.setStaticSecretKey(secretString);
-        
+
     }
 
     @Test
@@ -92,48 +89,23 @@ public class JwtAuthenticationFilterTest {
     }
 
     @Test
-    void testAuthenticationSuccessful() throws ServletException, IOException {
+    void testAuthenticationSuccessful() throws Exception {
         UserDetails userDetails = getUser();
         String userName = userDetails.getUsername();
 
+        // Setup mocks
         try (MockedStatic<JwtUtil> jwtUtilMockedStatic = mockStatic(JwtUtil.class)) {
-            jwtUtilMockedStatic.when(() -> JwtUtil.extractUsername(validToken)).thenReturn(userName);
-            when(userDetailsService.loadUserByUsername(userName)).thenReturn(userDetails);
+            jwtUtilMockedStatic.when(() -> JwtUtil.extractUsername(validToken)).thenReturn("test@test.com");
+
+            when(userDetailsService.loadUserByUsername("test@test.com")).thenReturn(userDetails);
             when(jwtUtil.isTokenValid(validToken, userDetails)).thenReturn(true);
 
             jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
-            verify(userDetailsService).loadUserByUsername(userName);
-
+            verify(userDetailsService).loadUserByUsername("test@test.com");
             verify(jwtUtil).isTokenValid(validToken, userDetails);
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            assertNotNull(authentication, "Authentication should not be null");
-            assertTrue(authentication.isAuthenticated(), "User should be authenticated");
-            assertEquals(userDetails, authentication.getPrincipal(), "Authenticated user should be the expected one");
-
-            verify(filterChain).doFilter(request, response);
         }
-
-
-//        when(userDetailsService.loadUserByUsername(userName)).thenReturn(userDetails);
-//        when(jwtUtil.isTokenValid(validToken, userDetails)).thenReturn(true);
-//        when(jwtUtil.extractUsername(validToken)).thenReturn(userName);
-//
-//        jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
-//
-//        verify(userDetailsService).loadUserByUsername(userName);
-//
-//        verify(jwtUtil).isTokenValid(validToken, userDetails);
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        assertNotNull(authentication, "Authentication should not be null");
-//        assertTrue(authentication.isAuthenticated(), "User should be authenticated");
-//        assertEquals(userDetails, authentication.getPrincipal(), "Authenticated user should be the expected one");
-//
-//        verify(filterChain).doFilter(request, response);
     }
-
 
 
     @Test

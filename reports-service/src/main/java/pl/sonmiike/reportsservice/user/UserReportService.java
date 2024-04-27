@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -14,12 +15,12 @@ public class UserReportService {
     private final UserReportRepository userReportRepository;
 
 
-    public Set<UserReport> getAllUsers() {
+    public Set<UserReport> fetchAllUsers() {
         return new HashSet<>(userReportRepository.findAll());
     }
 
-    public UserReport getUserById(Long userId) {
-        return userReportRepository.findById(userId).orElse(null);
+    public Optional<UserReport> fetchUserById(Long userId) {
+        return userReportRepository.findById(userId);
     }
 
 

@@ -33,31 +33,21 @@ public class JwtServiceTest {
 
     @Test
     void whenGenerateToken_thenSuccess() {
-        // Given
-        // When
         String token = jwtService.generateToken(USER_DETAILS);
 
-
-        // Then
         assertTrue(token != null && !token.isEmpty());
     }
 
     @Test
     void whenTokenIsValid_thenSuccess() {
-        // Given
-
         String token = jwtService.generateToken(USER_DETAILS);
-
-        // When
         boolean isValid = jwtService.isTokenValid(token, USER_DETAILS);
 
-        // Then
         assertTrue(isValid);
     }
 
     @Test
     void whenTokenIsInvalid_thenFailure() {
-        // Given
         UserEntity anotherUserDetails = UserEntity.builder()
                 .userId(2L)
                 .email("test2@test.com")
@@ -66,10 +56,8 @@ public class JwtServiceTest {
                 .build();
         String token = jwtService.generateToken(USER_DETAILS);
 
-        // When
         boolean isValid = jwtService.isTokenValid(token, anotherUserDetails);
 
-        // Then
         assertFalse(isValid);
     }
 

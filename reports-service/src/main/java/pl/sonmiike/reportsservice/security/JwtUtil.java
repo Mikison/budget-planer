@@ -68,4 +68,10 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
+
+
+    public static void setStaticSecretKey(String secretKey) {
+        STATIC_SECRET_KEY = secretKey;
+    }
+
 }

@@ -12,6 +12,7 @@ import pl.sonmiike.reportsservice.user.UserReport;
 import pl.sonmiike.reportsservice.user.UserReportService;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -28,12 +29,12 @@ public class ReportCreator {
     private static LocalDate endDate;
 
     public void generateReport(Long userId, ReportType reportType) {
-        UserReport user = userReportService.getUserById(userId);
-        if (user == null) {
+        Optional<UserReport> userOpt = userReportService.fetchUserById(userId);
+        if (userOpt.isEmpty()) {
             System.out.println("User not found");
             return;
         }
-
+        UserReport user = userOpt.get();
         Report report = generateReport(user, reportType);
         if (report == null) {
             System.out.println("Not Enough Data for " + reportType + " Report");

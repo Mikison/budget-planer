@@ -44,7 +44,7 @@ class ReportExecutorTest {
     void executeWeeklyReportGenerationTest() {
         UserReport user = new UserReport(1L); // Assuming UserReport has a constructor with userId
         Set<UserReport> users = Set.of(user);
-        when(userReportService.getAllUsers()).thenReturn(users);
+        when(userReportService.fetchAllUsers()).thenReturn(users);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         reportExecutor.executeWeeklyReportGeneration();
@@ -57,7 +57,7 @@ class ReportExecutorTest {
     void executeMonthlyReportGenerationTest() {
         UserReport user = new UserReport(2L);
         Set<UserReport> users = Set.of(user);
-        when(userReportService.getAllUsers()).thenReturn(users);
+        when(userReportService.fetchAllUsers()).thenReturn(users);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         reportExecutor.executeMonthlyReportGeneration();

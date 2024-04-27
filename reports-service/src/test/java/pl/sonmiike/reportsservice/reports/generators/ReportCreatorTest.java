@@ -22,12 +22,12 @@ import pl.sonmiike.reportsservice.user.UserReportService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings("unchecked")
 public class ReportCreatorTest {
 
     @Mock
@@ -60,11 +60,11 @@ public class ReportCreatorTest {
     void testGenerateReport_WhenUserIsNull() {
         Long userId = 1L;
 
-        when(userReportService.getUserById(userId)).thenReturn(null);
+        when(userReportService.fetchUserById(userId)).thenReturn(Optional.empty());
 
         reportCreator.generateReport(userId, any(ReportType.class));
 
-        verify(userReportService).getUserById(userId);
+        verify(userReportService).fetchUserById(userId);
     }
 
     @Test
@@ -72,12 +72,12 @@ public class ReportCreatorTest {
         Long userId = 1L;
         UserReport user = getUser();
 
-        when(userReportService.getUserById(userId)).thenReturn(user);
+        when(userReportService.fetchUserById(userId)).thenReturn(Optional.ofNullable(user));
         when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(null);
 
         reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
-        verify(userReportService).getUserById(userId);
+        verify(userReportService).fetchUserById(userId);
         verify(weeklyReportAssembler).createWeeklyReport(user);
     }
 
@@ -88,13 +88,13 @@ public class ReportCreatorTest {
         UserReport user = getUser();
         WeeklyReport weeklyReport = getWeeklyReport();
 
-        when(userReportService.getUserById(userId)).thenReturn(user);
+        when(userReportService.fetchUserById(userId)).thenReturn(Optional.ofNullable(user));
         when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(weeklyReport);
         when(reportGenerator.generatePDF(weeklyReport)).thenReturn("test.pdf");
 
         reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
-        verify(userReportService).getUserById(userId);
+        verify(userReportService).fetchUserById(userId);
         verify(weeklyReportAssembler).createWeeklyReport(user);
         verify(reportGenerator).generatePDF(weeklyReport);
     }

@@ -54,7 +54,7 @@ public class ReportExecutor {
     private void generateReportForAllUsers(ReportType reportType) {
         String routingKey = getRoutingKeyByType(reportType);
         String messagePrefix = String.format(REPORT_GENERATING_FOR_USER, reportType);
-        Set<UserReport> users = userReportService.getAllUsers();
+        Set<UserReport> users = userReportService.fetchAllUsers();
         users.forEach(user -> sendReportGenerationMessage(routingKey, messagePrefix, user.getUserId().toString()));
     }
 

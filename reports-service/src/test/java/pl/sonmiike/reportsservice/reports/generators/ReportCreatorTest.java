@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.income.Income;
+import pl.sonmiike.reportsservice.report.ReportMailSender;
 import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 import pl.sonmiike.reportsservice.report.generators.ReportGenerator;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +42,9 @@ public class ReportCreatorTest {
     @Mock
     private ReportGenerator<Report> reportGenerator;
 
+    @Mock
+    private  ReportMailSender reportMailSender;
+
     @InjectMocks
     private ReportCreator reportCreator;
 
@@ -50,8 +55,20 @@ public class ReportCreatorTest {
 
 
 
+
     @Test
-    void testGenerateWeeklyReport_WhenReportIsNull() {
+    void testGenerateReport_WhenUserIsNull() {
+        Long userId = 1L;
+
+        when(userReportService.getUserById(userId)).thenReturn(null);
+
+        reportCreator.generateReport(userId, any(ReportType.class));
+
+        verify(userReportService).getUserById(userId);
+    }
+
+    @Test
+    void testGenerateReport_WhenValidUserAndReportNull() {
         Long userId = 1L;
         UserReport user = getUser();
 
@@ -62,25 +79,58 @@ public class ReportCreatorTest {
 
         verify(userReportService).getUserById(userId);
         verify(weeklyReportAssembler).createWeeklyReport(user);
-
     }
-
 
 
     @Test
-    void testGenerateMonthlyReport_WhenReportIsNull() {
+    void testGenerateReport_WhenValidUserAndReportNotNull() {
         Long userId = 1L;
         UserReport user = getUser();
+        WeeklyReport weeklyReport = getWeeklyReport();
 
         when(userReportService.getUserById(userId)).thenReturn(user);
-        when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(null);
+        when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(weeklyReport);
+        when(reportGenerator.generatePDF(weeklyReport)).thenReturn("test.pdf");
 
-        reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
+        reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
         verify(userReportService).getUserById(userId);
-        verify(monthlyReportAssembler).createMonthlyReport(user);
-
+        verify(weeklyReportAssembler).createWeeklyReport(user);
+        verify(reportGenerator).generatePDF(weeklyReport);
     }
+
+
+//    @Test
+//    void testGenerateWeeklyReport_WhenReportIsNull() {
+//        Long userId = 1L;
+//        UserReport user = getUser();
+//
+//        when(userReportService.getUserById(userId)).thenReturn(user);
+//        when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(null);
+//
+//        reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
+//
+//        verify(userReportService).getUserById(userId);
+//        verify(weeklyReportAssembler).createWeeklyReport(user);
+//
+//    }
+//
+//
+//
+//    @Test
+//    void testGenerateMonthlyReport_WhenReportIsNull() {
+//        Long userId = 1L;
+//        UserReport user = getUser();
+//
+//        when(userReportService.getUserById(userId)).thenReturn(user);
+//        when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(null);
+//
+//        reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
+//
+//        verify(userReportService).getUserById(userId);
+//        verify(monthlyReportAssembler).createMonthlyReport(user);
+//
+//    }
 
     private UserReport getUser() {
         return UserReport.builder()

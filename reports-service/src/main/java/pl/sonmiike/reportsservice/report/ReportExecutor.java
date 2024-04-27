@@ -39,7 +39,6 @@ public class ReportExecutor {
     private String customRoutingKey;
 
 
-
     private static final String REPORT_GENERATING_FOR_USER = "[>] %s Report: Generating for User: ";
 
     @Scheduled(cron = "0 1 0 * * 1") // AT 00:01 ON MONDAY

@@ -1,7 +1,7 @@
-package pl.sonmiike.authenticationservice.Repository;
+package pl.sonmiike.authenticationservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.sonmiike.authenticationservice.Entity.UserCredential;
+import pl.sonmiike.authenticationservice.entity.UserCredential;
 
 import java.util.Optional;
 

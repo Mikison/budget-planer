@@ -1,4 +1,4 @@
-package pl.sonmiike.authenticationservice.Entity;
+package pl.sonmiike.authenticationservice.entity;
 
 
 import jakarta.persistence.*;

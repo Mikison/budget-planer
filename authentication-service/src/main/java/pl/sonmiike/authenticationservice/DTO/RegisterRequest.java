@@ -1,9 +1,11 @@
 package pl.sonmiike.authenticationservice.DTO;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class RegisterRequest {
 
 

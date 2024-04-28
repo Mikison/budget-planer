@@ -1,4 +1,4 @@
-package pl.sonmiike.authenticationservice.Config;
+package pl.sonmiike.authenticationservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +15,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import pl.sonmiike.authenticationservice.Entity.UserCredential;
-import pl.sonmiike.authenticationservice.Repository.UserCredentialRepository;
+import pl.sonmiike.authenticationservice.entity.UserCredential;
+import pl.sonmiike.authenticationservice.repository.UserCredentialRepository;
 
+import java.time.Clock;
 import java.util.Optional;
 
 @Configuration
@@ -61,5 +62,10 @@ public class AuthConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
     }
 }

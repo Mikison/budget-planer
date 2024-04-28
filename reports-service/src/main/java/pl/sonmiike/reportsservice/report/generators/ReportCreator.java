@@ -50,8 +50,7 @@ public class ReportCreator {
         return switch (reportType) {
             case WEEKLY_REPORT -> weeklyReportAssembler.createWeeklyReport(user);
             case MONTHLY_REPORT -> monthlyReportAssembler.createMonthlyReport(user);
-            case CUSTOM_DATE_REPORT ->
-                    customDateIntervalReportAssembler.createCustomDateReport(user, startDate, endDate);
+            case CUSTOM_DATE_REPORT -> customDateIntervalReportAssembler.createCustomDateReport(user, startDate, endDate);
         };
     }
 

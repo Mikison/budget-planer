@@ -2,11 +2,7 @@
 
 ## Overview
 
-Home Budget Planner is a comprehensive web-based application designed to assist users in managing and planning their
-budgets on a monthly basis. Users can create categories for budgeting, log expenses within these categories, and track
-income. The application incorporates robust security features using Spring Security with JWT authentication, supporting
-two user roles: ADMIN and USER. It also features a report service that automatically generates and sends PDF reports
-weekly or monthly based on user preferences or on-demand.
+Home Budget Planner is a comprehensive web-based application designed to assist users in managing and planning their budgets on a monthly basis. Utilizing a microservice architecture, the application supports robust scalability and flexibility. It features a Spring Cloud Gateway for routing and proxying microservices, enhancing security and API orchestration. Users can create categories for budgeting, log expenses within these categories, and track income. The application incorporates robust security features using Spring Security with JWT authentication, supporting two user roles: ADMIN and USER. It also features a report service that automatically generates and sends PDF reports weekly or monthly based on user preferences or on-demand.
 
 ## Features
 
@@ -28,6 +24,8 @@ weekly or monthly based on user preferences or on-demand.
   <img alt="Spring Security" src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white"/>
   <img alt="Spring Data JPA" src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
   <img alt="Spring AMQP" src="https://img.shields.io/badge/Spring%20AMQP-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
+  <img alt="Spring Cloud Gateway" src="https://img.shields.io/badge/Spring%20Cloud%20Gateway-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
+  <img alt="Spring Eureka" src="https://img.shields.io/badge/Spring%20Eureka-6DB33F?style=for-the-badge&logo=spring&logoColor=white"/>
   <img alt="RabbitMQ" src="https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white"/>
   <img alt="Lombok" src="https://img.shields.io/badge/Lombok-000000?style=for-the-badge&logo=lombok&logoColor=white"/>
 </p>
@@ -59,6 +57,7 @@ weekly or monthly based on user preferences or on-demand.
   <img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white"/>
   <img alt="Jenkins" src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white"/>
 </p>
+
 
 ## Documentation
 

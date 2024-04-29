@@ -50,7 +50,7 @@ public class IncomeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createIncome(@RequestBody @Valid AddIncomeDTO incomeDTO, Authentication authentication) {
+    public void addIncome(@RequestBody @Valid AddIncomeDTO incomeDTO, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
         incomeService.addIncome(incomeDTO, userId);
 

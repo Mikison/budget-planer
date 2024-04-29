@@ -33,4 +33,15 @@ public class Expense {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+
+    void update(ExpenseDTO updateData) {
+        if (updateData.getName() != null) this.name = updateData.getName();
+
+        if (updateData.getDescription() != null) this.description = updateData.getDescription();
+
+        if (updateData.getDate() != null) this.date = updateData.getDate();
+
+        if (updateData.getAmount() != null) this.amount = updateData.getAmount();
+    }
 }

@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import pl.sonmiike.budgetapp.category.Category;
-import pl.sonmiike.budgetapp.category.CategoryService;
-import pl.sonmiike.budgetapp.category.UserCategory;
-import pl.sonmiike.budgetapp.category.UserCategoryRepository;
+import pl.sonmiike.budgetapp.category.*;
 import pl.sonmiike.budgetapp.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.budgetapp.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.budgetapp.user.UserEntity;
@@ -39,7 +36,7 @@ class ExpenseServiceImplTest {
     private UserService userService;
 
     @Mock
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     @Mock
     private ExpenseMapper expenseMapper;
@@ -142,7 +139,7 @@ class ExpenseServiceImplTest {
     @Test
     void addExpense_SuccessfulCreation() {
         Long userId = 1L, categoryId = 1L;
-        AddExpesneDTO expenseDTO = new AddExpesneDTO("apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150));
+        AddExpenseDTO expenseDTO = new AddExpenseDTO("apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150));
         Expense expense = new Expense(1L, "apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150), null, null);
 
         UserCategory userCategory = new UserCategory();
@@ -161,7 +158,7 @@ class ExpenseServiceImplTest {
     @Test
     void addExpense_IdNotMatchingException() {
         Long userId = 1L, categoryId = 1L;
-        AddExpesneDTO expenseDTO = new AddExpesneDTO();
+        AddExpenseDTO expenseDTO = new AddExpenseDTO();
 
         when(userCategoryRepository.findByUserUserIdAndCategoryId(userId, categoryId))
                 .thenReturn(Optional.empty());
@@ -195,25 +192,40 @@ class ExpenseServiceImplTest {
     }
 
     @Test
-    void updateExpense_SuccessfulUpdate() {
-        ExpenseDTO expenseDTO = new ExpenseDTO();
-        expenseDTO.setId(1L);
+    void updateExpense_SuccessfulUpdate_ReturnsUpdatedExpenseDTO() {
         Long userId = 1L;
+        Long categoryId = 1L;
+        ExpenseDTO expenseDTOtoUpdate = new ExpenseDTO();
+        expenseDTOtoUpdate.setId(1L);
+        expenseDTOtoUpdate.setCategoryId(categoryId);
+        expenseDTOtoUpdate.setName("New Expense Name");
+
+        Expense existingExpense = new Expense();
+        existingExpense.setId(1L);
+
         UserEntity user = new UserEntity();
         user.setUserId(userId);
-        Expense expense = new Expense();
 
-        when(expenseRepository.existsById(expenseDTO.getId())).thenReturn(true);
-        when(expenseMapper.toEntity(expenseDTO)).thenReturn(expense);
+        Category category = new Category();
+        category.setId(categoryId);
+
+        ExpenseDTO returnedExpenseDTO = new ExpenseDTO();
+        returnedExpenseDTO.setId(1L);
+        returnedExpenseDTO.setName("New Expense Name");
+
+        when(expenseRepository.findByIdAndUserUserId(expenseDTOtoUpdate.getId(), userId))
+                .thenReturn(Optional.of(existingExpense));
         when(userService.fetchUserById(userId)).thenReturn(user);
-        when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, expenseDTO.getCategoryId())).thenReturn(true);
+        when(categoryService.fetchCategoryById(categoryId)).thenReturn(category);
+        when(expenseMapper.toDTO(any(Expense.class))).thenReturn(returnedExpenseDTO);
 
-        expenseService.updateExpense(expenseDTO, userId);
+        ExpenseDTO result = expenseService.updateExpense(expenseDTOtoUpdate, userId);
 
-        verify(expenseRepository).save(expenseCaptor.capture());
-        Expense savedExpense = expenseCaptor.getValue();
-        assertEquals(userId, savedExpense.getUser().getUserId());
+        assertNotNull(result);
+        assertEquals("New Expense Name", result.getName());
+        verify(expenseRepository).save(any(Expense.class));
     }
+
 
     @Test
     void updateExpense_ExpenseNotFound_ThrowsException() {
@@ -221,27 +233,32 @@ class ExpenseServiceImplTest {
         expenseDTO.setId(1L);
         Long userId = 1L;
 
-        when(expenseRepository.existsById(expenseDTO.getId())).thenReturn(false);
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> expenseService.updateExpense(expenseDTO, userId));
 
-        Exception exception = assertThrows(IdNotMatchingException.class, () -> expenseService.updateExpense(expenseDTO, userId));
-
-        assertEquals("Expense not found", exception.getMessage());
+        assertEquals("Expense with that id not found in database", exception.getMessage());
     }
+
 
     @Test
-    void updateTest_ExpenseNotFound_ThrowsCategoryUnassiggnedToUser() {
-        ExpenseDTO expenseDTO = new ExpenseDTO();
-        expenseDTO.setId(1L);
+    void updateExpense_ShouldThrowResourceNotFoundException_WhenCategoryNotFound() {
+        // Arrange
         Long userId = 1L;
         Long categoryId = 1L;
+        ExpenseDTO expenseDTOtoUpdate = new ExpenseDTO();
+        expenseDTOtoUpdate.setId(1L);
+        expenseDTOtoUpdate.setCategoryId(categoryId);
 
-        when(expenseRepository.existsById(expenseDTO.getId())).thenReturn(true);
-        when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(false);
+        when(expenseRepository.findByIdAndUserUserId(expenseDTOtoUpdate.getId(), userId))
+                .thenReturn(Optional.of(new Expense()));  // Assume the expense is found
 
-        Exception exception = assertThrows(IdNotMatchingException.class, () -> expenseService.updateExpense(expenseDTO, userId));
+        when(categoryService.fetchCategoryByUserIdAndId(userId, categoryId))
+                .thenThrow(new ResourceNotFoundException("User does not have this category assigned"));
 
-        assertEquals("User does not have category with that id assigned", exception.getMessage());
+        assertThrows(ResourceNotFoundException.class, () -> expenseService.updateExpense(expenseDTOtoUpdate, userId));
+
+        verify(categoryService).fetchCategoryByUserIdAndId(userId, categoryId);
     }
+
 
 
     @Test

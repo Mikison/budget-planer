@@ -60,7 +60,7 @@ public class ExpenseController {
 
     @PostMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createExpense(@RequestBody @Valid AddExpesneDTO expenseDTO, @PathVariable Long categoryId, Authentication authentication) {
+    public void createExpense(@RequestBody @Valid AddExpenseDTO expenseDTO, @PathVariable Long categoryId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
         expenseService.addExpense(expenseDTO, userId, categoryId);
     }
@@ -68,7 +68,7 @@ public class ExpenseController {
     @PutMapping("/{id}")
     public ResponseEntity<ExpenseDTO> updateExpense(@PathVariable Long id, @RequestBody @Valid ExpenseDTO expenseDTO, Authentication authentication) {
         if (!id.equals(expenseDTO.getId())) {
-            throw new IdNotMatchingException("Id in path does not match id in request body");
+            throw new IdNotMatchingException("Id in path and in request body must be the same");
         }
         Long userId = authService.getUserId(authentication);
         ExpenseDTO updatedExpense = expenseService.updateExpense(expenseDTO, userId);

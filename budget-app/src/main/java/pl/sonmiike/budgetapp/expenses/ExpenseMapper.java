@@ -3,8 +3,6 @@ package pl.sonmiike.budgetapp.expenses;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
 public class ExpenseMapper {
 
@@ -13,8 +11,8 @@ public class ExpenseMapper {
                 .id(expense.getId())
                 .name(expense.getName())
                 .description(expense.getDescription())
-                .date(expense.getDate().toString())
-                .amount(expense.getAmount().toString())
+                .date(expense.getDate())
+                .amount(expense.getAmount())
                 .userId(expense.getUser().getUserId())
                 .categoryId(expense.getCategory().getId())
                 .build();
@@ -25,12 +23,12 @@ public class ExpenseMapper {
                 .id(expenseDTO.getId())
                 .name(expenseDTO.getName())
                 .description(expenseDTO.getDescription())
-                .date(java.time.LocalDate.parse(expenseDTO.getDate()))
-                .amount(new BigDecimal(expenseDTO.getAmount()))
+                .date((expenseDTO.getDate()))
+                .amount(expenseDTO.getAmount())
                 .build();
     }
 
-    public Expense toEntity(AddExpesneDTO expenseDTO) {
+    public Expense toEntity(AddExpenseDTO expenseDTO) {
         return Expense.builder()
                 .name(expenseDTO.getName())
                 .description(expenseDTO.getDescription())

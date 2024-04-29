@@ -91,7 +91,7 @@ class CategoryControllerTest {
 
 
         Mockito.when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.when(categoryService.createAndAssignCategoryToUser(userId, addCategoryDTO)).thenReturn(category);
+        Mockito.when(categoryService.addCategoriyAndAssign(userId, addCategoryDTO)).thenReturn(category);
 
         mockMvc.perform(post("/me/category")
                         .contentType(MediaType.APPLICATION_JSON)

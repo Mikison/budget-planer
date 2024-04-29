@@ -64,7 +64,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category with that id not found in database"));
     }
 
-    public Category createAndAssignCategoryToUser(Long userId, AddCategoryDTO categoryDTO) {
+    public Category fetchCategoryByUserIdAndId(Long userId,Long categoryId) {
+        UserCategory userCategory = userCategoryRepository.findByUserUserIdAndCategoryId(userId, categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("User does not have this category assigned"));
+        return userCategory.getCategory();
+    }
+
+
+    public Category addCategoriyAndAssign(Long userId, AddCategoryDTO categoryDTO) {
         String categoryName = capitalizeFirstLetter(categoryDTO.getName().toLowerCase());
         Category category = categoryRepository.findByNameIgnoreCase(categoryName);
 

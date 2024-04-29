@@ -12,7 +12,9 @@ public interface CategoryService {
 
     Category fetchCategoryById(Long id);
 
-    Category createAndAssignCategoryToUser(Long userId, AddCategoryDTO categoryDTO);
+    Category fetchCategoryByUserIdAndId(Long userId,Long categoryId);
+
+    Category addCategoriyAndAssign(Long userId, AddCategoryDTO categoryDTO);
 
     void assignCategoryToUser(Long userId, Long categoryId, String iconUrl);
 

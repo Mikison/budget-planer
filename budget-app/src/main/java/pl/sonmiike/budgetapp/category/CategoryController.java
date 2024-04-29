@@ -38,7 +38,7 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createCategory(@RequestBody @Valid AddCategoryDTO categoryDTO, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
-        categoryService.createAndAssignCategoryToUser(userId, categoryDTO);
+        categoryService.addCategoriyAndAssign(userId, categoryDTO);
     }
 
 

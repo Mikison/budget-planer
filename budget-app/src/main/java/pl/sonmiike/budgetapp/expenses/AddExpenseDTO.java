@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddExpesneDTO {
+public class AddExpenseDTO {
 
     @NotBlank
     private String name;

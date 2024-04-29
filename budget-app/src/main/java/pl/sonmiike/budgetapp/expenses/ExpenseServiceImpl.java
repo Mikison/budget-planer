@@ -6,10 +6,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.sonmiike.budgetapp.category.Category;
 import pl.sonmiike.budgetapp.category.CategoryService;
 import pl.sonmiike.budgetapp.category.UserCategoryRepository;
 import pl.sonmiike.budgetapp.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.budgetapp.exceptions.custom.ResourceNotFoundException;
+import pl.sonmiike.budgetapp.user.UserEntity;
 import pl.sonmiike.budgetapp.user.UserService;
 
 import java.math.BigDecimal;
@@ -44,7 +46,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     }
 
-    public void addExpense(AddExpesneDTO expenseDTO, Long userId, Long categoryId) {
+    public void addExpense(AddExpenseDTO expenseDTO, Long userId, Long categoryId) {
         if (!userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)) {
             throw new IdNotMatchingException("User does not have category with that id assigned");
         }
@@ -62,15 +64,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Transactional
     public ExpenseDTO updateExpense(ExpenseDTO expenseDTOtoUpdate, Long userId) {
-        if (!expenseRepository.existsById(expenseDTOtoUpdate.getId())) {
-            throw new IdNotMatchingException("Expense not found");
-        }
-        if (!userCategoryRepository.existsByUserUserIdAndCategoryId(userId, expenseDTOtoUpdate.getCategoryId())) {
-            throw new IdNotMatchingException("User does not have category with that id assigned");
-        }
-        Expense expense = expenseMapper.toEntity(expenseDTOtoUpdate);
-        expense.setUser(userService.fetchUserById(userId));
-        expense.setCategory(categoryService.fetchCategoryById(expenseDTOtoUpdate.getCategoryId()));
+        Expense expense = expenseRepository.findByIdAndUserUserId(expenseDTOtoUpdate.getId(), userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense with that id not found in database"));
+
+        Category category = categoryService.fetchCategoryByUserIdAndId(userId, expenseDTOtoUpdate.getCategoryId());
+
+        UserEntity user = userService.fetchUserById(userId);
+
+        expense.update(expenseDTOtoUpdate);
+        expense.setUser(user);
+        expense.setCategory(category);
+
         expenseRepository.save(expense);
         return expenseMapper.toDTO(expense);
     }

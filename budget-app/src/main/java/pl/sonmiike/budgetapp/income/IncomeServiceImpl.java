@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.sonmiike.budgetapp.exceptions.custom.ResourceNotFoundException;
+import pl.sonmiike.budgetapp.user.UserEntity;
 import pl.sonmiike.budgetapp.user.UserService;
 
 import java.math.BigDecimal;
@@ -45,12 +46,16 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Transactional
     public IncomeDTO updateIncome(IncomeDTO incomeDTOtoUpdate, Long userId) {
-        if (!incomeRepository.existsById(incomeDTOtoUpdate.getId())) {
-            throw new ResourceNotFoundException("Income not found");
-        }
-        Income income = incomeMapper.toEntity(incomeDTOtoUpdate);
-        income.setUser(userService.fetchUserById(userId));
-        return incomeMapper.toDTO(incomeRepository.save(income));
+        Income income = incomeRepository.findById(incomeDTOtoUpdate.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Income not found"));
+
+        UserEntity user = userService.fetchUserById(userId);
+
+        income.update(incomeDTOtoUpdate);
+        income.setUser(user);
+        incomeRepository.save(income);
+
+        return incomeMapper.toDTO(income);
     }
 
     @Transactional

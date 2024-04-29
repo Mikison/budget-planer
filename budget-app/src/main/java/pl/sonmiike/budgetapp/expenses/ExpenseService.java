@@ -13,7 +13,7 @@ public interface ExpenseService {
 
     ExpenseDTO fetchExpenseById(Long id, Long userId);
 
-    void addExpense(AddExpesneDTO expenseDTO, Long userId, Long categoryId);
+    void addExpense(AddExpenseDTO expenseDTO, Long userId, Long categoryId);
 
     PagedExpensesDTO fetchExpensesWithFilters(String keyword, LocalDate dateFrom, LocalDate dateTo, BigDecimal amountFrom, BigDecimal amountTo, Pageable pageable);
 

@@ -58,7 +58,7 @@ class ExpenseControllerTest {
 
     @BeforeEach
     void setUp() {
-        expenseDTO = ExpenseDTO.builder().id(1L).name("Groceries").description("Today").date(LocalDate.now().toString()).categoryId(1L).amount(BigDecimal.valueOf(100).toString()).build();
+        expenseDTO = ExpenseDTO.builder().id(1L).name("Groceries").description("Today").date(LocalDate.now()).categoryId(1L).amount(BigDecimal.valueOf(100)).build();
         pagedExpensesDTO = PagedExpensesDTO.builder().page(0).totalPages(1).expenses(List.of(expenseDTO)).build();
     }
 
@@ -114,13 +114,13 @@ class ExpenseControllerTest {
     void createExpense_CreatesExpense() throws Exception {
         Long userId = 1L;
         Long categoryId = 2L;
-        AddExpesneDTO addExpesneDTO = new AddExpesneDTO("Groceries", "Walmart", LocalDate.now(), BigDecimal.valueOf(100));
+        AddExpenseDTO addExpenseDTO = new AddExpenseDTO("Groceries", "Walmart", LocalDate.now(), BigDecimal.valueOf(100));
         when(authService.getUserId(Mockito.any())).thenReturn(userId);
-        Mockito.doNothing().when(expenseService).addExpense(addExpesneDTO, userId, categoryId);
+        Mockito.doNothing().when(expenseService).addExpense(addExpenseDTO, userId, categoryId);
 
         mockMvc.perform(post("/me/expenses/{categoryId}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(addExpesneDTO)))
+                        .content(objectMapper.writeValueAsString(addExpenseDTO)))
                 .andExpect(status().isCreated());
     }
 
@@ -157,8 +157,8 @@ class ExpenseControllerTest {
     @Test
     public void updateExpense_Success() throws Exception {
         Long id = 1L;
-        ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", null, 1L);
-        ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", 1L, 1L);
+        ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", LocalDate.of(2023,4, 18), BigDecimal.valueOf(2.50), null, 1L);
+        ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", LocalDate.of(2023,4, 18), BigDecimal.valueOf(2.50), 1L, 1L);
         when(authService.getUserId(any())).thenReturn(1L);
         when(expenseService.updateExpense(any(ExpenseDTO.class), anyLong())).thenReturn(updatedExpenseDTO);
         mockMvc.perform(put("/me/expenses/{id}", id)
@@ -174,8 +174,8 @@ class ExpenseControllerTest {
     @Test
     void updateExpense_ThrowsIdNotMatchingException() throws Exception {
         Long id = 1L;
-        ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", null, 1L);
-        ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", "2023-04-18", "2.50", 1L, 1L);
+        ExpenseDTO expenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", LocalDate.of(2023,4, 18), BigDecimal.valueOf(2.50), null, 1L);
+        ExpenseDTO updatedExpenseDTO = new ExpenseDTO(id, "Coffee", "Morning coffee", LocalDate.of(2023,4, 18), BigDecimal.valueOf(2.50), 1L, 1L);
         when(authService.getUserId(any())).thenReturn(1L);
         when(expenseService.updateExpense(any(ExpenseDTO.class), anyLong())).thenReturn(updatedExpenseDTO);
         mockMvc.perform(put("/me/expenses/{id}", id + 1)

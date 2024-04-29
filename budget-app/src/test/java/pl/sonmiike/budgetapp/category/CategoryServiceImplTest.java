@@ -136,7 +136,7 @@ public class CategoryServiceImplTest {
         when(userCategoryRepository.save(any(UserCategory.class))).thenReturn(new UserCategory());
 
         // When
-        Category createdCategory = categoryService.createAndAssignCategoryToUser(userId, categoryDTO);
+        Category createdCategory = categoryService.addCategoriyAndAssign(userId, categoryDTO);
 
         assertEquals(category.getName(), createdCategory.getName());
         verify(categoryRepository, times(1)).save(category);
@@ -145,7 +145,7 @@ public class CategoryServiceImplTest {
     }
 
     @Test
-    void testCreateAndAssignCategoryToUserWithExistingCategory_ShouldAssignUserToExistingRecordInDatabase() {
+    void testAddCategoriyAndAssignCategoryToUserWithExistingCategory_ShouldAssignUserToExistingRecordInDatabase() {
         // Given
         Long userId = 1L;
         AddCategoryDTO categoryDTO = AddCategoryDTO.builder().name("TestCategory").build();
@@ -158,7 +158,7 @@ public class CategoryServiceImplTest {
         when(userCategoryRepository.save(any(UserCategory.class))).thenReturn(new UserCategory());
 
         // When
-        Category createdCategory = categoryService.createAndAssignCategoryToUser(userId, categoryDTO);
+        Category createdCategory = categoryService.addCategoriyAndAssign(userId, categoryDTO);
 
         assertEquals(category.getName(), createdCategory.getName());
         verify(categoryRepository, never()).save(category);

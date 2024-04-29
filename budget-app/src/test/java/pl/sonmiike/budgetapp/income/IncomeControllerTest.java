@@ -108,7 +108,7 @@ public class IncomeControllerTest {
 
 
     @Test
-    void createIncome_CreatesIncome() throws Exception {
+    void addIncome_CreatesIncome() throws Exception {
         Long userId = 1L;
         AddIncomeDTO addIncomeDTO = new AddIncomeDTO(LocalDate.now(), "Salary", "Monthly salary", new BigDecimal("1000"));
 

@@ -32,4 +32,13 @@ public class Income {
     private UserEntity user;
 
 
+    void update(IncomeDTO updatedData) {
+        if (updatedData.getName() != null) this.name = updatedData.getName();
+
+        if (updatedData.getDescription() != null) this.description = updatedData.getDescription();
+
+        if (updatedData.getIncomeDate() != null) this.incomeDate = updatedData.getIncomeDate();
+
+        if (updatedData.getAmount() != null) this.amount = updatedData.getAmount();
+    }
 }

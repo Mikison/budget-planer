@@ -7,13 +7,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import pl.sonmiike.reportsservice.user.UserReportRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class AppConfig {
 
-    private final UserReportRepository userReportRepository;
     private final UserDetailsServiceClass userDetailsService;
 
 

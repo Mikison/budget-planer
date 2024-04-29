@@ -16,15 +16,6 @@ public class IncomeMapper {
                 .build();
     }
 
-    public Income toEntity(IncomeDTO incomeDTO) {
-        return Income.builder()
-                .id(incomeDTO.getId())
-                .incomeDate(incomeDTO.getIncomeDate())
-                .name(incomeDTO.getName())
-                .description(incomeDTO.getDescription())
-                .amount(incomeDTO.getAmount())
-                .build();
-    }
 
     public Income toEntity(AddIncomeDTO incomeDTO) {
         return Income.builder()

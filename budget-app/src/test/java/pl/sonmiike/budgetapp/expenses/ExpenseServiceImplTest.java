@@ -3,12 +3,16 @@ package pl.sonmiike.budgetapp.expenses;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import pl.sonmiike.budgetapp.category.*;
+import pl.sonmiike.budgetapp.category.Category;
+import pl.sonmiike.budgetapp.category.CategoryServiceImpl;
+import pl.sonmiike.budgetapp.category.UserCategoryRepository;
 import pl.sonmiike.budgetapp.exceptions.custom.IdNotMatchingException;
 import pl.sonmiike.budgetapp.exceptions.custom.ResourceNotFoundException;
 import pl.sonmiike.budgetapp.user.UserEntity;
@@ -44,8 +48,6 @@ class ExpenseServiceImplTest {
     @InjectMocks
     private ExpenseServiceImpl expenseService;
 
-    @Captor
-    private ArgumentCaptor<Expense> expenseCaptor;
 
 
     private AutoCloseable openMocks;
@@ -142,7 +144,6 @@ class ExpenseServiceImplTest {
         AddExpenseDTO expenseDTO = new AddExpenseDTO("apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150));
         Expense expense = new Expense(1L, "apteka", "leki", LocalDate.now(), BigDecimal.valueOf(150), null, null);
 
-        UserCategory userCategory = new UserCategory();
         when(userCategoryRepository.existsByUserUserIdAndCategoryId(userId, categoryId)).thenReturn(true);
         when(expenseMapper.toEntity(expenseDTO)).thenReturn(expense);
         when(userService.fetchUserById(userId)).thenReturn(new UserEntity());
@@ -241,7 +242,6 @@ class ExpenseServiceImplTest {
 
     @Test
     void updateExpense_ShouldThrowResourceNotFoundException_WhenCategoryNotFound() {
-        // Arrange
         Long userId = 1L;
         Long categoryId = 1L;
         ExpenseDTO expenseDTOtoUpdate = new ExpenseDTO();

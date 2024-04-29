@@ -18,16 +18,6 @@ public class ExpenseMapper {
                 .build();
     }
 
-    public Expense toEntity(ExpenseDTO expenseDTO) {
-        return Expense.builder()
-                .id(expenseDTO.getId())
-                .name(expenseDTO.getName())
-                .description(expenseDTO.getDescription())
-                .date((expenseDTO.getDate()))
-                .amount(expenseDTO.getAmount())
-                .build();
-    }
-
     public Expense toEntity(AddExpenseDTO expenseDTO) {
         return Expense.builder()
                 .name(expenseDTO.getName())

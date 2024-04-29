@@ -98,37 +98,6 @@ public class ReportCreatorTest {
     }
 
 
-//    @Test
-//    void testGenerateWeeklyReport_WhenReportIsNull() {
-//        Long userId = 1L;
-//        UserReport user = getUser();
-//
-//        when(userReportService.getUserById(userId)).thenReturn(user);
-//        when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(null);
-//
-//        reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
-//
-//        verify(userReportService).getUserById(userId);
-//        verify(weeklyReportAssembler).createWeeklyReport(user);
-//
-//    }
-//
-//
-//
-//    @Test
-//    void testGenerateMonthlyReport_WhenReportIsNull() {
-//        Long userId = 1L;
-//        UserReport user = getUser();
-//
-//        when(userReportService.getUserById(userId)).thenReturn(user);
-//        when(monthlyReportAssembler.createMonthlyReport(user)).thenReturn(null);
-//
-//        reportCreator.generateReport(userId, ReportType.MONTHLY_REPORT);
-//
-//        verify(userReportService).getUserById(userId);
-//        verify(monthlyReportAssembler).createMonthlyReport(user);
-//
-//    }
 
     private UserReport getUser() {
         return UserReport.builder()

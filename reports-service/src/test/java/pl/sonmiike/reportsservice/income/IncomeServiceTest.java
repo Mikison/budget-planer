@@ -41,17 +41,14 @@ public class IncomeServiceTest {
 
     @Test
     void getIncomesFromDateInterval() {
-        // given
         List<Income> incomeEntities = List.of(new Income());
         LocalDate startDate = LocalDate.of(2024, 4, 1);
         LocalDate endDate = LocalDate.of(2024, 4, 7);
         Long userId = 1L;
-        // when
         when(incomeService.getIncomesFromDateInterval(eq(startDate), eq(endDate), anyLong())).thenReturn(Optional.of(incomeEntities));
 
         Optional<List<Income>> result = incomeService.getIncomesFromDateInterval(startDate, endDate, userId);
 
-        // then
         assertNotNull(result);
         assertTrue(result.isPresent(), "Income list should be present");
         assertEquals(incomeEntities, result.get(), "The returned income list should match the expected");

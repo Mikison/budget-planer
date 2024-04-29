@@ -20,16 +20,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JwtServiceTest {
 
 
-    private Clock fixedClock;
 
 
     private JwtService jwtService;
 
+    private Clock clock;
+
     @BeforeEach
     void setUp() {
-        fixedClock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
-
-        jwtService = new JwtService(fixedClock);
+        clock = Clock.systemUTC();
+        jwtService = new JwtService(clock);
         String secret = "ASUDJNASOID029840923840mKJIOSAJDIOASDASDASDASD";
         ReflectionTestUtils.setField(jwtService, "secret", secret);
         String expiration = "3600";
@@ -69,15 +69,19 @@ public class JwtServiceTest {
     public void testTokenExpiration() {
         String username = "expireTestUser";
         TokenType tokenType = TokenType.ACCESS_TOKEN;
+        Instant now = Instant.now();
+
+        Clock fixedClock = Clock.fixed(now, ZoneId.systemDefault());
+        ReflectionTestUtils.setField(jwtService, "clock", fixedClock);
 
         ReflectionTestUtils.setField(jwtService, "expiration", "1");
+
         String token = jwtService.generateToken(username, tokenType);
 
         Clock offsetClock = Clock.offset(fixedClock, Duration.ofSeconds(10));
         ReflectionTestUtils.setField(jwtService, "clock", offsetClock);
 
-
         Exception exception = assertThrows(RuntimeException.class, () -> jwtService.validateToken(token));
-        assertTrue(exception.getMessage().contains("expired"));
+        assertTrue(exception.getMessage().contains("expired"), "Token should be expired but wasn't");
     }
 }

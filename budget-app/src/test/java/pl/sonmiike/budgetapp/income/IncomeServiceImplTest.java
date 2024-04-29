@@ -89,10 +89,8 @@ public class IncomeServiceImplTest {
 
         when(incomeMapper.toPagedDTO(incomePage)).thenReturn(expectedPagedIncomesDTO);
 
-        // When
         PagedIncomesDTO result = incomeService.fetchUserIncome(userId, page, size);
 
-        // Then
         assertNotNull(result);
         assertEquals(expectedPagedIncomesDTO, result);
         verify(incomeRepository, times(1)).findByUserUserId(userId, PageRequest.of(page, size));
@@ -146,42 +144,46 @@ public class IncomeServiceImplTest {
     }
 
     @Test
-    void testUpdateIncome_ShouldUpdateWithSuccess() {
+    public void testUpdateIncome_Success() {
+        // Arrange
         Long userId = 1L;
-        IncomeDTO incomeDTO = new IncomeDTO(1L, LocalDate.now(), "Salary", "May Salary", BigDecimal.valueOf(150.00), userId);
-        Income income = new Income(1L, LocalDate.now(), "Salary", "May Salary", BigDecimal.valueOf(150.00), UserEntity.builder().userId(userId).build());
+        Long incomeId = 1L;
+        IncomeDTO incomeDTOtoUpdate = new IncomeDTO();
+        incomeDTOtoUpdate.setId(incomeId);
 
-        when(incomeMapper.toEntity(eq(incomeDTO))).thenReturn(income);
-        when(userService.fetchUserById(eq(userId))).thenReturn(UserEntity.builder().userId(userId).build());
-        when(incomeRepository.save(eq(income))).thenReturn(income);
-        when(incomeMapper.toDTO(eq(income))).thenReturn(incomeDTO);
-        when(incomeRepository.existsById(eq(incomeDTO.getId()))).thenReturn(true);
+        Income income = new Income();
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
 
-        IncomeDTO result = incomeService.updateIncome(incomeDTO, userId);
+        when(incomeRepository.findById(incomeId)).thenReturn(Optional.of(income));
+        when(userService.fetchUserById(userId)).thenReturn(user);
+        when(incomeMapper.toDTO(any(Income.class))).thenReturn(incomeDTOtoUpdate);
 
+        // Act
+        IncomeDTO result = incomeService.updateIncome(incomeDTOtoUpdate, userId);
+
+        // Assert
         assertNotNull(result);
-        assertEquals(incomeDTO, result);
-        verify(incomeMapper, times(1)).toEntity(eq(incomeDTO));
-        verify(userService, times(1)).fetchUserById(eq(userId));
-        verify(incomeRepository, times(1)).save(eq(income));
-        verify(incomeMapper, times(1)).toDTO(eq(income));
+        assertEquals(incomeId, result.getId());
+        verify(incomeRepository).save(income);
     }
+
 
     @Test
-    void testUpdateIncome_ShouldThrowResourceNotFoundException() {
+    public void testUpdateIncome_Failure_IncomeNotFound() {
         Long userId = 1L;
-        IncomeDTO incomeDTO = new IncomeDTO(1L, LocalDate.now(), "Salary", "May Salary", BigDecimal.valueOf(150.00), userId);
+        Long incomeId = 1L;
+        IncomeDTO incomeDTOtoUpdate = new IncomeDTO();
+        incomeDTOtoUpdate.setId(incomeId);
 
-        when(incomeRepository.existsById(eq(incomeDTO.getId()))).thenReturn(false);
+        when(incomeRepository.findById(incomeId)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> incomeService.updateIncome(incomeDTO, userId));
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> incomeService.updateIncome(incomeDTOtoUpdate, userId));
 
-        verify(incomeRepository, times(1)).existsById(eq(incomeDTO.getId()));
-        verify(incomeMapper, never()).toEntity(any(IncomeDTO.class));
-        verify(userService, never()).fetchUserById(any(Long.class));
+        assertEquals("Income not found", exception.getMessage());
         verify(incomeRepository, never()).save(any(Income.class));
-        verify(incomeMapper, never()).toDTO(any(Income.class));
     }
+
 
     @Test
     void testDeleteIncome() {

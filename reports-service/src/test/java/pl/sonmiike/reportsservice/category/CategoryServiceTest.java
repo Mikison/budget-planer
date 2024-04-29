@@ -41,13 +41,11 @@ public class CategoryServiceTest {
 
     @Test
     void getCategories() {
-        // given
         List<Category> categoryEntities = List.of(new Category());
-        // when
+
         when(categoryService.getCategories()).thenReturn(categoryEntities);
         List<Category> result = categoryService.getCategories();
 
-        // then
         assertEquals(categoryEntities, result);
         assertEquals(categoryEntities.size(), result.size());
     }

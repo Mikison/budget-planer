@@ -60,7 +60,6 @@ public class CategoryServiceImplTest {
 
     @Test
     void testFetchAllCategories() {
-        // Setup
         List<Category> categories = Arrays.asList(new Category(1L, "Food"), new Category(2L, "Utilities"));
         when(categoryRepository.findAll()).thenReturn(categories);
         when(categoryMapper.toDTO(any(Category.class))).thenAnswer(invocation -> {
@@ -68,10 +67,8 @@ public class CategoryServiceImplTest {
             return new CategoryDTO(category.getId(), category.getName(), BigDecimal.ZERO);
         });
 
-        // Execution
         Set<CategoryDTO> results = categoryService.fetchAllCategories();
 
-        // Assertions
         assertNotNull(results);
         assertEquals(2, results.size());
         verify(categoryRepository).findAll();
@@ -88,7 +85,6 @@ public class CategoryServiceImplTest {
             return new CategoryDTO(category.getId(), category.getName(), BigDecimal.ZERO);
         });
 
-        // Execution
         Set<CategoryDTO> results = categoryService.fetchUserCategories(userId);
 
         assertNotNull(results);
@@ -135,7 +131,6 @@ public class CategoryServiceImplTest {
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
         when(userCategoryRepository.save(any(UserCategory.class))).thenReturn(new UserCategory());
 
-        // When
         Category createdCategory = categoryService.addCategoriyAndAssign(userId, categoryDTO);
 
         assertEquals(category.getName(), createdCategory.getName());
@@ -146,7 +141,6 @@ public class CategoryServiceImplTest {
 
     @Test
     void testAddCategoriyAndAssignCategoryToUserWithExistingCategory_ShouldAssignUserToExistingRecordInDatabase() {
-        // Given
         Long userId = 1L;
         AddCategoryDTO categoryDTO = AddCategoryDTO.builder().name("TestCategory").build();
         Category category = Category.builder().id(1L).name("TestCategory").build();
@@ -157,7 +151,6 @@ public class CategoryServiceImplTest {
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
         when(userCategoryRepository.save(any(UserCategory.class))).thenReturn(new UserCategory());
 
-        // When
         Category createdCategory = categoryService.addCategoriyAndAssign(userId, categoryDTO);
 
         assertEquals(category.getName(), createdCategory.getName());
@@ -233,10 +226,8 @@ public class CategoryServiceImplTest {
         when(monthlyBudgetRepository.updateBudgetAmountByUserIdAndCategoryIdAndYearMonth(eq(userId), eq(inputDTO.getCategoryId()), any(String.class), eq(inputDTO.getBudgetToSet()))).thenReturn(0);
         when(monthlyBudgetRepository.save(any(MonthlyBudget.class))).thenAnswer(i -> i.getArgument(0));
 
-        // Execution
         MonthlyBudgetDTO result = categoryService.setBudgetAmountForCategory(userId, inputDTO);
 
-        // Verification
         verify(monthlyBudgetRepository).save(any(MonthlyBudget.class));
         assertNotNull(result);
         assertEquals(inputDTO.getBudgetToSet(), result.getBudgetToSet());
@@ -244,7 +235,6 @@ public class CategoryServiceImplTest {
 
     @Test
     void setMonthlyBudgetForCategoryUpdate_ShouldUpdateExistingRecord() {
-        // Setup
         Long userId = 1L;
         MonthlyBudgetDTO inputDTO = MonthlyBudgetDTO.builder().budgetToSet(BigDecimal.valueOf(1000)).build();
         UserCategory mockUserCategory = UserCategory.builder().id(1L).build();
@@ -253,7 +243,6 @@ public class CategoryServiceImplTest {
 
         MonthlyBudgetDTO result = categoryService.setBudgetAmountForCategory(userId, inputDTO);
 
-        // Verification
         verify(monthlyBudgetRepository, never()).save(any(MonthlyBudget.class));
         assertNotNull(result);
         assertEquals(inputDTO.getBudgetToSet(), result.getBudgetToSet());

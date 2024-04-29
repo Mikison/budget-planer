@@ -32,15 +32,12 @@ public class UserReportServiceTest {
 
     @Test
     void testFetchAllUsers_ReturnsAllUsers() {
-        // Arrange
         Set<UserReport> mockUserReports = Set.of(new UserReport(1L), new UserReport(2L));
 
         when(userReportRepository.findAll()).thenReturn(new ArrayList<>(mockUserReports));
 
-        // Act
         Set<UserReport> result = userReportService.fetchAllUsers();
 
-        // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
         assertTrue(result.containsAll(mockUserReports));

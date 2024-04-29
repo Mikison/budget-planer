@@ -43,13 +43,13 @@ public class UserControllerTest {
 
     @Test
     void getAllUsersTest() throws Exception {
-        // Given
+        
         int page = 0;
         int size = 10;
         PagedUsersDTO pagedUsersDTO = mock(PagedUsersDTO.class); // Mock the DTO
         when(userService.fetchAllUsers(page, size)).thenReturn(pagedUsersDTO);
 
-        // When & Then
+        
         mockMvc.perform(get("/api/v1/admin/users?page=" + page + "&size=" + size))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(pagedUsersDTO)));
@@ -59,14 +59,14 @@ public class UserControllerTest {
 
     @Test
     void getUserByIdTest() throws Exception {
-        // Given
+        
         Long id = 1L;
         UserEntity userEntity = mock(UserEntity.class);
         UserDTO userDTO = mock(UserDTO.class);
         when(userService.fetchUserById(id)).thenReturn(userEntity);
         when(userMapper.toDTO(userEntity)).thenReturn(userDTO);
 
-        // When & Then
+        
         mockMvc.perform(get("/api/v1/admin/users/" + id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
@@ -77,12 +77,12 @@ public class UserControllerTest {
 
     @Test
     void getUserByEmailTest() throws Exception {
-        // Given
+        
         String email = "test@example.com";
         UserDTO userDTO = mock(UserDTO.class);
         when(userService.fetchUserByEmail(email)).thenReturn(userDTO);
 
-        // When & Then
+        
         mockMvc.perform(get("/api/v1/admin/users/email").param("email", email))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
@@ -92,10 +92,10 @@ public class UserControllerTest {
 
     @Test
     void deleteUserByIdTest() throws Exception {
-        // Given
+        
         Long id = 1L;
 
-        // When & Then
+        
         mockMvc.perform(delete("/api/v1/admin/users/" + id))
                 .andExpect(status().isNoContent());
 

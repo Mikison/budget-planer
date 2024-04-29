@@ -42,7 +42,7 @@ class ReportExecutorTest {
 
     @Test
     void executeWeeklyReportGenerationTest() {
-        UserReport user = new UserReport(1L); // Assuming UserReport has a constructor with userId
+        UserReport user = new UserReport(1L);
         Set<UserReport> users = Set.of(user);
         when(userReportService.fetchAllUsers()).thenReturn(users);
 

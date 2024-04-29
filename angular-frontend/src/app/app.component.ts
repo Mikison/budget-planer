@@ -1,10 +1,14 @@
-import {Component, computed, effect, Signal, signal, WritableSignal} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
+  host: {
+    class: 'flex flex-col justify-center items-center h-screen',
+
+  },
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

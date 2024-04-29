@@ -56,7 +56,6 @@ public class UserServiceImplTest {
 
     @Test
     void testFetchAllUsers() {
-        // Prepare your test data
         List<UserEntity> userList = List.of(
                 UserEntity.builder().userId(1L).build(),
                 UserEntity.builder().userId(2L).build(),

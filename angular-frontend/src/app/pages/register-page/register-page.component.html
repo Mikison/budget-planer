@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" class="overflow-hidden h-screen w-screen">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Registration Form</title>
+</head>
+<body class="flex items-center justify-center min-h-screen overflow-hidden bg-background dark bg-cover">
+<div class="scale-150">
+  <form>
+    <section class="w-80" hlmCard>
+      <div hlmCardHeader><h3 hlmCardTitle>Register</h3>
+        <p hlmCardDescription>Sign up to create your account.</p>
+      </div>
+      <div hlmCardContent>
+        <label class="block mb-4" hlmLabel>
+          Name
+          <input class="mt-2 w-full p-2 border rounded-md" placeholder="Enter your name" hlmInput/>
+        </label>
+        <label class="mb-4 block" hlmLabel>
+          Username
+          <input class="mt-2 w-full p-2 border rounded-md" placeholder="Choose a username" hlmInput/>
+        </label>
+        <label class="mb-4 block" hlmLabel>
+          Email
+          <input type="email" class="mt-2 w-full p-2 border rounded-md" placeholder="Enter your email" hlmInput/>
+        </label>
+        <label class="mb-4 block" hlmLabel>
+          Password
+          <input type="password" class="mt-2 w-full p-2 border rounded-md" placeholder="Create a password" hlmInput/>
+        </label>
+      </div>
+      <div hlmCardFooter class="flex justify-between">
+        <button hlmBtn variant="ghost">Cancel</button>
+        <button hlmBtn>Create Account</button>
+      </div>
+    </section>
+  </form>
+</div>
+</body>
+</html>

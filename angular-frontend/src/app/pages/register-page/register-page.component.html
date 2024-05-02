@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" class="overflow-hidden h-screen w-screen">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Registration Form</title>
-</head>
-<body class="flex items-center justify-center min-h-screen overflow-hidden bg-background dark bg-cover">
-<div class="scale-150">
+<div class="scale-150 flex items-center justify-center min-h-screen overflow-hidden  bg-cover ">
   <form>
     <section class="w-80" hlmCard>
       <div hlmCardHeader><h3 hlmCardTitle>Register</h3>
@@ -30,13 +22,15 @@
           Password
           <input type="password" class="mt-2 w-full p-2 border rounded-md" placeholder="Create a password" hlmInput/>
         </label>
+        <label class="mb-4 block" hlmLabel>
+          Confirm password
+          <input type="password" class="mt-2 w-full p-2 border rounded-md" placeholder="Confirm your password" hlmInput/>
+        </label>
       </div>
       <div hlmCardFooter class="flex justify-between">
-        <button hlmBtn variant="ghost">Cancel</button>
+        <a routerLink="/login" hlmBtn variant="ghost">Cancel</a>
         <button hlmBtn>Create Account</button>
       </div>
     </section>
   </form>
 </div>
-</body>
-</html>

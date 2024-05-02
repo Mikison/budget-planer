@@ -18,6 +18,7 @@ import {
   BrnPopoverContentDirective,
   BrnPopoverTriggerDirective,
 } from '@spartan-ng/ui-popover-brain';
+import {RouterModule} from "@angular/router";
 
 @Component({
   selector: 'app-register-page',
@@ -37,7 +38,8 @@ import {
     HlmLabelDirective,
     HlmInputDirective,
     HlmCardFooterDirective,
-    HlmButtonDirective,],
+    HlmButtonDirective,
+  RouterModule],
   templateUrl: './register-page.component.html',
 })
 export class RegisterPageComponent {

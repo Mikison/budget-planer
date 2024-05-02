@@ -1,0 +1,26 @@
+
+<div class="scale-150 flex items-center justify-center min-h-screen overflow-hidden  bg-cover ">
+  <form method="post">
+    <section class="w-80"  hlmCard>
+      <div hlmCardHeader><h3 hlmCardTitle>Login</h3>
+        <p hlmCardDescription>Sign in into your account.</p>
+      </div>
+      <div hlmCardContent>
+        <label class="mb-4 block" hlmLabel>
+          Email
+          <input type="email" class="mt-2 w-full p-2 border rounded-md" placeholder="Enter your email" hlmInput/>
+        </label>
+        <label class="mb-4 block" hlmLabel>
+          Password
+          <input type="password" class="mt-2 w-full p-2 border rounded-md" placeholder="Create a password" hlmInput/>
+        </label>
+        <div class="mt-2 text-center">
+          <a routerLink="/register" class="text-sm text-primary ">Register a new account</a>
+        </div>
+      </div>
+      <div hlmCardFooter class="flex justify-end">
+        <button hlmBtn>Login</button>
+      </div>
+    </section>
+  </form>
+</div>

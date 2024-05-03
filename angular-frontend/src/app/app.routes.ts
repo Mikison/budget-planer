@@ -10,8 +10,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login-page/login-page.component').then(m => m.LoginPageComponent)
   },
   {
-    path: 'nav',
-    loadComponent: () => import('./shared/navbar/navbar.component').then(m => m.NavbarComponent)
+    path: 'budget',
+    loadComponent: () => import('./pages/budget-category/budget-category.component').then(m => m.BudgetCategoryComponent)
   }
 
 ];

@@ -6,7 +6,14 @@ module.exports = {
     './src/**/*.{html,ts}',
     './components/**/*.{html,ts}',
   ],
+
   theme: {
+    colors: {
+      warning: '#FFC22DFF',
+      success: '#00CA92FF',
+      info: '#00B3F0FF',
+      danger: '#FF6F70FF'
+    },
     extend: {},
   },
   plugins: [],

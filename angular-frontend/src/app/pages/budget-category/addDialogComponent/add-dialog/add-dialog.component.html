@@ -1,0 +1,25 @@
+<hlm-dialog>
+  <button id="create-category" class="bg-success" brnDialogTrigger hlmBtn>
+    <hlm-icon name="lucideFolderPlus" class="mr-2"/>
+    <p>Add Category</p>
+  </button>
+  <hlm-dialog-content class="scale-150 sm:max-w-[425px]" *brnDialogContent="let ctx">
+    <hlm-dialog-header>
+      <h3 hlmDialogTitle>Create Category</h3>
+      <p hlmDialogDescription>Create a place to categorize your expenses.</p>
+    </hlm-dialog-header>
+    <div class="py-4 grid gap-4 ">
+      <div class="items-center grid grid-cols-4 gap-4">
+        <label hlmLabel for="name" class="text-right">Name</label>
+        <input hlmInput id="name"  class="col-span-3" />
+      </div>
+      <div class="items-center grid grid-cols-4 gap-4">
+        <label hlmLabel for="username" class="text-right">Image [URL]</label>
+        <input hlmInput id="username"  class="col-span-3" />
+      </div>
+    </div>
+    <hlm-dialog-footer>
+      <button hlmBtn type="submit">Save changes</button>
+    </hlm-dialog-footer>
+  </hlm-dialog-content>
+</hlm-dialog>

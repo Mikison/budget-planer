@@ -23,18 +23,19 @@ public class IncomeDTO {
     private Long id;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @NotNull
+    @NotNull(message = "Date cannot be null")
     private LocalDate incomeDate;
 
-    @NotBlank
+    @NotBlank(message = "Name cannot be blank")
+    @Size(min = 2, max = 32, message = "Name must be between 21 and 32 characters")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description cannot be blank")
     @Size(max = 100, message = "Description can have max 100 characters")
     private String description;
 
     @DecimalMin(value = "0.00", inclusive = false)
-    @NotNull
+    @NotNull(message = "Amount cannot be null")
     private BigDecimal amount;
 
     private Long userId;

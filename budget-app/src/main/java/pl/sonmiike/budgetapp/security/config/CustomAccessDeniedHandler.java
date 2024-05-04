@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import pl.sonmiike.budgetapp.exceptions.custom.ApiError;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
@@ -20,7 +21,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ApiError apiError = new ApiError(request.getRequestURI(), "Access denied", HttpStatus.FORBIDDEN.value());
+        String ACCESS_DENIED_MESSAGE = "Access denied";
+        ApiError apiError = new ApiError(request.getRequestURI(), List.of(ACCESS_DENIED_MESSAGE), HttpStatus.FORBIDDEN.value());
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

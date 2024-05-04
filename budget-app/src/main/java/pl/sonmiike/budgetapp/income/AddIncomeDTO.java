@@ -19,6 +19,9 @@ public class AddIncomeDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @NotNull
     private LocalDate incomeDate;
+
+    @NotNull(message = "Name cannot be null")
+    @Size(min = 1, max = 32, message = "Name must be between 1 and 32 characters")
     private String name;
 
     @Size(max = 100, message = "Description can have max 100 characters")

@@ -19,18 +19,19 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AddExpenseDTO {
 
-    @NotBlank
+    @NotBlank(message = "Name cannot be blank")
+    @NotNull(message = "Name cannot be null")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description cannot be blank")
     @Size(max = 100, message = "Description can have max 100 characters")
     private String description;
 
-    @NotNull
+    @NotNull(message = "Date cannot be null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
 
-    @NotNull
+    @NotNull(message = "Amount cannot be null")
     @DecimalMin(value = "0.0", message = "Amount must be greater than 0", inclusive = false)
     private BigDecimal amount;
 }

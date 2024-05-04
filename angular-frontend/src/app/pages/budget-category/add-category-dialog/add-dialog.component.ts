@@ -13,7 +13,7 @@ import {HlmIconComponent, provideIcons} from "@spartan-ng/ui-icon-helm";
 import {lucideFolderPlus} from "@ng-icons/lucide";
 
 @Component({
-  selector: 'app-add-dialog',
+  selector: 'app-add-category-dialog',
   standalone: true,
   imports: [BrnDialogTriggerDirective,
     BrnDialogContentDirective,

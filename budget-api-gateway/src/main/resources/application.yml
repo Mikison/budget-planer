@@ -1,6 +1,21 @@
 spring:
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+            exposedHeaders:
+              - X-Response-Time
       routes:
         - id: budget-app
           uri: lb://BUDGET-APP

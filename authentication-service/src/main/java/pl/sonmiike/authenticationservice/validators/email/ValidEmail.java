@@ -1,4 +1,4 @@
-package pl.sonmiike.budgetapp.validators.email;
+package pl.sonmiike.authenticationservice.validators.email;
 
 
 import jakarta.validation.Constraint;

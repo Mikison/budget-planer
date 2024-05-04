@@ -29,7 +29,8 @@ import {
   HlmDialogTitleDirective
 } from "@spartan-ng/ui-dialog-helm";
 import {BrnDialogContentDirective, BrnDialogTriggerDirective} from "@spartan-ng/ui-dialog-brain";
-import {AddDialogComponent} from "./addDialogComponent/add-dialog/add-dialog.component";
+import {AddDialogComponent} from "./add-category-dialog/add-dialog.component";
+import {DateCarouselComponent} from "./date-carousel/date-carousel.component";
 
 
 
@@ -72,6 +73,7 @@ import {AddDialogComponent} from "./addDialogComponent/add-dialog/add-dialog.com
     HlmInputDirective,
     HlmButtonDirective,
     AddDialogComponent,
+    DateCarouselComponent,
   ],
   providers: [provideIcons({lucideFolderPlus, lucideChevronRight})],
   templateUrl: './budget-category.component.html',

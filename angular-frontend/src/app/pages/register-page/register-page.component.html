@@ -1,6 +1,6 @@
 
 <div class="scale-150 flex items-center justify-center min-h-screen overflow-hidden  bg-cover ">
-  <form>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <section class="w-80" hlmCard>
       <div hlmCardHeader><h3 hlmCardTitle>Register</h3>
         <p hlmCardDescription>Sign up to create your account.</p>
@@ -8,23 +8,23 @@
       <div hlmCardContent>
         <label class="block mb-4" hlmLabel>
           Name
-          <input class="mt-2 w-full p-2 border rounded-md" placeholder="Enter your name" hlmInput/>
+          <input formControlName="name" class="text-background mt-2 w-full p-2 border rounded-md" placeholder="Enter your name" hlmInput/>
         </label>
         <label class="mb-4 block" hlmLabel>
           Username
-          <input class="mt-2 w-full p-2 border rounded-md" placeholder="Choose a username" hlmInput/>
+          <input formControlName="username" class="text-background mt-2 w-full p-2 border rounded-md" placeholder="Choose a username" hlmInput/>
         </label>
         <label class="mb-4 block" hlmLabel>
           Email
-          <input type="email" class="mt-2 w-full p-2 border rounded-md" placeholder="Enter your email" hlmInput/>
+          <input formControlName="email" type="email" class="text-background mt-2 w-full p-2 border rounded-md" placeholder="Enter your email" hlmInput/>
         </label>
         <label class="mb-4 block" hlmLabel>
           Password
-          <input type="password" class="mt-2 w-full p-2 border rounded-md" placeholder="Create a password" hlmInput/>
+          <input formControlName="password" type="password" class="text-background mt-2 w-full p-2 border rounded-md" placeholder="Create a password" hlmInput/>
         </label>
         <label class="mb-4 block" hlmLabel>
           Confirm password
-          <input type="password" class="mt-2 w-full p-2 border rounded-md" placeholder="Confirm your password" hlmInput/>
+          <input type="password" class="text-background mt-2 w-full p-2 border rounded-md" placeholder="Confirm your password" hlmInput/>
         </label>
       </div>
       <div hlmCardFooter class="flex justify-between">

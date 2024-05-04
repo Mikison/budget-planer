@@ -1,4 +1,4 @@
-  <div class="w-64 h-screen bg-background text-center text-foreground border-r border-border px-5 py-3">
+  <div class="w-64 h-screen bg-background text-foreground  text-center border-r border-border px-5 py-3">
     <div class="flex flex-col justify-between h-full">
       <svg class=" text-7xl text-primary w-full" fill="white" height="160px" width="160px"  id="Capa_1" xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 490.2 490.2" xml:space="preserve">
@@ -42,6 +42,12 @@
         <a class="px-3 py-2 rounded-md text-2xl font-medium my-2 w-full" hlmBtn variant="outline">
           <hlm-icon size="lg" class="mr-2" name="lucideUserCircle"/>
           Profile
+        </a>
+      </div>
+      <div>
+        <a class="px-3 py-2 rounded-md text-2xl font-medium my-2 w-full" (click)="toggleTheme()" hlmBtn variant="outline">
+          <hlm-icon size="lg" class="mr-2" name="lucideUserCircle"/>
+          Darkmode
         </a>
       </div>
     </div>

@@ -1,4 +1,4 @@
-package pl.sonmiike.budgetapp.validators.password;
+package pl.sonmiike.authenticationservice.validators.password;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

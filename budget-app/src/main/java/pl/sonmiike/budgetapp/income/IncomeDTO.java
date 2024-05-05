@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class IncomeDTO {
 
-    @NotNull
+    @NotNull(message = "Id cannot be null")
     private Long id;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

@@ -16,20 +16,20 @@ import java.time.LocalDate;
 @Builder
 public class ExpenseDTO {
 
-    @NotNull
+    @NotNull(message = "Id cannot be null")
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description cannot be blank")
     private String description;
 
-    @NotNull
+    @NotNull(message = "Date cannot be null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
 
-    @NotNull
+    @NotNull(message = "Amount cannot be null")
     @DecimalMin(value = "0.0", message = "Amount must be greater than 0", inclusive = false)
     private BigDecimal amount;
 

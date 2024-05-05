@@ -41,6 +41,8 @@ public class ReportGenerator<T extends Report> implements ReportPDFGenerator<T> 
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
     public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(220, 20, 60);
+
+
     private final ReportEntityRepository reportEntityRepository;
 
 

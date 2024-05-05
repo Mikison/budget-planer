@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.sonmiike.budgetapp.exceptions.custom.IdNotMatchingException;
@@ -30,7 +31,8 @@ public class IncomeController {
         return ResponseEntity.ok(incomeService.fetchUserIncome(userId, page, size));
     }
 
-    @GetMapping("/{incomeId}") // TODO Make it for either admin or user scope only
+    @GetMapping("/{incomeId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<IncomeDTO> getIncomeById(@PathVariable Long incomeId, Authentication authentication) {
         Long userId = authService.getUserId(authentication);
         IncomeDTO incomeDTO = incomeService.fetchIncomeById(incomeId, userId);

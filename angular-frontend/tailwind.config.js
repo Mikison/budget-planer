@@ -6,14 +6,16 @@ module.exports = {
     './src/**/*.{html,ts}',
     './components/**/*.{html,ts}',
   ],
-  darkMode: 'class',
+  // darkMode: 'class',
 
   theme: {
     colors: {
-      warning: '#FFC22DFF',
-      success: '#00CA92FF',
-      info: '#00B3F0FF',
-      danger: '#FF6F70FF'
+        warning: '#FFC22DFF',
+        success: '#00CA92FF',
+        dark_green: '#006400',
+        info: '#00B3F0FF',
+        danger: '#FF6F70FF',
+        dark_red: '#d11a2a'
     },
     extend: {},
   },

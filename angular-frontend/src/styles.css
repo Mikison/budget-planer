@@ -1,41 +1,42 @@
 @import '@angular/cdk/overlay-prebuilt.css';
-
-
-html,
-body {
-  height: 100%;
-}
-
-input,
-button,
-textarea,
-select {
-  font: inherit;
-}
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  overflow-wrap: break-word;
-}
-
-
-app-root {
-  isolation: isolate;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-:root {
-  --font-sans: ''
-}
+/*html,*/
+/*body {*/
+/*  height: 100%;*/
+/*}*/
+
+/*input,*/
+/*button,*/
+/*textarea,*/
+/*select {*/
+/*  font: inherit;*/
+/*}*/
+
+/*p,*/
+/*h1,*/
+/*h2,*/
+/*h3,*/
+/*h4,*/
+/*h5,*/
+/*h6 {*/
+/*  overflow-wrap: break-word;*/
+/*}*/
+
+
+/*app-root {*/
+/*  isolation: isolate;*/
+/*}*/
+
+
+
+/*:root {*/
+/*  --font-sans: ''*/
+/*}*/
 
 html, body {
   height: 100%;
@@ -43,6 +44,10 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: "Libre Franklin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
 :root {

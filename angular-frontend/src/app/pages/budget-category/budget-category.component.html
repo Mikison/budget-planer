@@ -1,15 +1,15 @@
-<div class="flex flex-col items-center scale-125 mt-12 px-4">
+<div class="flex flex-col items-center scale-110  mt-6 px-4">
   <h1 class="text-primary text-center text-4xl mb-4">Categories</h1>
   <app-date-carousel/>
 </div>
 
-<div class="flex flex-col items-center scale-125 mt-4  px-4">
+<div class="flex flex-col items-center scale-110   mt-12  px-4">
   <app-add-category-dialog/>
 </div>
 
 
 <div class="flex flex-wrap justify-center gap-4 px-4 py-2 items-center mt-10">
-  <a href="" class="scale-110">
+  <a href=""  [brnCtxMenuTriggerFor]="menu">
     <section class="w-80 m-2 flex flex-col items-center" hlmCard>
       <div hlmCardContent class="mt-5 flex flex-col items-center justify-center">
         <img
@@ -18,7 +18,7 @@
       </div>
       @if (value > 0) {
         <div class="relative w-60 bg-secondary rounded-full h-2.5 mb-4 hover-parent">
-          <div class="bg-danger h-2.5 rounded-full mb-2" [style.width]="value + '%'"></div>
+          <div class="bg-dark_green h-2.5 rounded-full mb-2" [style.width]="value + '%'"></div>
           <span class="absolute left-0 text-xs text-primary hover-child opacity-0">123123</span>
           <span class="absolute right-0 text-xs text-primary hover-child opacity-0">2000000000000</span>
           <div class="text-center text-xs text-primary">{{ value }}%</div>
@@ -29,7 +29,7 @@
       <div class="my-2 text-center">
         <span class="text-xl text-primary">Elektronika</span>
       </div>
-      <div hlmCardFooter class="flex justify-center">
+      <div hlmCardFooter class="flex justify-center ">
         <button hlmBtn size="icon" >
           <hlm-icon size='sm' name="lucideChevronRight"/>
         </button>
@@ -37,3 +37,23 @@
     </section>
   </a>
 </div>
+
+
+<ng-template #menu>
+  <hlm-menu class="w-64 scale-125">
+    <hlm-menu-group>
+      <button inset hlmMenuItem>
+        <hlm-icon size="lg" class="mr-2 text-lg" name="lucideEdit"/>
+        <p>Edit</p>
+      </button>
+
+      <button inset hlmMenuItem>
+        <hlm-icon size="lg" class="mr-2 text-dark_red text-lg " name="lucideTrash2"/>
+        <p class="text-dark_red ">Delete</p>
+      </button>
+
+    </hlm-menu-group>
+  </hlm-menu>
+</ng-template>
+
+

@@ -5,20 +5,22 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryService;
+import pl.sonmiike.reportsservice.category.Category;
+import pl.sonmiike.reportsservice.category.CategoryService;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.expense.ExpenseService;
 import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.income.IncomeService;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
+import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,7 +48,7 @@ public class MonthlyReportAssemblerTest {
     }
 
     @Test
-    void testCreateMonthlyReport_WithData() {
+    void testCreateReport_WithData() {
         UserReport user = getUser();
         List<Income> incomes = getIncomes();
         List<Expense> expenses = getExpenses();
@@ -59,7 +61,7 @@ public class MonthlyReportAssemblerTest {
         when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
         when(categoryService.getCategories()).thenReturn(categories);
 
-        MonthlyReport report = monthlyReportAssembler.createMonthlyReport(user);
+        MonthlyReport report = (MonthlyReport) monthlyReportAssembler.createReport(user, Map.of());
 
         assertNotNull(report);
         assertEquals(BigDecimal.valueOf(1000), report.getTotalIncomes());
@@ -69,13 +71,13 @@ public class MonthlyReportAssemblerTest {
     }
 
     @Test
-    void testCreateMonthlyReport_NoData() {
+    void testCreateReport_NoData() {
         UserReport user = getUser();
         when(incomeService.getIncomesFromDateInterval(any(), any(), anyLong())).thenReturn(Optional.empty());
         when(expenseService.getExpensesFromDateBetween(any(), any(), anyLong())).thenReturn(Optional.empty());
         when(categoryService.getCategories()).thenReturn(new ArrayList<>());
 
-        MonthlyReport report = monthlyReportAssembler.createMonthlyReport(user);
+        Report report =  monthlyReportAssembler.createReport(user, Map.of());
 
         assertNull(report);
     }

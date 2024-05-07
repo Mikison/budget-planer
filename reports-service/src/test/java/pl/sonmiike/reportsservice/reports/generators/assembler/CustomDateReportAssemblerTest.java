@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryService;
+import pl.sonmiike.reportsservice.category.Category;
+import pl.sonmiike.reportsservice.category.CategoryService;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.expense.ExpenseService;
 import pl.sonmiike.reportsservice.income.Income;
@@ -44,7 +44,7 @@ public class CustomDateReportAssemblerTest {
 
 
     @Test
-    void testCreateCustomDateReport_WithData() {
+    void testCreateReport_WithData() {
         UserReport user = getUser();
         LocalDate startDate = LocalDate.now().minusDays(7);
         LocalDate endDate = LocalDate.now();
@@ -56,7 +56,7 @@ public class CustomDateReportAssemblerTest {
         when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.of(expenses));
         when(categoryService.getCategories()).thenReturn(categories);
 
-        CustomDateReport customDateReport = customDateReportAssembler.createCustomDateReport(user, startDate, endDate);
+        CustomDateReport customDateReport = customDateReportAssembler.createReport(user, startDate, endDate);
 
         assertEquals(user, customDateReport.getUser());
         assertEquals(startDate, customDateReport.getDateInterval().getStartDate());
@@ -69,7 +69,7 @@ public class CustomDateReportAssemblerTest {
     }
 
     @Test
-    void testCreateCustomDateReport_NoData() {
+    void testCreateReport_NoData() {
         UserReport user = getUser();
         LocalDate startDate = LocalDate.now().minusDays(7);
         LocalDate endDate = LocalDate.now();
@@ -79,7 +79,7 @@ public class CustomDateReportAssemblerTest {
         when(expenseService.getExpensesFromDateBetween(startDate, endDate, user.getUserId())).thenReturn(Optional.empty());
         when(categoryService.getCategories()).thenReturn(categories);
 
-        CustomDateReport customDateReport = customDateReportAssembler.createCustomDateReport(user, startDate, endDate);
+        CustomDateReport customDateReport = customDateReportAssembler.createReport(user, startDate, endDate);
 
         assertNull(customDateReport);
     }

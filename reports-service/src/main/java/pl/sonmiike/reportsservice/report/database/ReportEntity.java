@@ -37,6 +37,7 @@ public class ReportEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate generatedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private UserReport user;
 }

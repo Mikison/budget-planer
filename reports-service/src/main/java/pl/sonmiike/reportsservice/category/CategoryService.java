@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.cateogry;
+package pl.sonmiike.reportsservice.category;
 
 
 import lombok.RequiredArgsConstructor;

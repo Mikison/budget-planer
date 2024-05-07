@@ -1,24 +1,27 @@
 package pl.sonmiike.reportsservice.report.generators.assemblers;
 
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.cateogry.CategoryService;
-import pl.sonmiike.reportsservice.expense.ExpenseService;
-import pl.sonmiike.reportsservice.income.IncomeService;
+import pl.sonmiike.reportsservice.category.CategoryCalculator;
+import pl.sonmiike.reportsservice.category.CategoryService;
+import pl.sonmiike.reportsservice.expense.ExpenseFetcher;
+import pl.sonmiike.reportsservice.income.IncomeFetcher;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.MonthlyReport;
+import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import static pl.sonmiike.reportsservice.expense.ExpenseOperations.*;
 import static pl.sonmiike.reportsservice.income.IncomeOperations.getTotalIncomes;
 
 
 @Component
-public class MonthlyReportAssembler extends BaseReportAssembler {
+public class MonthlyReportAssembler extends BaseReportAssembler implements ReportAssembler {
 
-    public MonthlyReportAssembler(IncomeService incomeService, ExpenseService expenseService, CategoryService categoryService) {
-        super(incomeService, expenseService, categoryService);
+    public MonthlyReportAssembler(IncomeFetcher incomeFetcher, ExpenseFetcher expenseFetcher, CategoryCalculator categoryCalculator, CategoryService categoryService) {
+        super(incomeFetcher, expenseFetcher, categoryCalculator, categoryService);
     }
 
     @Override
@@ -28,7 +31,7 @@ public class MonthlyReportAssembler extends BaseReportAssembler {
         return new DateInterval(startDate, endDate);
     }
 
-    public MonthlyReport createMonthlyReport(UserReport user) {
+    public Report createReport(UserReport user, Map<String, Object> parameters) {
         return createReport(user, (userDetails, date, incomes, expenses, categoryExpenses) -> MonthlyReport.builder()
                 .user(userDetails)
                 .dateInterval(date)

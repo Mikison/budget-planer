@@ -1,6 +1,6 @@
 package pl.sonmiike.reportsservice.report.generators.assemblers;
 
-import pl.sonmiike.reportsservice.cateogry.Category;
+import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.report.types.DateInterval;

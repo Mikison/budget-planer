@@ -12,6 +12,8 @@ import pl.sonmiike.reportsservice.report.database.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 import pl.sonmiike.reportsservice.report.generators.ReportGenerator;
 import pl.sonmiike.reportsservice.report.generators.assemblers.MonthlyReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.assemblers.ReportAssembler;
+import pl.sonmiike.reportsservice.report.generators.assemblers.ReportAssemblerFactory;
 import pl.sonmiike.reportsservice.report.generators.assemblers.WeeklyReportAssembler;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
@@ -33,11 +35,9 @@ public class ReportCreatorTest {
     @Mock
     private UserReportService userReportService;
 
-    @Mock
-    private WeeklyReportAssembler weeklyReportAssembler;
 
     @Mock
-    private MonthlyReportAssembler monthlyReportAssembler;
+    private ReportAssemblerFactory reportAssemblerFactory;
 
     @Mock
     private ReportGenerator<Report> reportGenerator;
@@ -71,12 +71,12 @@ public class ReportCreatorTest {
         UserReport user = getUser();
 
         when(userReportService.fetchUserById(userId)).thenReturn(Optional.ofNullable(user));
-        when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(null);
+        when(weeklyReportAssembler.createReport(user)).thenReturn(null);
 
         reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
         verify(userReportService).fetchUserById(userId);
-        verify(weeklyReportAssembler).createWeeklyReport(user);
+        verify(weeklyReportAssembler).createReport(user);
     }
 
 
@@ -87,13 +87,13 @@ public class ReportCreatorTest {
         WeeklyReport weeklyReport = getWeeklyReport();
 
         when(userReportService.fetchUserById(userId)).thenReturn(Optional.ofNullable(user));
-        when(weeklyReportAssembler.createWeeklyReport(user)).thenReturn(weeklyReport);
+        when(weeklyReportAssembler.createReport(user)).thenReturn(weeklyReport);
         when(reportGenerator.generatePDF(weeklyReport)).thenReturn("test.pdf");
 
         reportCreator.generateReport(userId, ReportType.WEEKLY_REPORT);
 
         verify(userReportService).fetchUserById(userId);
-        verify(weeklyReportAssembler).createWeeklyReport(user);
+        verify(weeklyReportAssembler).createReport(user);
         verify(reportGenerator).generatePDF(weeklyReport);
     }
 

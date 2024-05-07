@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.sonmiike.reportsservice.cateogry.Category;
+import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;

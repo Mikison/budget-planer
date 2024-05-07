@@ -32,7 +32,7 @@ public class ReportServiceImpl implements ReportService {
 
 
     public void callCustomReportOnDemand(Long userId, String startDate, String endDate) {
-        reportExecutor.initiateCustomReportGenerationForUser(userId, startDate, endDate);
+        reportExecutor.callCustomReportOnDemand(userId, startDate, endDate);
     }
 
     public List<ReportDTO> fetchAllReports() {

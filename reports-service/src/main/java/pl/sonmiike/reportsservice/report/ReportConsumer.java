@@ -3,9 +3,11 @@ package pl.sonmiike.reportsservice.report;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.generators.MessageParser;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
+import pl.sonmiike.reportsservice.report.generators.ReportRequest;
 
 import java.time.LocalDate;
 import java.util.regex.Matcher;
@@ -16,26 +18,15 @@ import java.util.regex.Pattern;
 public class ReportConsumer {
 
     private final ReportCreator reportCreator;
+    private final MessageParser messageParser;
+    private final RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = "${spring.rabbitmq.queue}", concurrency = "2-4")
     public void receiveReportMessage(String message) {
-        System.out.println("Received message: " + message);
-        if (message.startsWith("[>] " + ReportType.WEEKLY_REPORT.name())) {
-            reportCreator.generateReport(extractUserId(message), ReportType.WEEKLY_REPORT);
-            return;
+        ReportRequest request = messageParser.parse(message);
+        if (request != null) {
+            reportCreator.generateReport(request.getUserId(), request.getReportType(), request.getParameters());
         }
-
-        if (message.startsWith("[>] " + ReportType.MONTHLY_REPORT.name())) {
-            reportCreator.generateReport(extractUserId(message), ReportType.MONTHLY_REPORT);
-            return;
-        }
-
-        if (message.startsWith("[>] " + ReportType.CUSTOM_DATE_REPORT.name())) {
-            LocalDate[] dates = extractAndParseDates(message);
-            reportCreator.setCustomDates(dates[0], dates[1]);
-            reportCreator.generateReport(extractUserId(message), ReportType.CUSTOM_DATE_REPORT);
-        }
-
     }
 
     private Long extractUserId(String message) {

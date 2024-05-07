@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.sonmiike.reportsservice.cateogry.Category;
-import pl.sonmiike.reportsservice.cateogry.CategoryRepository;
-import pl.sonmiike.reportsservice.cateogry.CategoryService;
 
 import java.util.List;
 

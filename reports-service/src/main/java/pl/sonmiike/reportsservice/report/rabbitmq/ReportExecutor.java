@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report;
+package pl.sonmiike.reportsservice.report.rabbitmq;
 
 
 import lombok.RequiredArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 import pl.sonmiike.reportsservice.user.UserReport;
 import pl.sonmiike.reportsservice.user.UserReportService;
 
@@ -19,10 +19,13 @@ public class ReportExecutor {
 
     private final UserReportService userReportService;
     private final ReportMessagingService reportMessagingService;
+
     @Value("${spring.rabbitmq.routing.key.weekly}")
     private String weeklyRoutingKey;
+
     @Value("${spring.rabbitmq.routing.key.monthly}")
     private String monthlyRoutingKey;
+
     @Value("${spring.rabbitmq.routing.key.custom}")
     private String customRoutingKey;
 

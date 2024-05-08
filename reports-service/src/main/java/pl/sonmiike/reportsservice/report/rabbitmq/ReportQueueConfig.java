@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.rabbitmq;
+package pl.sonmiike.reportsservice.report.rabbitmq;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

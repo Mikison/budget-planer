@@ -1,7 +1,8 @@
-package pl.sonmiike.reportsservice.report.generators;
+package pl.sonmiike.reportsservice.report.util;
 
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.generators.ReportRequest;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 import java.time.LocalDate;
 import java.util.HashMap;

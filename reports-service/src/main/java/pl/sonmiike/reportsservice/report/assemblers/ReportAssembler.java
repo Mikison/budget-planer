@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators.assemblers;
+package pl.sonmiike.reportsservice.report.assemblers;
 
 import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.user.UserReport;

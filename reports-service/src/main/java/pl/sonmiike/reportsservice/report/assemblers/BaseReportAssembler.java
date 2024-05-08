@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators.assemblers;
+package pl.sonmiike.reportsservice.report.assemblers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,6 +11,7 @@ import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.income.IncomeFetcher;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
+import pl.sonmiike.reportsservice.report.util.ReportDataProcessor;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;

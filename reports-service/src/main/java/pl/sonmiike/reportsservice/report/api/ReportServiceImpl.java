@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.report.ReportExecutor;
-import pl.sonmiike.reportsservice.report.database.ReportDTO;
-import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
-import pl.sonmiike.reportsservice.report.database.ReportMapper;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.rabbitmq.ReportExecutor;
+import pl.sonmiike.reportsservice.report.repository.ReportDTO;
+import pl.sonmiike.reportsservice.report.repository.ReportEntityRepository;
+import pl.sonmiike.reportsservice.report.repository.ReportMapper;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 import java.net.MalformedURLException;
 import java.nio.file.Paths;

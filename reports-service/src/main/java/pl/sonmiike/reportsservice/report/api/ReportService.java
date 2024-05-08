@@ -1,8 +1,8 @@
 package pl.sonmiike.reportsservice.report.api;
 
 import org.springframework.core.io.Resource;
-import pl.sonmiike.reportsservice.report.database.ReportDTO;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportDTO;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 import java.util.List;
 

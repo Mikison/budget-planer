@@ -7,9 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
-import pl.sonmiike.reportsservice.report.ReportExecutor;
+import pl.sonmiike.reportsservice.report.rabbitmq.ReportExecutor;
 import pl.sonmiike.reportsservice.report.api.ReportServiceImpl;
-import pl.sonmiike.reportsservice.report.database.*;
+import pl.sonmiike.reportsservice.report.repository.*;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.time.LocalDate;

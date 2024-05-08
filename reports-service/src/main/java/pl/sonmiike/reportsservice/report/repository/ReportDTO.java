@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.database;
+package pl.sonmiike.reportsservice.report.repository;
 
 
 import lombok.Builder;

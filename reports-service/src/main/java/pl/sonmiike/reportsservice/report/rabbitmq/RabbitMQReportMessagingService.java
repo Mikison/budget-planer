@@ -1,11 +1,11 @@
-package pl.sonmiike.reportsservice.report;
+package pl.sonmiike.reportsservice.report.rabbitmq;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 
 @Service

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.income.Income;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.math.BigDecimal;
@@ -37,20 +37,20 @@ public class MonthlyReport implements Report {
 
 
     @Override
-    public Map<String, Object> getReportData() {
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("User", user.getUsername());
-        dataMap.put("Date Interval", dateIntervalToString(dateInterval));
-        dataMap.put("Total Expenses", totalExpenses.toPlainString());
-        dataMap.put("Largest Expense", largestExpense);
-        dataMap.put("Average Weekly Expense", averageWeeklyExpense.toPlainString());
-        dataMap.put("Week With Highest Expenses", dateIntervalToString(weekWithHighestExpenses));
-        dataMap.put("Day With Highest Average Expense", dayWithHighestAverageExpense);
-        dataMap.put("Total Incomes", totalIncomes.toPlainString());
-        dataMap.put("Budget Summary", budgetSummary.toPlainString());
-        dataMap.put("Expenses List", expensesList);
-        dataMap.put("Income List", incomeList);
-        dataMap.put("Category Expenses", categoryExpenses);
+    public Map<ReportDataKey, Object> getReportData() {
+        Map<ReportDataKey, Object> dataMap = new HashMap<>();
+        dataMap.put(ReportDataKey.USER, user.getUsername());
+        dataMap.put(ReportDataKey.DATE_INTERVAL, dateIntervalToString(dateInterval));
+        dataMap.put(ReportDataKey.TOTAL_EXPENSES, totalExpenses.toPlainString());
+        dataMap.put(ReportDataKey.LARGEST_EXPENSE, largestExpense);
+        dataMap.put(ReportDataKey.AVERAGE_WEEKLY_EXPENSE, averageWeeklyExpense.toPlainString());
+        dataMap.put(ReportDataKey.WEEK_WITH_HIGHEST_EXPENSES, dateIntervalToString(weekWithHighestExpenses));
+        dataMap.put(ReportDataKey.DAY_WITH_HIGHEST_AVERAGE_EXPENSE, dayWithHighestAverageExpense);
+        dataMap.put(ReportDataKey.TOTAL_INCOMES, totalIncomes.toPlainString());
+        dataMap.put(ReportDataKey.BUDGET_SUMMARY, budgetSummary.toPlainString());
+        dataMap.put(ReportDataKey.EXPENSES_LIST, expensesList);
+        dataMap.put(ReportDataKey.INCOME_LIST, incomeList);
+        dataMap.put(ReportDataKey.CATEGORY_EXPENSES, categoryExpenses);
 
         return dataMap;
 

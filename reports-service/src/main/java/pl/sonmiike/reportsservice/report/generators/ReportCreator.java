@@ -2,10 +2,10 @@ package pl.sonmiike.reportsservice.report.generators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.report.ReportMailSender;
-import pl.sonmiike.reportsservice.report.database.ReportType;
-import pl.sonmiike.reportsservice.report.generators.assemblers.ReportAssembler;
-import pl.sonmiike.reportsservice.report.generators.assemblers.ReportAssemblerFactory;
+import pl.sonmiike.reportsservice.report.rabbitmq.ReportMailSender;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
+import pl.sonmiike.reportsservice.report.assemblers.ReportAssembler;
+import pl.sonmiike.reportsservice.report.assemblers.ReportAssemblerFactory;
 import pl.sonmiike.reportsservice.report.types.Report;
 import pl.sonmiike.reportsservice.user.UserReport;
 import pl.sonmiike.reportsservice.user.UserReportService;

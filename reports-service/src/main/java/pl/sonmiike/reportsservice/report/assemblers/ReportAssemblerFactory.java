@@ -1,7 +1,7 @@
-package pl.sonmiike.reportsservice.report.generators.assemblers;
+package pl.sonmiike.reportsservice.report.assemblers;
 
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report;
+package pl.sonmiike.reportsservice.report.rabbitmq;
 
 public interface ReportMessagingService {
     void sendReportGenerationMessage(String routingKey, String messagePrefix, String userId);

@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import pl.sonmiike.reportsservice.report.ReportConsumer;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.rabbitmq.ReportConsumer;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

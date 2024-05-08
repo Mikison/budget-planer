@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pl.sonmiike.reportsservice.report.database.ReportDTO;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportDTO;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 import pl.sonmiike.reportsservice.security.CustomUserDetails;
 
 import java.util.List;

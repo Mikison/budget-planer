@@ -3,7 +3,7 @@ package pl.sonmiike.reportsservice.report.generators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 import java.util.Map;
 

@@ -1,9 +1,9 @@
-package pl.sonmiike.reportsservice.expense;
+package pl.sonmiike.reportsservice.category;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.sonmiike.reportsservice.category.Category;
-import pl.sonmiike.reportsservice.category.CategoryCalculator;
+import pl.sonmiike.reportsservice.expense.Expense;
+import pl.sonmiike.reportsservice.expense.ExpenseOperations;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class ExpenseCategoryCalculator implements CategoryCalculator {
+public class CategoryExpenseCalculator implements CategoryCalculator {
 
 
     @Override

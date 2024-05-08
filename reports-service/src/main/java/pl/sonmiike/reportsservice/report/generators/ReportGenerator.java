@@ -6,8 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
+import pl.sonmiike.reportsservice.report.repository.ReportEntityRepository;
 import pl.sonmiike.reportsservice.report.types.Report;
+import pl.sonmiike.reportsservice.report.util.PDFCreationHelper;
 
 import java.io.IOException;
 import java.nio.file.Files;

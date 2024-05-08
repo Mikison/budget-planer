@@ -10,7 +10,7 @@ import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.expense.ExpenseService;
 import pl.sonmiike.reportsservice.income.Income;
 import pl.sonmiike.reportsservice.income.IncomeService;
-import pl.sonmiike.reportsservice.report.generators.assemblers.CustomDateReportAssembler;
+import pl.sonmiike.reportsservice.report.assemblers.CustomDateReportAssembler;
 import pl.sonmiike.reportsservice.report.types.CustomDateReport;
 import pl.sonmiike.reportsservice.user.UserReport;
 

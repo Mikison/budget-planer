@@ -1,11 +1,11 @@
-package pl.sonmiike.reportsservice.report;
+package pl.sonmiike.reportsservice.report.rabbitmq;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import pl.sonmiike.reportsservice.report.generators.MessageParser;
+import pl.sonmiike.reportsservice.report.util.MessageParser;
 import pl.sonmiike.reportsservice.report.generators.ReportCreator;
 import pl.sonmiike.reportsservice.report.generators.ReportRequest;
 

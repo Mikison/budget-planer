@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators;
+package pl.sonmiike.reportsservice.report.util;
 
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -14,11 +14,12 @@ import org.springframework.stereotype.Component;
 import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.income.Income;
-import pl.sonmiike.reportsservice.report.database.ReportEntity;
-import pl.sonmiike.reportsservice.report.database.ReportEntityRepository;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.repository.ReportEntity;
+import pl.sonmiike.reportsservice.report.repository.ReportEntityRepository;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 import pl.sonmiike.reportsservice.report.types.DateInterval;
 import pl.sonmiike.reportsservice.report.types.Report;
+import pl.sonmiike.reportsservice.report.types.ReportDataKey;
 import pl.sonmiike.reportsservice.user.UserReport;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ import java.util.Map;
 
 @Component
 public class PDFCreationHelper {
+
+    // TODO Check the pdf after replacing strings with enums, probably it will have enum name so u need to make string for enums and constructor to return name
 
     public static final DeviceRgb DARK_GREEN_COLOR = new DeviceRgb(50, 102, 71);
     public static final DeviceRgb DARK_RED_COLOR = new DeviceRgb(220, 20, 60);
@@ -51,7 +54,7 @@ public class PDFCreationHelper {
             return "";
         }
         String username = report.getUser().getUsername();
-        String dateInterval = report.getReportData().get("Date Interval").toString();
+        String dateInterval = report.getReportData().get(ReportDataKey.DATE_INTERVAL).toString();
         String fileName = report.getReportType() + "_" + dateInterval + "_" + username + ".pdf";
         String outputPath = Paths.get(basePath, fileName).toString();
         if (Files.exists(Paths.get(outputPath))) {
@@ -70,19 +73,19 @@ public class PDFCreationHelper {
                     .setFontSize(12)
                     .setTextAlignment(TextAlignment.CENTER));
 
-            Map<String, Object> reportData = report.getReportData();
-            String[] order = getOrderForReportType(report.getReportType());
+            Map<ReportDataKey, Object> reportData = report.getReportData();
+            ReportDataKey[] order = getOrderForReportType(report.getReportType());
 
-            for (String key : order) {
+            for (ReportDataKey key : order) {
                 Object value = reportData.get(key);
                 if (value == null) continue;
 
-                if (key.equals("Budget Summary") || key.equals("Biggest Expense") || key.equals("Smallest Expense")) {
+                if (key.equals(ReportDataKey.BUDGET_SUMMARY) || key.equals(ReportDataKey.BIGGEST_EXPENSE) || key.equals(ReportDataKey.SMALLEST_EXPENSE)) {
 
                     handleSpecialEntries(document, key, value);
                     continue;
                 }
-                if (key.equals("Category Expenses")) {
+                if (key.equals(ReportDataKey.CATEGORY_EXPENSES)) {
                     createCategoryExpensesTable(document, (Map<Category, BigDecimal>) value);
                     continue;
                 }
@@ -116,8 +119,8 @@ public class PDFCreationHelper {
     }
 
 
-    private void handleSpecialEntries(Document document, String key, Object value) {
-        if (key.equals("Budget Summary")) {
+    private void handleSpecialEntries(Document document, ReportDataKey key, Object value) {
+        if (key.equals(ReportDataKey.BUDGET_SUMMARY)) {
             BigDecimal summary = new BigDecimal(value.toString());
             Paragraph summaryParagraph = new Paragraph(key + ": ").setBold();
             String summaryText = summary.compareTo(BigDecimal.ZERO) > 0 ? "+" + summary.toPlainString() : summary.toPlainString();
@@ -134,7 +137,7 @@ public class PDFCreationHelper {
         }
     }
 
-    private void createCenteredTable(Document document, String key, Object value) {
+    private void createCenteredTable(Document document, ReportDataKey key, Object value) {
         List<?> list = (List<?>) value;
         if (!list.isEmpty() && (list.get(0) instanceof Income || list.get(0) instanceof Expense)) {
             Table table = new Table(UnitValue.createPercentArray(new float[]{0.8f, 2.5f, 0.8f, 1f}))
@@ -163,7 +166,7 @@ public class PDFCreationHelper {
         }
     }
 
-    private Paragraph createKeyValueParagraph(String key, Object value) {
+    private Paragraph createKeyValueParagraph(ReportDataKey key, Object value) {
         Paragraph p = new Paragraph();
         p.add(new Text(key + ": ").setBold());
         p.add(new Text(value.toString()));
@@ -188,14 +191,36 @@ public class PDFCreationHelper {
 
     }
 
-    private String[] getOrderForReportType(ReportType reportType) {
+    private ReportDataKey[] getOrderForReportType(ReportType reportType) {
         return switch (reportType) {
-            case WEEKLY_REPORT, CUSTOM_DATE_REPORT ->
-                    new String[]{"User", "Date Interval", "Total Expenses", "Average Daily Expense",
-                            "Total Incomes", "Budget Summary", "Biggest Expense", "Smallest Expense",
-                            "Expenses List", "Income List", "Category Expenses"};
-            case MONTHLY_REPORT ->
-                    new String[]{"User", "Date Interval", "Total Expenses", "Largest Expense", "Average Weekly Expense", "Week With Highest Expenses", "Day With Highest Average Expense", "Total Incomes", "Budget Summary", "Expenses List", "Income List", "Category Expenses"};
+            case WEEKLY_REPORT, CUSTOM_DATE_REPORT -> new ReportDataKey[]{
+                    ReportDataKey.USER,
+                    ReportDataKey.DATE_INTERVAL,
+                    ReportDataKey.TOTAL_EXPENSES,
+                    ReportDataKey.LARGEST_EXPENSE,
+                    ReportDataKey.AVERAGE_DAILY_EXPENSE,
+                    ReportDataKey.TOTAL_INCOMES,
+                    ReportDataKey.BUDGET_SUMMARY,
+                    ReportDataKey.BIGGEST_EXPENSE,
+                    ReportDataKey.SMALLEST_EXPENSE,
+                    ReportDataKey.EXPENSES_LIST,
+                    ReportDataKey.INCOME_LIST,
+                    ReportDataKey.CATEGORY_EXPENSES
+            };
+            case MONTHLY_REPORT -> new ReportDataKey[]{
+                    ReportDataKey.USER,
+                    ReportDataKey.DATE_INTERVAL,
+                    ReportDataKey.TOTAL_EXPENSES,
+                    ReportDataKey.LARGEST_EXPENSE,
+                    ReportDataKey.AVERAGE_WEEKLY_EXPENSE,
+                    ReportDataKey.WEEK_WITH_HIGHEST_EXPENSES,
+                    ReportDataKey.DAY_WITH_HIGHEST_AVERAGE_EXPENSE,
+                    ReportDataKey.TOTAL_INCOMES,
+                    ReportDataKey.BUDGET_SUMMARY,
+                    ReportDataKey.EXPENSES_LIST,
+                    ReportDataKey.INCOME_LIST,
+                    ReportDataKey.CATEGORY_EXPENSES
+            };
         };
     }
 

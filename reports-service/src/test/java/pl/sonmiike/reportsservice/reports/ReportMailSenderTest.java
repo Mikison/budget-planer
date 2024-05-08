@@ -8,8 +8,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import pl.sonmiike.reportsservice.report.ReportMailSender;
-import pl.sonmiike.reportsservice.report.database.ReportType;
+import pl.sonmiike.reportsservice.report.rabbitmq.ReportMailSender;
+import pl.sonmiike.reportsservice.report.repository.ReportType;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;

@@ -1,4 +1,4 @@
-package pl.sonmiike.reportsservice.report.generators.assemblers;
+package pl.sonmiike.reportsservice.report.util;
 
 import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.expense.Expense;
@@ -14,5 +14,4 @@ import java.util.List;
 @FunctionalInterface
 public interface ReportDataProcessor<T extends Report> {
     T buildReport(UserReport user, DateInterval date, List<Income> incomes, List<Expense> expenses, HashMap<Category, BigDecimal> categoryExpenses);
-
 }

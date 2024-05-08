@@ -33,5 +33,6 @@ public class CategoryExpenseCalculator implements CategoryCalculator {
                     .collect(Collectors.toList()));
             categoryExpenses.put(category, categoryExpense);
         }
-        return categoryExpenses;    }
+        return categoryExpenses;
+    }
 }

@@ -2,7 +2,6 @@ package pl.sonmiike.reportsservice.report.rabbitmq;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import pl.sonmiike.reportsservice.user.UserReportService;
 import java.util.Set;
 
 @Service
-@Setter
 @RequiredArgsConstructor
 public class ReportExecutor {
 
@@ -51,7 +49,6 @@ public class ReportExecutor {
             case WEEKLY_REPORT -> weeklyRoutingKey;
             case MONTHLY_REPORT -> monthlyRoutingKey;
             case CUSTOM_DATE_REPORT -> customRoutingKey;
-            default -> throw new IllegalArgumentException("Unsupported report type");
         };
     }
 

@@ -1,8 +1,10 @@
 package pl.sonmiike.reportsservice.report.types;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.expense.Expense;
 import pl.sonmiike.reportsservice.income.Income;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class WeeklyReport implements Report {
 
     private UserReport user;

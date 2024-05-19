@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.sonmiike</groupId>
-    <artifactId>mail-app</artifactId>
+    <artifactId>mail-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mail-service</name>
     <description>mail-service</description>

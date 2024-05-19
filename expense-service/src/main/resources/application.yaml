@@ -13,14 +13,9 @@ spring:
       ddl-auto: update
     generate-ddl: true
     show-sql: true
-  docker:
-    compose:
-      enabled: false
-jwt:
-  secret: MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP
 
 server:
-  port: 8081
+  port: 8084
 
 eureka:
   client:

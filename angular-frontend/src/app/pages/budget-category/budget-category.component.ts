@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {
   BrnPopoverComponent,
@@ -50,6 +50,22 @@ import {
   HlmSubMenuComponent
 } from "@spartan-ng/ui-menu-helm";
 import {BrnContextMenuTriggerDirective, BrnMenuTriggerDirective} from "@spartan-ng/ui-menu-brain";
+import {
+  BrnAlertDialogComponent,
+  BrnAlertDialogContentDirective,
+  BrnAlertDialogTriggerDirective
+} from "@spartan-ng/ui-alertdialog-brain";
+import {
+  HlmAlertDialogActionButtonDirective,
+  HlmAlertDialogCancelButtonDirective,
+  HlmAlertDialogComponent,
+  HlmAlertDialogContentComponent,
+  HlmAlertDialogDescriptionDirective,
+  HlmAlertDialogFooterComponent,
+  HlmAlertDialogHeaderComponent,
+  HlmAlertDialogOverlayDirective,
+  HlmAlertDialogTitleDirective
+} from "@spartan-ng/ui-alertdialog-helm";
 
 
 @Component({
@@ -108,6 +124,18 @@ import {BrnContextMenuTriggerDirective, BrnMenuTriggerDirective} from "@spartan-
     HlmMenuGroupComponent,
     HlmMenuItemCheckboxDirective,
     HlmMenuItemRadioDirective,
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+
+    HlmAlertDialogComponent,
+    HlmAlertDialogOverlayDirective,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent,
   ],
   providers: [provideIcons({lucideFolderPlus, lucideChevronRight, lucideEdit, lucideTrash2})],
   templateUrl: './budget-category.component.html',
@@ -126,7 +154,6 @@ import {BrnContextMenuTriggerDirective, BrnMenuTriggerDirective} from "@spartan-
   `]
 })
 export class BudgetCategoryComponent {
-
 
 
   value = 23;

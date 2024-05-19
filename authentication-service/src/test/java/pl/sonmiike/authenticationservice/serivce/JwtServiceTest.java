@@ -19,16 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtServiceTest {
 
-
-
-
     private JwtService jwtService;
-
-    private Clock clock;
 
     @BeforeEach
     void setUp() {
-        clock = Clock.systemUTC();
+        Clock clock = Clock.systemUTC();
         jwtService = new JwtService(clock);
         String secret = "ASUDJNASOID029840923840mKJIOSAJDIOASDASDASDASD";
         ReflectionTestUtils.setField(jwtService, "secret", secret);

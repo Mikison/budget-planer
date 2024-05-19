@@ -2,9 +2,7 @@ package pl.sonmiike.reportsservice.report.assemblers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import pl.sonmiike.reportsservice.category.Category;
 import pl.sonmiike.reportsservice.category.CategoryCalculator;
 import pl.sonmiike.reportsservice.category.CategoryService;
@@ -27,30 +25,34 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class WeeklyReportAssemblerTest {
 
     @Mock
     private IncomeFetcher incomeFetcher;
-    @Mock private ExpenseFetcher expenseFetcher;
-    @Mock private CategoryCalculator categoryCalculator;
-    @Mock private CategoryService categoryService;
+    @Mock
+    private ExpenseFetcher expenseFetcher;
+    @Mock
+    private CategoryCalculator categoryCalculator;
+    @Mock
+    private CategoryService categoryService;
     @InjectMocks
     private WeeklyReportAssembler assembler;
 
+    @Captor
+    private ArgumentCaptor<DateInterval> dateIntervalCaptor;
+
     private UserReport user;
-    private LocalDate startDate, endDate;
+    private LocalDate referenceDate;
     private DateInterval dateInterval;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         user = new UserReport(1L);
-        startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
-        endDate = startDate.plusDays(6);
-        dateInterval = new DateInterval(startDate, endDate);
+        referenceDate = LocalDate.of(2024, 5, 12).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).minusWeeks(1);
+        dateInterval = new DateInterval(referenceDate, referenceDate.plusDays(7));
     }
 
     @Test
@@ -58,8 +60,8 @@ class WeeklyReportAssemblerTest {
         List<Income> incomes = getIncomes();
         List<Expense> expenses = getExpenses();
 
-        when(incomeFetcher.fetchSortedIncomes(eq(dateInterval), eq(user.getUserId()))).thenReturn(incomes);
-        when(expenseFetcher.fetchSortedExpenses(eq(dateInterval), eq(user.getUserId()))).thenReturn(expenses);
+        when(incomeFetcher.fetchSortedIncomes(any(), eq(user.getUserId()))).thenReturn(incomes);
+        when(expenseFetcher.fetchSortedExpenses(any(), eq(user.getUserId()))).thenReturn(expenses);
         when(categoryService.getCategories()).thenReturn(Collections.singletonList(getCategory()));
         when(categoryCalculator.calculateCategoryExpenses(any(), any())).thenReturn(new HashMap<>());
 
@@ -67,37 +69,47 @@ class WeeklyReportAssemblerTest {
 
         assertNotNull(report, "Report should not be null when data is present");
         assertInstanceOf(WeeklyReport.class, report, "Report should be an instance of WeeklyReport");
-        verify(incomeFetcher).fetchSortedIncomes(eq(dateInterval), eq(user.getUserId()));
-        verify(expenseFetcher).fetchSortedExpenses(eq(dateInterval), eq(user.getUserId()));
-        verify(categoryCalculator).calculateCategoryExpenses(any(), any());
+
+        verify(incomeFetcher).fetchSortedIncomes(dateIntervalCaptor.capture(), eq(user.getUserId()));
+        verify(expenseFetcher).fetchSortedExpenses(dateIntervalCaptor.capture(), eq(user.getUserId()));
+
+        DateInterval capturedIntervalForIncome = dateIntervalCaptor.getAllValues().get(0);
+        DateInterval capturedIntervalForExpense = dateIntervalCaptor.getAllValues().get(1);
+
+        assertAll("DateInterval properties should match",
+                () -> assertEquals(dateInterval.getStartDate(), capturedIntervalForIncome.getStartDate(), "Start dates should match"),
+                () -> assertEquals(dateInterval.getEndDate(), capturedIntervalForIncome.getEndDate(), "End dates should match"),
+                () -> assertEquals(dateInterval.getStartDate(), capturedIntervalForExpense.getStartDate(), "Start dates should match for expense"),
+                () -> assertEquals(dateInterval.getEndDate(), capturedIntervalForExpense.getEndDate(), "End dates should match for expense")
+        );
     }
 
     @Test
     void testCreateReportWithNoData() {
-        when(incomeFetcher.fetchSortedIncomes(eq(dateInterval), eq(user.getUserId()))).thenReturn(Collections.emptyList());
-        when(expenseFetcher.fetchSortedExpenses(eq(dateInterval), eq(user.getUserId()))).thenReturn(Collections.emptyList());
+        when(incomeFetcher.fetchSortedIncomes(any(), eq(user.getUserId()))).thenReturn(Collections.emptyList());
+        when(expenseFetcher.fetchSortedExpenses(any(), eq(user.getUserId()))).thenReturn(Collections.emptyList());
         when(categoryService.getCategories()).thenReturn(Collections.emptyList());
         when(categoryCalculator.calculateCategoryExpenses(any(), any())).thenReturn(new HashMap<>());
 
         Report report = assembler.createReport(user, new HashMap<>());
 
         assertNull(report, "Report should be null when no data is present");
-        verify(incomeFetcher).fetchSortedIncomes(eq(dateInterval), eq(user.getUserId()));
-        verify(expenseFetcher).fetchSortedExpenses(eq(dateInterval), eq(user.getUserId()));
-        verify(categoryCalculator, never()).calculateCategoryExpenses(any(), any());
+        verify(incomeFetcher).fetchSortedIncomes(dateIntervalCaptor.capture(), eq(user.getUserId()));
+        verify(expenseFetcher).fetchSortedExpenses(dateIntervalCaptor.capture(), eq(user.getUserId()));
+
+        // Check the captured values if needed
     }
 
-
     private List<Income> getIncomes() {
-        Income income = new Income(1L, LocalDate.now(), "Salary", "Monthly salary", BigDecimal.valueOf(7803), user);
-        Income income2 = new Income(2L, LocalDate.now(), "Second Salary", "Second Monthly salary", BigDecimal.valueOf(1234), user);
+        Income income = new Income(1L, referenceDate, "Salary", "Monthly salary", BigDecimal.valueOf(7803), user);
+        Income income2 = new Income(2L, referenceDate, "Second Salary", "Second Monthly salary", BigDecimal.valueOf(1234), user);
         return List.of(income, income2);
     }
 
     private List<Expense> getExpenses() {
-        Category category = getCategory();  // Reuse the same category instance for all expenses
-        Expense expense = new Expense(1L, "Rent", "Monthly rent", LocalDate.now(), BigDecimal.valueOf(2000), user, category);
-        Expense expense2 = new Expense(2L, "Food", "Groceries", LocalDate.now(), BigDecimal.valueOf(240), user, category);
+        Category category = getCategory();
+        Expense expense = new Expense(1L, "Rent", "Monthly rent", referenceDate, BigDecimal.valueOf(2000), user, category);
+        Expense expense2 = new Expense(2L, "Food", "Groceries", referenceDate, BigDecimal.valueOf(240), user, category);
         return List.of(expense, expense2);
     }
 

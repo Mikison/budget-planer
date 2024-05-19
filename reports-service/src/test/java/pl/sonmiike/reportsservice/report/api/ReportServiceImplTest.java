@@ -76,7 +76,6 @@ class ReportServiceImplTest {
     @Test
     void fetchPdfFile_ThrowsIfFileNotFound() {
         String fileName = "nonexistent";
-        List<ReportDTO> reports = List.of();
 
         when(reportEntityRepository.findAllByUserUserId(userId)).thenReturn(new ArrayList<>());
         when(reportMapper.toDTO(any())).thenReturn(new ReportDTO());

@@ -1,0 +1,5 @@
+pl\sonmiike\mailservice\mail\MailSenderService.class
+pl\sonmiike\mailservice\MailApp.class
+pl\sonmiike\mailservice\mail\MailCreator.class
+pl\sonmiike\mailservice\rabbitmq\MailConsumer.class
+pl\sonmiike\mailservice\rabbitmq\MailQueueConfig.class

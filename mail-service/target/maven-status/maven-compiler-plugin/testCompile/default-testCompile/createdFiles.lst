@@ -1,0 +1,4 @@
+pl\sonmiike\mailservice\mail\MailSenderServiceTest.class
+pl\sonmiike\mailservice\rabbitmq\MailConsumerTest.class
+pl\sonmiike\mailservice\MailAppTests.class
+pl\sonmiike\mailservice\mail\MailCreatorTest.class

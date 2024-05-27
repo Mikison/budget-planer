@@ -26,11 +26,11 @@ public class Expense {
     private LocalDate date;
     private BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 

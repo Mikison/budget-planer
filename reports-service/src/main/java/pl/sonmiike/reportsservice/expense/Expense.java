@@ -26,11 +26,11 @@ public class Expense {
     private LocalDate date;
     private BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private UserReport user;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 

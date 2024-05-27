@@ -1,35 +1,31 @@
-import {Component, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {InputTextModule} from "primeng/inputtext";
-import {InputGroupAddonModule} from "primeng/inputgroupaddon";
-import {InputGroupModule} from "primeng/inputgroup";
-import {FormsModule} from "@angular/forms";
-import {MultiSelectModule} from "primeng/multiselect";
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import {RouterModule} from "@angular/router";
 
 interface City {
-  name: string,
-  code: string
+  name: string;
+  code: string;
 }
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, MultiSelectModule, FormsModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [RouterModule,FormsModule, DropdownModule]
 })
 export class AppComponent implements OnInit {
-  cities!: City[];
+  cities: City[] | undefined;
 
-  selectedCities!: City[];
+  selectedCity: City | undefined;
 
   ngOnInit() {
     this.cities = [
-      {name: 'New York', code: 'NY'},
-      {name: 'Rome', code: 'RM'},
-      {name: 'London', code: 'LDN'},
-      {name: 'Istanbul', code: 'IST'},
-      {name: 'Paris', code: 'PRS'}
+      { name: 'New York', code: 'NY' },
+      { name: 'Rome', code: 'RM' },
+      { name: 'London', code: 'LDN' },
+      { name: 'Istanbul', code: 'IST' },
+      { name: 'Paris', code: 'PRS' }
     ];
   }
 }
